@@ -1,0 +1,3 @@
+tex/base.*
+!tex/base.tex
+tex/xelatex*
