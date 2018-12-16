@@ -1,0 +1,43 @@
+\chapter{Volba technologie}\label{technology}
+
+Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc. Pavel Kovář, a frontend, který je předmětem této práce, je vhodné věnovat jistou část textu volbě vhodné technologie.
+
+\section{Cílová platforma}
+
+Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC20}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucího pracovníka. // TODO přepsat. Z důvodu jednoduchosti vývoje,  testování a aktualizaci bylo hned při úvodním návrhu určeno, že aplikace bude ve formě webové služby, která bude zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. // TODO přepsat
+Z toho důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
+
+\section{Dostupné frameworky a knihovny}
+
+V době psaní této práce patří mezi nejpopulárnější front-endové frameworky React \cite{react} a Angular \cite{angular}. 
+
+TODO
+
+\section{Porovnání a volba frameworků a knihoven}
+
+TODO
+
+\begin{table}[H]
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue} & \multicolumn{1}{c}{Ember} & \multicolumn{1}{c}{Backbone} \\ \hline
+Počet hvězdiček\\na GitHubu              & 43,6k                       & 117,7k                    & 122,3k                  & 20,3k                     & 27,3k                        \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{3}                  & \textit{4}                & \textit{5}              & \textit{1}                & \textit{2}                  
+\end{tabular}
+\end{table}
+
+TODO table label
+
+TODO
+
+\begin{table}[H]
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue} & \multicolumn{1}{c}{Ember} & \multicolumn{1}{c}{Backbone} \\ \hline
+Zázemí velké\\společnosti                & ano                         & ano                       & ne                      & částečně                  & ne                           \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{4}                  & \textit{4}                & \textit{0}              & \textit{2}                & \textit{0}                  
+\end{tabular}
+\end{table}
+
+TODO table label
+

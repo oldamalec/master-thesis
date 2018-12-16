@@ -7,6 +7,7 @@
 
 % TODO:
 % * Zvolit správné Prohlášení
+% * Ověřit jaký model Zebry je ve skladu
 
 % arara: xelatex: { shell: yes }
 % arara: makeglossaries	
@@ -21,6 +22,7 @@
 \usepackage{ lscape }		% to be able to rotate stuff
 \usepackage{ metalogo }		% for \XeLaTeX
 \usepackage{ multicol }		% for multiple columns
+\usepackage{ multirow }		% for multiple rows
 \usepackage{ booktabs }		% for prettier tables
 \usepackage{ rotating }		% for rotating pictures
 \usepackage{ xcolor } 		% for custom colors
@@ -50,7 +52,10 @@
 \input{0_uvod.tex}
 \end{introduction}
 
-TODO
+\chapter{Analýza požadavků}
+\chapter{Návrh uživatelského rozhraní}
+\input{x_volba_technologie.tex}
+\chapter{Implementace}
 
 \begin{conclusion} \label{conclusion}
 TODO
