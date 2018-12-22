@@ -7,37 +7,212 @@ Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc
 Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC20}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucího pracovníka. // TODO přepsat. Z důvodu jednoduchosti vývoje,  testování a aktualizaci bylo hned při úvodním návrhu určeno, že aplikace bude ve formě webové služby, která bude zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. // TODO přepsat
 Z toho důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
 
-\section{Dostupné frameworky a knihovny}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-V době psaní této práce patří mezi nejpopulárnější front-endové frameworky React \cite{react} a Angular \cite{angular}. 
+\section{Frameworky a knihovny}
 
-TODO
+V době psaní této práce patří mezi nejpopulárnější\cite{frameworks-github}\cite{frameworks-hackr} front-endové frameworky či knihovny Angular\cite{angular}, React\cite{react}, Vue.js\cite{vue}, Ember.js\cite{ember} a Backbone.js\cite{backbone}.
 
-\section{Porovnání a volba frameworků a knihoven}
+\paragraph{Názvosloví} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework} při referenci jak na frameworky, tak knihovny, z důvodu zmenšení repetitivnosti textu.\\
 
-TODO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{table}[H]
+\subsection{Datum vydání}
+
+Zatímco první dva zmíněné frameworky jsou v současnosti nejvíce porovnávány, Vue.js je z této pětice vybraných nejmladší, nabírá ale velké obliby. Ember.js a Backbone.js jsou poté lehce upozaděny z důvodu jejich stáří. Přehled prvního vydání jednotlivých frameworků je v tabulce \ref{table:compare:release}
+
+\begin{table}[h]
+\caption{Volba frameworku: Porovnání data vydání}
+\label{table:compare:release}
 \begin{tabular}{lrrrrr}
 \hline
-                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue} & \multicolumn{1}{c}{Ember} & \multicolumn{1}{c}{Backbone} \\ \hline
-Počet hvězdiček\\na GitHubu              & 43,6k                       & 117,7k                    & 122,3k                  & 20,3k                     & 27,3k                        \\
-\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{3}                  & \textit{4}                & \textit{5}              & \textit{1}                & \textit{2}                  
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Vydání první verze                       & 2010/2016\footnote{V roce 2010 byl vydán AngularJS, který byl v roce 2016 kompletně přepsán do TypeScriptu a vydán jako Angular 2, či jednoduše \emph{Angular}.}                                                                       & 2013                      & 2014                       & 2011                         & 2010                            \\
 \end{tabular}
 \end{table}
 
-TODO table label
+Datum vydání ovšem nelze objektivně ohodnotit bodovým ziskem. Na jedné straně stojí fakt, že starší framework může být vyspělejší a tudíž stabilnější atp., na straně druhé nové frameworky se často učí z chyb provedených jejich předchůdci a vyberou z nich pouze to nejlepší. Tato tabulka tedy zůstane čistě přehledová.
 
-TODO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{table}[H]
+\subsection{Počtu hvězdiček na GitHubu}
+
+Počet hvězdiček na GitHubu lze velmi volně interpretovat jako oblíbenost frameworku mezi vývojáři. Z tohoto důvodu již v tabulce \ref{table:compare:github_stars} hodnotím frameworky dle počtu získaných hvězdiček. Hodnocení přeskakuje bodový zisk 3, aby bylo zhodnoceno i absolutní množství hvězdiček, nejen pořadí.
+
+\begin{table}[h]
+\caption{Volba frameworku: Porovnání počtu hvězdiček na GitHubu}
+\label{table:compare:github_stars}
 \begin{tabular}{lrrrrr}
 \hline
-                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue} & \multicolumn{1}{c}{Ember} & \multicolumn{1}{c}{Backbone} \\ \hline
-Zázemí velké\\společnosti                & ano                         & ano                       & ne                      & částečně                  & ne                           \\
-\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{4}                  & \textit{4}                & \textit{0}              & \textit{2}                & \textit{0}                  
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Počet hvězdiček\\na GitHubu\footnote{Stav k 17. 12. 2018} &   43,6k    & 117,7k                    & 122,3k                     & 20,3k                        & 27,3k                           \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{2}                  & \textit{4}                & \textit{5}                 & \textit{0}                   & \textit{1}                  
 \end{tabular}
 \end{table}
 
-TODO table label
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\subsection{Zázemí}
+
+Zatímco Angular a React jsou vyvíjeny velkými společnosti - Googlem a Facebookem, které zná každý, Ember.js je vyvíjen společností Tilde Inc.\cite{tilde}, která také není žádným startupem. Vue.js a Backbone.js by se naopak daly nazvat \emph{komunitními projekty}, neboť jsou vytvořeny převážně jedním autorem (Evan You, respektive Jeremy Ashkenas) a rozvíjeny a udržovány komunitou vývojářů. Z tohoto hodnocení vychází lépe ty frameworky, které mají za sebou stabilní firmy, neboť tím je do určité míry zaručen jejich kontinuální vývoj.
+
+\begin{table}[h]
+\caption{Volba frameworku: Porovnání zázemí}
+\label{table:compare:background}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Zázemí velké\\společnosti                & ano                         & ano                       & ne                         & částečně                     & ne                              \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{4}                  & \textit{4}                & \textit{0}                 & \textit{2}                   & \textit{0}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Křivka učení}
+
+Složitost frameworku je důležitá metrika, neboť má dopady zejména na ekonomickou stránku projektu. Jednoduché prvotní vniknutí do problematiky frameworku ovšem také nemusí být nutně výhodou, pokud v něm je později problémové provést některé pokročilé věci, nebo i v pokročilém stádiu zdržuje svým nízkoúrovňovým přístupem k problémům, které jiné frameworky řeší automaticky.
+
+\paragraph{Angular, React a Vue.js} Přehled obtížnosti tří v současnosti nejčastěji skloňovaných frameworků přehledně shrnul Rajdeep Chandra ve své prezentaci \emph{My experience with Angular 2 , React and Vue}\cite{frameworks-3compare}, ze které vychází hodnocení v tabulce \ref{table:compare:difficulty}.
+
+\paragraph{Ember.js} Tento framework je dle V. Lascika\cite{ember-diffuculty} vhodný spíše pro projekty, na kterých pracuje velké množství vývojářů, a z toho důvodu jej v tabulce \ref{table:compare:difficulty} hodnotím nula body.
+
+\paragraph{Backbone.js} U této knihovny je důležité zmínit, že umožňuje vývojáři vytvořit si strukturu aplikace kompletně dle svého uvážení\cite{frameworks-rubygarage}. To ssebou může nést jak výhody pro zkušeného, tak nevýhody pro nezkušeného vývojáře, který v pokročilém stádiu vývoje může zjistit, že některou ze základních struktur navrhl špatně. Samotná obtížnost práce s touto knihovnou je ale poměrně nízká
+
+\begin{table}[h]
+\caption{Volba frameworku: Obtížnost}
+\label{table:compare:difficulty}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Obtížnost                                & vysoká                      & vyšší                     & nízká                      & velmi vysoká\footnote{za předpokladu, že na projektu bude pracovat pouze velmi malé množství vývojářů}                                                                                                                                  & nízká                           \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{2}                  & \textit{3}                & \textit{5}                 & \textit{0}                   & \textit{5}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Firemní stack}
+
+Další zvolenou metrikou je, jak daná technologie zapadá do firemní stacku firmy Jagu s.r.o., ve které bude tento nový projekt realizován. Firma se specializuje především na webové aplikace a middlewary na zakázku\cite{jaguweb}, a mezi nejpoužívanější technologie patří PHP (Nette, Laravel, Symfony), dále provozuje jednu aplikaci postavenou na Angularu. Tabulka \ref{table:compare:stack} shrnuje, jak jsou jednotlivé frameworky blízko k tomuto stacku.
+
+\begin{table}[h]
+\caption{Volba frameworku: Shoda s firemním stackem}
+\label{table:compare:stack}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Shoda s firemním stackem                 & ano                         & ne                        & částečně                   & ne                           & ne                              \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{3}                  & \textit{0}                & \textit{1}                 & \textit{0}                   & \textit{0}                  
+\end{tabular}
+\end{table}
+
+Angular je zde ohodnocen třemi body, neboť se jedná o framework, který již firma používá. Vue.js je také ohodnoceno jedním bodem, protože vzniklo na základě Angularu a dá se také jednoduše do stávajícího projektu v Angularu integrovat.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dostupnost vývojářů}
+
+Metrikou, kterou z hlediska udržitelnosti projektu a jeho ekonomických nákladů nelze opomenout, je dostupnost a cena vývojářů se zájmem o danou technologii.
+\\
+Tato data se ale obtížněji získávají, většina statistik naopak hovoří o nabídkách práce v dané technologii, nikoliv o počtu lidí, kteří s ní pracují. Z toho důvodu jsem se rozhodl založit tuto metriku na výsledcích vyhledávání osob v profesní síti LinkedIn - tak dokážeme zjistit alespoň hrubý počet lidí, kteří o sobě sami tvrdí, že jsou vývojáři v daném frameworku.
+\\
+Bodové zisky zde hrubě reflektují relativní počet nalezených profilů.
+
+\begin{table}[h]
+\caption{Volba frameworku: Počet vývojářů na LinkedIn}
+\label{table:compare:developers}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Počet výsledků\\na dotaz\\"<název> developer"             & 344k       & 333k                      & 78k                        & 21k                          & 76k                             \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{4}                  & \textit{4}                & \textit{2}                 & \textit{1}                   & \textit{2}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Počet npm balíků}
+
+Npm\cite{npm} je repozitář javascriptových komponent, na kterém jsou sdíleny jednak kompletní řešení (jako například Angular, Rect, Vue.js a další), ale především různé rozšiřující pluginy do těchto frameworků. Z toho důvodu budu v následující metrice hodnotit, kolik balíků npm nabízí pro jednotlivé porovnávané frameworky.
+\\
+Bodové zisky hrubě odpovídají relativnímu počtu nalezených balíků.
+
+\begin{table}[h]
+\caption{Volba frameworku: Počet npm balíků}
+\label{table:compare:npm}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Počet npm balíků                         & 26,6k                       & 73,4k                     & 20,6k                      & 6,4k                         & 1,5k                            \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{2}                  & \textit{3}                & \textit{2}                 & \textit{1}                   & \textit{0}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Licence}
+
+Licence k použití frameworku je důležitá položka při rozhodování. Naštěstí všech 5 porovnávaných frameworků je v době psaní této licencováno pod MIT licencí, která povoluje jakékoliv použití i v komerční sféře, úpravy, distribuce i použití v ne-opensource projektech. Nevýhodou této licence je nulová záruka funkčnosti či zodpovědnost autorů za potenciální spáchané škody tímto softwarem.
+\\
+\paragraph{Licencování Reactu} Facebook původně vydal svůj React pod BSD licencí spolu s dalšími patenty, avšak 24. září 2017 byl React převeden pod MIT licenci\cite{react-license-commit}\cite{react-license}.
+
+\begin{table}[h]
+\caption{Volba frameworku: Licence}
+\label{table:compare:license}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & \multicolumn{1}{c}{Angular} & \multicolumn{1}{c}{React} & \multicolumn{1}{c}{Vue.js} & \multicolumn{1}{c}{Ember.js} & \multicolumn{1}{c}{Backbone.js} \\ \hline
+Licence                                  & MIT                         & MIT                       & MIT                        & MIT                          & MIT                             \\
+\multicolumn{1}{r}{\textit{bodový zisk}} & \textit{1}                  & \textit{1}                & \textit{1}                 & \textit{1}                   & \textit{1}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+TODO popularita v 2018
+
+TODO licence
+
+TODO devtools (Chrome plugin etc)
+
+TODO oficiální manuál
+
+TODO stackOverflow questions
+
+TODO test framework
+
+\subsection{Kompilace}
+TODO porovnání rychlosti kompilace
+
+
+\subsection{Vybavenost frameworku TODO}
+
+Zde budu hodnotit, jaké funkce framework či knihovna nabízí, a zda je vhodné jejich použití pro frontend skladového systému, který je předmětem této práce. Jelikož systém bude vždy napojen na backend, který bude poskytovat data, je vhodné se zamyslet i nad tím, aby framework zbytečně neobsahoval nepotřebné součásti, které by v tomto případě byly spíše na obtíž a zanášely jednoduchou aplikaci zbytečnými složitostmi.TODO
+
+\paragraph{Angular} Ze všech zde porovnávaných frameworků se jedná o ten nejkomplexnější. Nabízí Dependency Injection, Services, Router, TODO
+
+\paragraph{React} Tím, že je React pouze knihovna a nikoliv framework, nenabízí tolik součástí jako Angular: neexistuje zde Dependency Injection\footnote{DI je do Reactu možné doplnit pomocí knihoven třetích stran}, Services, Router\footnote{Router je možné doplnit knihovnou}, vše je komponenta.TODO
+
+\paragraph{Vue.js} Co se nabízených komponent týká, Vue.js stojí mezi Angularem a Reactem. Vue.js je považováno za framework, a samo o sobě říká, že obsahuje \emph{to nejlepší z Angularu}. Například Router je možné použít jak oficiální vestavěný, tak jiný router třetí strany\cite{vue-routers}. Dependency injection je také dostupné jako knihovna třetí strany.TODO
+
+\paragraph{Ember.js} 
+
+\paragraph{Backbone.js} Backbone.js je z pěti porovnávaných 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
