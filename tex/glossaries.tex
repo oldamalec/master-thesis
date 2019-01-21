@@ -1,36 +1,48 @@
+\newglossaryentry{gBackend}{
+	name=Backend,
+	description={
+		Část aplikace, která se stará o ukládání dat, jejich zpracování a bussiness logiku. Většinou není přímo přístupná koncovému uživateli, ten k ní přistupuje přes frontend.
+	}
+}
+\newglossaryentry{gDepInj}{
+	name=Dependency Injection,
+	description={
+		Technika, která umožňuje "vložení" instance objektu, který poskytuje nějakou službu, do jiného objektu, který pak může danou službu efektivně používat.
+	}
+}
 \newglossaryentry{gFramework}{
 	name=Framework,
 	description={
 		Softwarová struktura, která slouží jako podpora pro pohodlnější programování. Může obsahovat podpůrné funkce, knihovny či nástroje pro efektivnější, bezpečnější a pohodlnější vývoj softwaru.
 	}
 }
-\newglossaryentry{gWebView}{
-	name=WebView,
+\newglossaryentry{gFrontend}{
+	name=Frontent,
 	description={
-		Komponenta nativní Android aplikace, která zobrazuje stanovenou URL jako svůj obsah. Používá se zejména v místech, kde je žádoucí zobrazovat obsah z webu, ale je potřeba přístup k funkcím zařízení, ke kterým není možné přístupovat z běžného webového prohlížeče.
-	}
-}
-\newglossaryentry{gTypeScript}{
-	name=TypeScript,
-	description={
-		Nadmnožina JavaScriptu, TODO
+		Část aplikace, s kterou přímo interaguje koncový uživatel či administrátor, typicky pomocí GUI. Většinou komunikuje s druhou, serverovou částí - backendem.
 	}
 }
 \newglossaryentry{gGitHub}{
 	name=GitHub,
 	description={
-		TODO
+		GitHub je webová služba podporující vývoj softwaru za pomoci verzovacího nástroje Git.
 	}
 }
 \newglossaryentry{gMiddleware}{
 	name=Middleware,
 	description={
-		TODO
+		Software realizující integraci mezi dvěma jinými systémy, typicky pomocí API.
 	}
 }
-\newglossaryentry{gDepInj}{
-	name=Dependency Injection,
+\newglossaryentry{gTypeScript}{
+	name=TypeScript,
 	description={
-		TODO
+		Nadmnožina JavaScriptu, která jej rozšiřuje především o statické typování proměnných a další atributy z OOP.
+	}
+}
+\newglossaryentry{gWebView}{
+	name=WebView,
+	description={
+		Komponenta nativní Android aplikace, která zobrazuje stanovenou URL jako svůj obsah. Používá se zejména v místech, kde je žádoucí zobrazovat obsah z webu, ale je potřeba přístup k funkcím zařízení, ke kterým není možné přístupovat z běžného webového prohlížeče.
 	}
 }

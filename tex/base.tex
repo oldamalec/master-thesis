@@ -8,7 +8,6 @@
 % TODO:
 % * Zvolit správné Prohlášení
 % * Ověřit jaký model Zebry je ve skladu
-% * Opravit autory online zdrojů
 % * Opravit footnotes v tabulkách
 
 % arara: xelatex: { shell: yes }
@@ -16,19 +15,21 @@
 % arara: biber
 % arara: xelatex: { shell: yes }
 % arara: xelatex: { shell: yes }
+% arara: xelatex: { shell: yes }
 \documentclass[thesis=M,czech,hidelinks]{../template/FITthesisXE}
 
-\usepackage{ graphicx }		% graphics files inclusion
+\usepackage{ booktabs }		% for prettier tables
 \usepackage{ dirtree } 		% directory tree visualisation
+\usepackage{ graphicx }		% graphics files inclusion
 \usepackage{ longtable } 	% tables which Pandoc use
 \usepackage{ lscape }		% to be able to rotate stuff
+\usepackage{ makecell }		% for newlines in table cells
+\usepackage{ mdframed }		% hack for bg colors in minted
 \usepackage{ metalogo }		% for \XeLaTeX
 \usepackage{ multicol }		% for multiple columns
 \usepackage{ multirow }		% for multiple rows
-\usepackage{ booktabs }		% for prettier tables
 \usepackage{ rotating }		% for rotating pictures
 \usepackage{ xcolor } 		% for custom colors
-\usepackage{ mdframed }		% hack for bg colors in minted
 \usepackage{ xevlna }		% for non-breakable whitespaces
 
 \bibliography{sources.bib}
@@ -48,7 +49,7 @@
 
 \begin{document}
 
-%\input{hyphenation.tex}
+\input{hyphenation.tex}
 
 \begin{introduction} \label{introduction}
 \input{0_uvod.tex}
@@ -58,6 +59,7 @@
 \chapter{Návrh uživatelského rozhraní}
 \input{x_volba_technologie.tex}
 \chapter{Implementace}
+\chapter{Testování}
 
 \begin{conclusion} \label{conclusion}
 TODO
