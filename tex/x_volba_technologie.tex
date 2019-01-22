@@ -2,10 +2,8 @@
 
 Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc.~Pavel Kovář, a frontend, který je předmětem této práce, je vhodné věnovat jistou část textu volbě vhodné technologie.
 
-\section{Cílová platforma}
-
-Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC20}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucího pracovníka. // TODO přepsat. Z důvodu jednoduchosti vývoje,  testování a aktualizaci bylo hned při úvodním návrhu určeno, že aplikace bude ve formě webové služby, která bude zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. // TODO přepsat
-Z toho důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
+\paragraph{Cílová platforma} Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC20}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucích pracovníků. Z důvodu jednoduchosti vývoje,  testování, možností aktualizací a obecně dobré zkušenosti z jiných projektů bylo hned při úvodním návrhu určeno, že aplikace bude tvořena formou webové služby, která bude na klientských zařízeních zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. Řídící pracovníci budou naopak moci využít přístupu odkudkoliv, kde budou připojeni k internetu pouze pomocí běžného webového prohlížeče.\\
+Z tohoto důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,7 +14,7 @@ Z toho důvodu jsou v následující rešerši zhodnocovány frameworky či knih
 
 V době psaní této práce patří mezi nejpopulárnější \cite{frameworks-github} \cite{frameworks-hackr} front-endové frameworky či knihovny Angular \cite{angular}, React \cite{react}, Vue.js \cite{vue}, Ember.js \cite{ember} a Backbone.js \cite{backbone}.
 
-\paragraph{Názvosloví} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework} při referenci jak frameworků, tak knihoven, z důvodu snížení opakování textu.\\
+\paragraph{Názvosloví} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework}, kterým budu označovat jak frameworky, tak knihovny, z důvodu snížení opakování textu.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,25 +38,6 @@ Datum vydání ovšem nelze objektivně ohodnotit bodovým ziskem. Na jedné str
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Počtu hvězdiček na GitHubu}
-
-Počet hvězdiček na GitHubu lze velmi volně interpretovat jako oblíbenost frameworku mezi vývojáři. Z tohoto důvodu již v tabulce \ref{table:compare:github_stars} hodnotím frameworky dle počtu získaných hvězdiček. Hodnocení přeskakuje bodový zisk 3, aby bylo zhodnoceno i absolutní množství hvězdiček, nejen pořadí.
-
-\begin{table}[h]
-\caption{Volba frameworku: Počet hvězdiček na GitHubu}
-\label{table:compare:github_stars}
-\begin{tabular}{lrrrrr}
-\hline
-                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-Počet hvězdiček\\na GitHubu\footnote{Stav k 17. 12. 2018} &   43,6k    & 117,7k                    & 122,3k                     & 20,3k                        & 27,3k                     \\
-\makecell[r]{\textit{bodový zisk}}       & \textit{2}                  & \textit{4}                & \textit{5}                 & \textit{0}                   & \textit{1}                  
-\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \subsection{Zázemí}
 
 Zatímco Angular a React jsou vyvíjeny velkými společnostmi: Googlem, respektive Facebookem, které zná každý, Ember.js je vyvíjen společností Tilde Inc. \cite{tilde}, která také není žádným startupem. Vue.js a Backbone.js by se naopak daly nazvat \emph{komunitními projekty}, neboť jsou vytvořeny převážně jedním autorem (Evan You, respektive Jeremy Ashkenas) a rozvíjeny a udržovány komunitou vývojářů. 
@@ -72,92 +51,6 @@ Na první pohled by se mohlo zdát, že z tohoto hodnocení budou vycházet lép
 \hline
                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
 Zázemí velké\\společnosti                & ano                         & ano                       & ne                         & částečně                     & ne                        \\
-\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Křivka učení}
-
-Složitost frameworku je důležitá metrika, neboť má dopady zejména na ekonomickou stránku projektu. Jednoduché prvotní vniknutí do problematiky frameworku ovšem také nemusí být nutně výhodou, pokud v něm je později problémové provést některé pokročilé věci, nebo i v pokročilém stádiu zdržuje svým nízkoúrovňovým přístupem k problémům, které jiné frameworky řeší automaticky.
-
-\paragraph{Angular, React a Vue.js} Přehled obtížnosti tří v současnosti nejčastěji skloňovaných frameworků přehledně shrnul Rajdeep Chandra ve své prezentaci \emph{My experience with Angular 2 , React and Vue} \cite{frameworks-3compare}, ze které vychází hodnocení v tabulce \ref{table:compare:difficulty}.
-
-\paragraph{Ember.js} Tento framework je dle V. Lascika \cite{ember-diffuculty} vhodný spíše pro projekty, na kterých pracuje velké množství vývojářů, a z toho důvodu jej v tabulce \ref{table:compare:difficulty} hodnotím nula body.
-
-\paragraph{Backbone.js} U této knihovny je důležité zmínit, že umožňuje vývojáři vytvořit si strukturu aplikace kompletně dle svého uvážení \cite{frameworks-rubygarage}. To ssebou může nést jak výhody pro zkušeného, tak nevýhody pro nezkušeného vývojáře, který v pokročilém stádiu vývoje může zjistit, že některou ze základních struktur navrhl špatně. Samotná obtížnost práce s touto knihovnou je ale poměrně nízká.
-
-\begin{table}[h]
-\caption{Volba frameworku: Obtížnost}
-\label{table:compare:difficulty}
-\begin{tabular}{lrrrrr}
-\hline
-                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-Obtížnost                                & vysoká                      & vyšší                     & nízká                      & velmi vysoká\footnote{za předpokladu, že na projektu bude pracovat pouze velmi malé množství vývojářů}                                                                                                                                  & nízká                     \\
-\makecell[r]{\textit{bodový zisk}}       & \textit{1}                  & \textit{2}                & \textit{4}                 & \textit{1}                   & \textit{4}                  
-\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Firemní stack}
-
-Další zvolenou metrikou je, jak daná technologie zapadá do firemní stacku firmy Jagu s.r.o., ve které bude tento nový projekt realizován. Firma se specializuje především na webové aplikace a middlewary na zakázku \cite{jaguweb}, a mezi nejpoužívanější technologie patří PHP (Nette, Laravel, Symfony), dále provozuje jeden informační systém postavený na Angularu a nově také menší aplikaci ve Vue.js. Tabulka \ref{table:compare:stack} shrnuje, jak jsou jednotlivé frameworky blízko k tomuto stacku.
-
-\begin{table}[h]
-\caption{Volba frameworku: Shoda s firemním stackem}
-\label{table:compare:stack}
-\begin{tabular}{lrrrrr}
-\hline
-                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-Shoda s\\firemním stackem                 & ano                         & ne                        & ano                        & ne                           & ne                        \\
-\makecell[r]{\textit{bodový zisk}}        & \textit{2}                  & \textit{0}                & \textit{2}                 & \textit{0}                   & \textit{0}                  
-\end{tabular}
-\end{table}
-
-Angular je zde ohodnocen třemi body, neboť se jedná o framework, který již firma používá. Vue.js je také ohodnoceno jedním bodem, protože vzniklo na základě Angularu a dá se také jednoduše do stávajícího projektu v Angularu integrovat.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Dostupnost vývojářů}
-
-Metrikou, kterou z hlediska udržitelnosti projektu a jeho ekonomických nákladů nelze opomenout, je dostupnost a cena vývojářů se zájmem o danou technologii.
-\\
-Tato data se ale obtížněji získávají, většina statistik naopak hovoří o nabídkách práce v dané technologii, nikoliv o počtu lidí, kteří s ní pracují. Z toho důvodu jsem se rozhodl založit tuto metriku na výsledcích vyhledávání osob v profesní síti LinkedIn - tak dokážeme zjistit alespoň hrubý počet lidí, kteří o sobě sami tvrdí, že jsou vývojáři v daném frameworku.
-\\
-Bodové zisky zde hrubě reflektují relativní počet nalezených profilů.
-
-\begin{table}[h]
-\caption{Volba frameworku: Počet vývojářů na LinkedIn}
-\label{table:compare:developers}
-\begin{tabular}{lrrrrr}
-\hline
-                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-Počet výsledků\\na dotaz\\"<název> developer"              & 344k       & 333k                      & 78k                        & 21k                          & 76k                       \\
-\makecell[r]{\textit{bodový zisk}}        & \textit{4}                  & \textit{4}                & \textit{2}                 & \textit{1}                   & \textit{2}                  
-\end{tabular}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Počet npm balíků}
-
-Npm \cite{npm} je repozitář javascriptových komponent, na kterém jsou sdíleny jednak kompletní řešení (jako například Angular, Rect, Vue.js a další), ale především různé rozšiřující pluginy do těchto frameworků. Z toho důvodu budu v následující metrice hodnotit, kolik balíků npm nabízí pro jednotlivé porovnávané frameworky.
-\\
-Bodové zisky hrubě odpovídají relativnímu počtu nalezených balíků.
-
-\begin{table}[h]
-\caption{Volba frameworku: Počet npm balíků}
-\label{table:compare:npm}
-\begin{tabular}{lrrrrr}
-\hline
-                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-Počet npm balíků                         & 26,6k                       & 73,4k                     & 20,6k                      & 6,4k                         & 1,5k                      \\
-\makecell[r]{\textit{bodový zisk}}       & \textit{2}                  & \textit{3}                & \textit{2}                 & \textit{1}                   & \textit{0}                 
 \end{tabular}
 \end{table}
 
@@ -185,11 +78,91 @@ Licence                                  & MIT                         & MIT    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Křivka učení}
+
+Složitost frameworku je důležitá metrika, neboť má dopady zejména na ekonomickou stránku projektu. Jednoduché prvotní vniknutí do problematiky frameworku ovšem také nemusí být nutně výhodou, pokud v něm je později problémové provést některé pokročilé věci, nebo i v pokročilém stádiu zdržuje svým nízkoúrovňovým přístupem k problémům, které jiné frameworky řeší automaticky.
+
+\paragraph{Angular, React a Vue.js} Přehled obtížnosti tří v současnosti nejčastěji skloňovaných frameworků přehledně shrnul Rajdeep Chandra ve své prezentaci \emph{My experience with Angular 2 , React and Vue} \cite{frameworks-3compare}, ze které vychází hodnocení v tabulce \ref{table:compare:difficulty}.
+
+\paragraph{Ember.js} Tento framework je dle V. Lascika \cite{ember-diffuculty} vhodný spíše pro projekty, na kterých pracuje velké množství vývojářů, a to z důvodu své komplexnosti. Proto jej pro použití v mé vznikající aplikaci hodnotím nula body.
+
+\paragraph{Backbone.js} U této knihovny je důležité zmínit, že umožňuje vývojáři vytvořit si strukturu aplikace kompletně dle svého uvážení \cite{frameworks-rubygarage}. To ssebou může nést jak výhody pro zkušeného, tak nevýhody pro nezkušeného vývojáře, který v pokročilém stádiu vývoje může zjistit, že některou ze základních struktur navrhl špatně. Samotná obtížnost práce s touto knihovnou je ale poměrně nízká.
+
+\begin{table}[h]
+\caption{Volba frameworku: Obtížnost}
+\label{table:compare:difficulty}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+Obtížnost                                & vysoká                      & vyšší                     & nízká                      & velmi vysoká\footnote{za předpokladu, že na projektu bude pracovat pouze velmi malé množství vývojářů}                                                                                                                                  & nízká                     \\
+\makecell[r]{\textit{bodový zisk}}       & \textit{1}                  & \textit{2}                & \textit{4}                 & \textit{1}                   & \textit{4}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Oficiální dokumentace}
+
+Hlavním zdrojem ke studiu frameworku by měla být jeho oficiální dokumentace, v této sekci tedy budu hodnotit kvalitu a obsáhlost oficiálního manuálu k jednotlivým frameworkům.
+
+\paragraph{Angular} Jedná se o velmi obsáhlou a dobře rozdělenou dokumentaci \cite{angular-doc}, která obsahuje i řadu příkladů a ve srozumitelné stromové struktuře vývojář jednoduše najde, co potřebuje.
+
+\paragraph{React} Dokumentace Reactu \cite{react-doc} je o poznání jednodušší než ta Angularu, avšak to je způsobeno tím, že React je pouze knihovna, kdežto Angular je plnohodnotný framework. Dokumentace je rozdělena na jednodušší úvod a pokročilejší techniky, je tedy snadné s ní pracovat.
+
+\paragraph{Vue.js} Nejmladší z frameworků má také velmi přátelskou dokumentaci \cite{vue-doc}, která je podobně jako u Angularu velmi bohatá a stromově strukturovaná.
+
+\paragraph{Ember.js} Oficiální manuál Ember.js \cite{ember-doc} je taktéž poměrně obsáhlý a strukturou připomíná dokumentaci Angularu a Vue.js. Obsahuje velké množství ukázek kódu a je logicky strukturován.
+
+\paragraph{Backbone.js} Poslední ze zkoumaných frameworků má oficiální dokumentaci \cite{backbone-doc} na první pohled méně atraktivní a pro nováčka může být matoucí. Oproti ostatním dokumentacím chybí například barevné zvýraznění důležitých bodů a další grafické strukturování textu.
+
+\begin{table}[h]
+\caption{Volba frameworku: Dokumentace}
+\label{table:compare:docs}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+\makecell{Kvalita oficiální\\dokumentace} & \makecell{velmi\\vysoká}   & vysoká                    & \makecell{velmi\\vysoká}   & \makecell{velmi\\vysoká}     & střední                   \\
+\makecell[r]{\textit{bodový zisk}}       & \textit{3}                  & \textit{2}                & \textit{3}                 & \textit{3}                   & \textit{1}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Testování}
+
+Testování je při vývoji softwaru velkým tématem. Mnoho vývojářů nerado testuje, jiní se naopak specializují pouze na testování. V moderních aplikacích je testování z větší části řešeno automatizovanými testy, které se spouští v rámci CI. Přestože se tato práce zabývá pouze frontendem, i ten je možné testovat již od úrovně Unit testů, vyvíjej jej pomocí TDD a nakonec samozřejmě vše zkontrolovat pomocí E2E testů.
+
+\paragraph{Angular} Nejkomplexější z frameworků nabízí přehlednou dokumentaci \cite{angular-test}, jak by měl být testován. Popisuje jak používat Unit testy i E2E testy a pro druhý zmíněný typ nabízí i samotný testovací framework: Protractor \cite{protractor}. Jeho testovatelnost tedy hodnotím jako velmi dobrou.
+
+\paragraph{React} Tato knihovna ve své dokumentaci na první pohled testování příliš neprosazuje, avšak stránku dedikovanou této kratochvíli \cite{react-test} lze nakonec také nalézt. Narozdíl od Angularu zde není poskytován dedikovaný framework určený přímo pro testování této knihovny. Stránka popisuje testovací frameworky, které používají různé společnosti: autoři Reactu - Facebook - zmiňují svůj Jest \cite{jest}, také je ale zmiňován Enzyme \cite{enzyme} od Airbnb. Konkrétní příklady použití bychom tedy dále hledali v dokumentacích těchto frameworků. Celkově je pro React k dispozici více různých testovacích frameworků, které opět pokrývají jak Unit, tak E2E testování.
+
+\paragraph{Vue.js} Ani Vue.js se neztratí co se Unit a E2E testů týká. Přímo ve své dokumentaci \cite{vue-test} popisuje spouštění Unit testů pomoci vestavěných příkazů, které interně používají buďto již zmiňovaný Jest nebo Mocha \cite{mocha}, a dále odkazuje na vlastní kompletní testovací knihovnu \cite{vue-test-utils}. Také je možné použít velké množství různých testových frameworků a aplikace ve Vue.js lze vyvíjet i pomocí TDD \cite{vue-tdd}.
+
+\paragraph{Ember.js} Tento framework se ve své dokumentaci věnuje testování poměrně intenzivně a zasvětil mu rovnou několik stránek \cite{ember-test}. Jako výchozí testovací framework představuje vlastní QUnit, avšak informuje, že je možné použít i frameworky třetích stran. Testování přehledně rozděluje na \emph{Unit}, \emph{Container}, \emph{Render}, a \emph{Application} testy a také popisuje jak testovat jednotlivé komponenty. Testování Ember.js tedy také hodnotím jako velmi dobré.
+
+\paragraph{Backbone.js} U posledního zkoumaného frameworku na první pohled není testování moc jasné. Oficiální stránka odkazuje na \emph{test suite} \cite{backbone-test}, což je ovšem stránka, která testy \emph{spouští} a ne popisuje. Zdá se, že na této stránce je možné otestovat svůj prohlížeč, zda podporuje veškeré funkcionality Backbone.js. Co se psaní testů týká, rozumněji již vypadá externí stránka \emph{Backbone.js Testing} \cite{backbone-testing}, která již zmiňuje i zde dříve probírané frameworky jako \emph{Mocha}. Ve výsledku tak bude pravděpodobně testování Backbone vypadat obdobně jako u ostatních frameworků, avšak přístup oficiální dokumentace snižuje jeho pochopení.
+
+\begin{table}[h]
+\caption{Volba frameworku: Testování}
+\label{table:compare:tests}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+\makecell[l]{Možnosti testování\\a jejich popis\\v dokumentaci} &\makecell[l]{velmi\\kvalitní} &\makecell[l]{velmi\\kvalitní} &\makecell[l]{velmi\\kvalitní} &\makecell[l]{velmi\\kvalitní} &matoucí \\
+\makecell[r]{\textit{bodový zisk}}       & \textit{2}                  & \textit{2}                & \textit{2}                 & \textit{2}                   & \textit{1}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Vývojářské nástroje}
 
 Dalším důležitým nástrojem při práci s frameworkem je možnost jeho debuggování. Framework by měl nabízet vlastní řešení, které vývojáři usnadní nalézt chybu, zjistit, jak se jeho kód chová či odladil rychlostní problémy.
 \\
-Všechny ze zde porovnávaných frameworků nabízejí tyto nástroje formou doplňku do prohlížeče, konkrétně se dále budeme bavit o doplňcích do Google Chrome.
+Všechny ze zde porovnávaných frameworků nabízejí tyto nástroje formou doplňku do prohlížeče, konkrétně se dále budeme bavit o doplňcích pro Google Chrome.
 
 \begin{table}[h]
 \caption{Volba frameworku: Devtools}
@@ -208,28 +181,39 @@ Hodnocení (z 5)                          & 3.9                         & 4.2   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Oficiální dokumentace}
+\subsection{Počet hvězdiček na GitHubu}
 
-Hlavním zdrojem ke studiu frameworku by měla být jeho oficiální dokumentace, v této sekci tedy budu hodnotit kvalitu a obsáhlost oficiálního manuálu k jednotlivým frameworkům.
+Počet hvězdiček na GitHubu lze velmi volně interpretovat jako oblíbenost frameworku mezi vývojáři. Z tohoto důvodu již v tabulce \ref{table:compare:github_stars} hodnotím frameworky dle počtu získaných hvězdiček.
 
-\paragraph{Angular} Jedná se o velmi obsáhlou a dobře rozdělenou dokumentaci \cite{angular-doc}, která obsahuje i řadu příkladů a ve srozumitelné stromové struktuře vývojář jednoduše najde, co potřebuješ.
-
-\paragraph{React} Dokumentace Reactu \cite{react-doc} je o poznání jednodušší než ta Angularu, avšak to je způsobeno tím, že React je pouze knihovna, kdežto Angular je plnohodnotný framework. Dokumentace je rozdělena na jednodušší úvod a pokročilejší techniky, je tedy snadné s ní pracovat.
-
-\paragraph{Vue.js} Nejmladší z frameworků má také velmi přátelskou dokumentaci \cite{vue-doc}, která je podobně jako u Angularu velmi bohatá a stromově strukturovaná.
-
-\paragraph{Ember.js} Oficiální manuál Ember.js \cite{ember-doc} je taktéž poměrně obsáhlý a strukturou připomíná dokumentaci Angularu a Vue.js. Obsahuje velké množství ukázek kódu a je logicky strukturován.
-
-\paragraph{Backbone.js} Poslední ze zkoumaných frameworků má oficiální dokumentaci \cite{backbone-doc} na první pohled méně atraktivní a pro nováčka může být matoucí. Oproti ostatním dokumentacím chybí například barevné zvýraznění důležitých bodů a další grafické strukturování textu.
-
-\begin{table}[h]
-\caption{Volba frameworku: Dokumentace}
-\label{table:compare:docs}
+\begin{table}[H]
+\caption{Volba frameworku: Počet hvězdiček na GitHubu}
+\label{table:compare:github_stars}
 \begin{tabular}{lrrrrr}
 \hline
                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-\makecell{Kvalita oficiální\\dokumentace} & \makecell{velmi\\vysoká}   & vysoká                    & \makecell{velmi\\vysoká}   & \makecell{velmi\\vysoká}     & střední                   \\
-\makecell[r]{\textit{bodový zisk}}       & \textit{3}                  & \textit{2}                & \textit{3}                 & \textit{3}                   & \textit{1}                  
+Počet hvězdiček\\na GitHubu\footnote{Stav k 17. 12. 2018} &   43,6k    & 117,7k                    & 122,3k                     & 20,3k                        & 27,3k                     \\
+\makecell[r]{\textit{bodový zisk}\footnote{Hodnocení přeskakuje bodový zisk 3, aby bylo zhodnoceno i absolutní množství hvězdiček, nejen pořadí.}}
+                                         & \textit{2}                  & \textit{4}                & \textit{5}                 & \textit{0}                   & \textit{1}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Počet npm balíků}
+
+Npm \cite{npm} je repozitář javascriptových komponent, na kterém jsou sdíleny jednak kompletní řešení (jako například Angular, Rect, Vue.js a další), ale především různé rozšiřující pluginy do těchto frameworků. Z toho důvodu budu v následující metrice hodnotit, kolik balíků npm nabízí pro jednotlivé porovnávané frameworky.
+\\
+Bodové zisky hrubě odpovídají relativnímu počtu nalezených balíků.
+
+\begin{table}[h]
+\caption{Volba frameworku: Počet npm balíků}
+\label{table:compare:npm}
+\begin{tabular}{lrrrrr}
+\hline
+                                         & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+Počet npm balíků                         & 26,6k                       & 73,4k                     & 20,6k                      & 6,4k                         & 1,5k                      \\
+\makecell[r]{\textit{bodový zisk}}       & \textit{2}                  & \textit{3}                & \textit{2}                 & \textit{1}                   & \textit{0}                 
 \end{tabular}
 \end{table}
 
@@ -256,6 +240,46 @@ Z pohledu volby frameworku může být na jednu stranu vhodné, aby bylo na tét
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Firemní stack}
+
+Další zvolenou metrikou je, jak daná technologie zapadá do firemní stacku firmy Jagu s.r.o., ve které bude tento nový projekt realizován. Firma se specializuje především na webové aplikace a middlewary na zakázku \cite{jaguweb}, a mezi nejpoužívanější technologie patří PHP (Nette, Laravel, Symfony), dále provozuje jeden informační systém postavený na Angularu a nově také menší aplikaci ve Vue.js. Tabulka \ref{table:compare:stack} shrnuje, jak jsou jednotlivé frameworky blízko k tomuto stacku.
+
+\begin{table}[h]
+\caption{Volba frameworku: Shoda s firemním stackem}
+\label{table:compare:stack}
+\begin{tabular}{lrrrrr}
+\hline
+                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+Shoda s\\firemním stackem                 & ano                         & ne                        & ano                        & ne                           & ne                        \\
+\makecell[r]{\textit{bodový zisk}}        & \textit{2}                  & \textit{0}                & \textit{2}                 & \textit{0}                   & \textit{0}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dostupnost vývojářů}
+
+Metrikou, kterou z hlediska udržitelnosti projektu a jeho ekonomických nákladů nelze opomenout, je dostupnost a cena vývojářů se zájmem o danou technologii.
+\\
+Tato data se ale obtížněji získávají, většina statistik hovoří o nabídkách práce v dané technologii, nikoliv o počtu lidí, kteří s ní pracují. Z toho důvodu jsem se rozhodl založit tuto metriku na výsledcích vyhledávání osob v profesní síti LinkedIn - tak dokážeme zjistit alespoň hrubý počet lidí, kteří o sobě sami tvrdí, že jsou vývojáři v daném frameworku.
+\\
+Bodové zisky zde hrubě reflektují relativní počet nalezených profilů.
+
+\begin{table}[h]
+\caption{Volba frameworku: Počet vývojářů na LinkedIn}
+\label{table:compare:developers}
+\begin{tabular}{lrrrrr}
+\hline
+                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
+Počet výsledků\\na dotaz\\"<název> developer"              & 344k       & 333k                      & 78k                        & 21k                          & 76k                       \\
+\makecell[r]{\textit{bodový zisk}}        & \textit{4}                  & \textit{4}                & \textit{2}                 & \textit{1}                   & \textit{2}                  
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Integrace se Sentry}
 
 Sentry \cite{sentry} je nástroj sloužící k automatickému i manuálnímu záznamu chyb v aplikacích. Ve firmě Jagu s.r.o. je využíván v řadě projektů a jeho nasazení bude vhodné i pro aplikaci řešenou v rámci této práce. Z toho důvodu je vhodné se podívat, jak hlubokou integraci je možné mezi jednotlivými frameworky a Sentry realizovat.\\
@@ -267,10 +291,9 @@ Při pohledu na přehled toho, jaké technologie Sentry podporuje v JavaScriptu 
 \begin{tabular}{lrrrrr}
 \hline
                                          & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-\makecell[l]{Oficiální integrace\\se Sentry} & ano                      & ano                       & ano                        & ano                          & ano                       \\
+\makecell[l]{Oficiální integrace\\se Sentry} & ano                     & ano                       & ano                        & ano                          & ano                       \\
 \end{tabular}
 \end{table}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -302,9 +325,9 @@ V tabulce \ref{table:compare:results} jsou sečteny body z předchozích dílč�
 \begin{tabular}{lrrrrr}
 \hline
                                           & Angular                     & React                     & Vue.js                     & Ember.js                     & Backbone.js               \\ \hline
-\makecell[r]{bodový zisk celkem}          & 21                          & 23                        & 25                         & 12                           & 11                  
+\makecell[r]{bodový zisk celkem}          & 23                          & 25                        & 27                         & 14                           & 12                  
 \end{tabular}
 \end{table}
 
-Výsledky rozdělují frameworky na dvě skupiny. V té vedoucí je trojice Angular, React a Vue.js, v pozadí poté zůstávají Ember.js a Backbone.\\
+Výsledky rozdělují frameworky na dvě skupiny. V té vedoucí je trojice Angular, React a Vue.js, v pozadí poté zůstávají Ember.js a Backbone.js. Na tomto místě je také vhodné znovu zmínit, že hodnocení frameworků probíhalo ve vztahu ke konkrétnímu projektu, který je cílem této práce, a také ve vztahu k firmě Jagu~s.r.o., která vývoj této aplikace zaštiťuje.\\
 První tři frameworky jsou seřazeny poměrně těsně za sebou, avšak nejlépe vyšel ze srovnání nejmladší Vue.js, který tímto volím jako framework, ve kterém budu na práci dále pracovat.
