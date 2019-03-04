@@ -679,5 +679,7 @@ of works or by adapting the Work (including translation), and at the same time m
 \newcommand\uv[1]{\quotedblbase #1\textquotedblleft}
 \newcommand{\code}[1]{\texttt{#1}}
 \definecolor{code-gray}{gray}{0.95}
-\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=code-gray,linewidth=0pt]}
-\AfterEndEnvironment{minted}{\end{mdframed}}
+\AtBeginEnvironment{minted}{%
+  \renewcommand{\fcolorbox}[4][]{#4}}
+% \BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=code-gray,linewidth=0pt]}
+% \AfterEndEnvironment{minted}{\end{mdframed}}

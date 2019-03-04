@@ -7,7 +7,6 @@
 
 % TODO:
 % * Zvolit správné Prohlášení
-% * Ověřit jaký model Zebry je ve skladu
 % * Opravit footnotes v tabulkách
 
 % arara: xelatex: { shell: yes }
@@ -57,13 +56,11 @@
 
 \chapter{Analýza požadavků}
 \chapter{Návrh uživatelského rozhraní}
-\input{x_volba_technologie.tex}
-\chapter{Implementace}
+\input{30_volba_technologie.tex}
+\input{40_implementace.tex}
 \chapter{Testování}
 
-\begin{conclusion} \label{conclusion}
-TODO
-\end{conclusion}
+\input{90_zaver.tex}
 
 \nocite{*}
 \printbibliography[title={Zdroje}]
@@ -77,6 +74,6 @@ TODO
 \chapter{Slovník pojmů}
 \printglossary[type=main]
 
-TODO přílohy
+\chapter{TODO Přílohy}
 
 \end{document}
