@@ -1,18 +1,11 @@
-\chapter{Volba technologie}\label{technology}
+\section{Volba technologie}\label{technology}
 
-Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc.~Pavel Kovář, a frontend, který je předmětem této práce, je vhodné věnovat jistou část textu volbě vhodné technologie.
+Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc.~Pavel Kovář, a frontend, který je předmětem této práce, je žádoucí věnovat jistou část textu volbě vhodné technologie.
 
 \paragraph{Cílová platforma} Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC25BJ}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucích pracovníků. Z důvodu jednoduchosti vývoje,  testování, možností aktualizací a obecně dobré zkušenosti z jiných projektů bylo hned při úvodním návrhu určeno, že aplikace bude tvořena formou webové služby, která bude na klientských zařízeních zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. Řídící pracovníci budou naopak moci využít přístupu odkudkoliv, kde budou připojeni k internetu pouze pomocí běžného webového prohlížeče.\\
 Z tohoto důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Frameworky a knihovny}
-
-V době psaní této práce patří mezi nejpopulárnější \cite{frameworks-github} \cite{frameworks-hackr} front-endové frameworky či knihovny Angular \cite{angular}, React \cite{react}, Vue.js \cite{vue}, Ember.js \cite{ember} a Backbone.js \cite{backbone}.
+\paragraph{Frameworky a knihovny} V době psaní této práce patří mezi nejpopulárnější \cite{frameworks-github} \cite{frameworks-hackr} front-endové frameworky či knihovny Angular \cite{angular}, React \cite{react}, Vue.js \cite{vue}, Ember.js \cite{ember} a Backbone.js \cite{backbone}.
 
 \paragraph{Názvosloví} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework}, kterým budu označovat jak frameworky, tak knihovny, z důvodu snížení opakování textu.\\
 
