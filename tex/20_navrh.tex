@@ -1,43 +1,11 @@
 \chapter{Návrh}
 
-\section{Návrh uživatelského rozhraní}
+\input{23_navrh_mockup.tex}
 
-TODO
+\input{25_navrh_hifi.tex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{26_navrh_hifi_testovani.tex}
 
-\section{Návrh funkčností aplikace}
-
-TODO
-
-\subsection{Undo}
-
-Undo, neboli možnost vrácení akce, tlačítko \emph{zpět}, \emph{vrátit} či \emph{stornovat}. Tím vším je myšlena možnost odvrátit poslední akci, kterou uživatel v systému provedl. Undo je svým způsobem alternativa potvrzovacím dialogům, u kterých bych se chtěl ještě na chvilku zastavit.
-
-\paragraph{Potvrzovací dialogy} Všichni je známe - modální okna, typicky s otázkou a dvěma akcemi: \emph{opravdu smazat/odeslat/\ldots} a \emph{storno}. Jsou používány tam, kde jejích potvrzení je většinou nevratné a dojde k provedení něčeho důležitého. Co když je ale provádění důležitých akcí stěžejní funkčností systému? V příkladu skladového systému jsou veškeré přesuny zboží, naskladnění, vyskladnění atp. důležité akce, u kterých by si měl skladník zkontrolovat, že realita odpovídá stavu v systému. Potvrzovací dialogy na všech těchto akcích ale mohou uživatele i zdržovat - akce, která je v systému vykonávána s vysokou frekvencí, by neměla stále dokola vyžadovat dvojité potvrzení. Nejen že to bude uživatele zdržovat, ale i samotná četnost zapříčiní, že potvrzovací dialog ztratí svůj účel - uživatel bude zvyklý jej \emph{ihned odkliknout}, aniž by se zamyslel nad tím, zda akci chce opravdu provést. (TODO zdroj?)
-
-\paragraph{Undo} Možnost vrátit akci zpět je svým způsobem volnější než potvrzovací dialog - nezdržuje dvojitým potvrzením, ale v případě nutnosti umožňuje špatné rozhodnutí vrátit. Většinou ale nedává moc času na rozmyšlenou - možnost vrátit akci se typicky zobrazuje pouze několik sekund. Také implementace je často mnohem složitější a vyžaduje řádný návrh a spolupráci prezenční a modelové či datové vrstvy.
-
-Při návrhu \emph{undo tlačítka} pro skladový systém jsme společně s Pavlem Kovářem\footnote{spoluautor celého řešení - zabývá se backendovou částí aplikace} zanalyzovali několik možností:
-\begin{enumerate}
-	\item \textbf{Fronta ve frontendu:} Frontendu by při provedení akce, která by podporovala undo, požadavek reálně neodeslal, ale uložil by jej k pozdějšímu odeslání - například za 5 sekund. Při kliku na undo by se odložené odeslání akce stornovalo, v opačném případě by se požadavek odeslal buďto po uplynutí stanového doby, nebo před provedením jiné další akce.\\\\
-	\emph{Zhodnocení řešení:} Jedná se o nejsnadnější implementaci - nevyžaduje žádné úpravy backendu a vše se řeší pouze na klientských zařízeních. S tím ale přichází i hlavní nedostatky tohoto řešení: Když klient ukončí či ztratí spojení se serverem, požadavek se reálně neodešle, přestože systém hlásí, že je odeslaný. Dále když jiný klient provede stejnou akci, dorazí pak na server obě a druhá nemůže být provedena - je potřeba o tom uživatele informovat a problém řešit. Oba problémy jsou poměrně zásadní, a tak byla tato varianta provedení zavržena.
-	\item \textbf{Fronta jako middleware:} Frontend by odesílal požadavky ihned, avšak mezi ním a backendem by existoval ještě prostředník: fronta ke zpracování. Ta by požadavky zachytávala a čekala s jejich reálným odesláním backendu. Chování by bylo podobné, jako kdyby s odesláním čekal frontend v předchozí variantě.\\\\
-	\emph{Zhodnocení řešení:} Jedná se o řešením, jak předcházet problémům s potenciální ztrátou připojení. Middleware by sloužil jako fronta pro všechny klienty serveru. Když pak klient ztratí či ukončí připojení, požadavek se provede, neboť middleware jej na backend odešle sám. Při ztrátě připojení by se uživateli, který by chtěl použít undo zobrazí informace o ztrátě připojení a informace, že požadavek již byl proveden a bohužel nemůže být stornován.\\
-	I zde ale přetrvává problém se synchronizací mezi více klienty - frontend by musel pro každý požadavek, který šel přes frontu, zpětně kontrolovat, že byl nakonec vykonán bezchybně a případně informovat uživatele. To je nepohodlné, ale na druhou stranu ne zcela nereálné řešení.
-	\item \textbf{Fronta v backendu:} Požadavky by se odesílaly na backend ihned, a ten by si sám držel frontu obdržených požadavků, ke kterým ještě může přijít požadavek na undo. Opět po uplynutí doby, nebo přijetí požadavku na potvrzení by se změny reálně provedly a potvrdily.\\\\
-	\emph{Zhodnocení řešení:} Třetí řešení je velmi podobné tomu druhému, změnou je, že když si bude frontu udržovat přímo backend, může ten s čekajícími požadavky již počítat při vracení dat jiným klientům (soft lock) - a tím předcházet nekonzistencím v datech: Když uživatel A vyskladní poslední kus výrobku, ale tento požadavek ještě čeká ve frontě, uživateli B se již bude zobrazovat, že je na skladě 0 kusů tohoto výrobků a nemůže ho tak vyskladnit duplicitně.\\
-	Problémem tohoto řešení je velmi velká náročnost na zpracování těchto zámků a poměrně vysoká šance na neúmyslné chyby v kódu. Z toho důvodu jsme nakonec tuto variantu také zavrhli.
-	\item \textbf{Změnové vektory v backendu:} Frontend by vše odesílal hned, backend by vše ihned zpracovával. Kromě zpracování by ale ukládal i změnové vektory, které by bylo možné zpětně odvolat - provést \emph{rollback}. Změnové vektory jsou technikou často používanou například v databázových strojích - veškeré změny jsou zaznamenávány a posléze je možné vše zpětně přehrát a vrátit tak předchozí stav (TODO zdroj?).\\\\
-	\emph{Zhodnocení řešení:} V běžné implementaci tato technika umožňuje navrátit stav \emph{celé databáze}, nikoliv pouze jednoho uživatele. Pokud by tedy chtěl undo použít pouze jeden klient, vrátil by se stav i ostatním uživatelům, které si undo vůbec nepřejí. Pro potřeby undo jednoho klienta by tak musely být provedeny mnohé úpravy, a ty by byly neúměrně náročné vůči výsledku. Z důvodu robustnosti tedy tuto variantu taktéž zavrhujeme.
-	\item \textbf{Přímá podpora undo v API:} Backendové metody by nativně podporovaly možnost zavolat na určité akce undo: u vybraných funkcí by byla příbuzná metoda, která by jako parametr přijímala identifikátor zaslaný jako výsledek předchozí akce. Jednotlivé požadavky by tak nebyly nijak zdržovány a vše by se provádělo ihned, a požadavek na vrácení změn by byl zpracován jako zcela nová akce.\\\\
-	\emph{Zhodnocení řešení:} Mezi výhody posledního z návrhů patří zejména to, že při něm není potřeba řešit konzistenci dat mezi více klienty, vše je ihned potvrzeno a změny se řeší nezávisle na předchozím požadavku. Nevýhodou je, že to není obecné řešení - je potřeba tyto metody implementovat pro všechny akce, které mají undo podporovat. Opět se ale jedná o reálně použitelné řešení, které bude implementováno pouze tam, kde to dává smysl.
-\end{enumerate}
-
-Po zhodnocení všech variant jsem se rozhodli jít prozatím cestou pátého návrhu - přímé podpory pouze u vybraných akcí. Důvodem je i fakt, že ve většině akcí by v systému ani chybu jít udělat \emph{nemělo} - tím jsme se posunuli od potvrzovacího dialogu, přes undo, až po \emph{prevenci chyb}. Například u vyskladnění vidí skladník jasný seznam položek, které má vyskladnit, a pokud nemá vše \emph{napípáno}, systému mu ani úkol dokončit nedovolí. U některých vybraných akcí půjde undo provést, a u zbylých, které vyhodnotím jako důležité a málo časté, kde nepůjde realizovat ani prevence chyb, ani undo, skončím u běžných potvrzovacích dialogů.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{27_navrh_funkci.tex}
 
 \input{30_volba_technologie.tex}
