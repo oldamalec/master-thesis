@@ -1,6 +1,6 @@
 \chapter{Implementace}\label{implementation}
 
-\section{Příprava kostry aplikace}
+\section{Obecné součásti aplikace}
 
 Pro instalaci základu projektu jsem vycházel z dokumentace \cite{vue-doc} a využil NPM \cite{npm}. Tím jsem získal základní kostru aplikace, kterou je možné spouštět ve vývojářském režimu (ten podporuje například hot-swapping, ale pro produkční prostředí se nehodí, neboť není rychlostně optimalizován). Nástroje pro tvorbu optimalizované verze jsou také samozřejmě dostupné - zatím ale nejsou pro mé použití potřeba.
 
@@ -11,7 +11,7 @@ Jelikož se zabývám aplikací středních rozměrů, je vhodné k tomuto zákl
 
 \subsection{Router}
 
-Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Jelikož Vue.js je zaměřeno na tvorbu SPA - Single Page Application, bez konfigurace routeru by se všechny obrazovky aplikace zobrazovaly pouze na URL \code{/} - pokročilý uživatel by tak nemohl zadat například adresu \code{/task/2345}, což je vhodné i při ladění chyb - tester může jednoduše poslat zprávu \emph{\uv{na této adrese je špatně dodavatel}}.
+Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Jelikož Vue.js je zaměřeno na tvorbu SPA - Single Page Application, bez konfigurace routeru by se všechny obrazovky aplikace zobrazovaly pouze na URL \code{/} - pokročilý uživatel by tak nemohl zadat například adresu \code{/task/2345}, což je vhodné i při ladění chyb - tester může jednoduše poslat zprávu \emph{\uv{na této adrese se špatně zobrazuje dodavatel}}.
 
 Podobně jako chceme mít hezké URL, pro uživatele, který bude aplikaci ovládat z prohlížeče (tedy ne z aplikace), je žádoucí nastavovat správné titulky stránek. K tomu sice ve Vue Routeru neexistuje nativní podpora, ale řešení je opravdu snadné - je popsáno v jednom z \emph{Issues} v repozitáři na GitHubu \cite{vue-router-title} a spočívá v doplnění titulků do meta atributů cest:
 
@@ -98,8 +98,10 @@ class SentryClient {
     }
 }
 
-const Sentry = new SentryClient();
+// TODO už je uplně jinak
 
+const Sentry = new SentryClient()
+;
 export default Sentry;
 \end{minted}
 \caption{Třída pro zasílání aplikačních chyb do Sentry} \label{code:sentry-vue}
@@ -175,8 +177,8 @@ Použití knihovny je pak obdobné jako známe z jiných jazyků. Máme definova
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{html}
-<div>
-    <h1>{{ $t("base.notFound") }}</h1>
+<div
+>    <h1>{{ $t("base.notFound") }}</h1>
     <router-link to="/">{{ $t("base.home") }}</router-link>
 </div>
 \end{minted}
@@ -263,4 +265,138 @@ this.$store.commit('setSnack', '<message to display>');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% TODO popsat nový vue.config.cz a vue ui - dashboard, deps, analyzet atp.
+\subsection{Hlídání konektivity}
+
+V moderních aplikacích, které veškerá data ukládají na API, je vhodné hlídat dostupnost tohoto API.\\
+Prvním krokem k realizaci této funkce bylo zjistit stav připojení - tedy zda je aplikace online, nebo offline. Jako první jsem našel vlastnost prohlížeče \code{window.navigator.onLine} \cite{online}, která by přesně o tomto měla informovat a navíc poskytuje i možnosti poslouchat její změny pomocí běžných JS eventů.\\
+Po hlubším prozkoumání TODO
+TODO kontrola konektivity (proč nepoužívat browser properities, vlastní check, jeho náročnost na síť)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Renderování formulářů}
+
+Ještě před tím, než jsem začal tvořit formuláře ve své diplomové práci, jsem shodou okolností potřeboval upravit několik formulářů v jiné firemní aplikaci, která funguje na podobných technologiích: backend je zcela oddělený a poskytuje REST API, frontend je poté napsán v Angularu. Při zjišťování, jak složitě se zde generují formuláře jsem ale zjistil, že pro svou práci chci rozhodně vymyslet lepší systém. Níže přikládám seznam, které věci je potřeba ve zmiňovaném projektu upravit, chce-li programátor přidat nový formulářový prvek:
+
+\begin{enumerate}
+    \item přidat atribut do modelové třídy,
+    \item nakódovat HTML, které atribut vypisuje,
+    \item přidat atribut do instance formuláře,
+    \item nastavovat výchozí obsah formuláře při načtení existujících dat z API,
+    \item nastavovat nový obsah modelu při ukládání nových dat na API,
+    \item nakódovat HTML, které umožňuje atribut měnit - tj. formulářový vstup.
+\end{enumerate}
+
+Celkem se tedy jedná o šest míst, kam je potřeba nový atribut zanést. Zde je ovšem na místě upozornit, že se rozhodně nejedná o problém Angularu, a že ve Vue.js není vše automaticky jednodušší - postup, jak jsem tento počet redukoval, by měl být použitelný v jakémkoliv Javascriptovém frameworku, a s většími úpravami pravděpodobně i v jiných jazycích.\\
+Co se mi zejména nelíbilo, byl fakt, že \emph{modelová třída} a \emph{instance formuláře} měly totožné atributy, tudíž se vůbec nemusí nastavovat jedna po druhé, ale můžeme použít například \code{Object.assign()} \cite{mdn-object-assign} pro nakopírování hodnot jednoho objektu do druhého. \emph{(Tato metoda sice není podporována v Android WebView, avšak napsat její ruční alternativu je triviální záležitost)}. Tím dokážeme odbourat nutnost nastavování konkrétních klíčů mezi instancí formuláře a modelovou třídou - tedy položky 4. a 5. výše uvedeného seznamu.\\
+Nutnost položky č. 2 - vykreslování v HTML - jsem tušil už od začátku. Tomuto je spíše kontraproduktivní se vyhýbat, neboť typicky každý atribut chceme vypsat nějak jinak, celá stránka je nějak strukturována atp. - tuto položku jsem tedy ponechal a smířil se s tím, že se bude u formulářů vždy kódovat ručně.\\
+Stále ale ještě máme nutnost nastavit atribut v modelové třídě, v instanci formuláře a formulář nějak vykreslovat - tedy na třech různých místech: dvakrát v Typescriptu a jedenkrát v HTML. Má představa o jednoduše konfigurovatelném formuláři se ubírala směrem k vytvoření pouze jednoho konfiguračního souboru, odkud by se všechny tyto 3 věci generovaly, což se mi nakonec podařilo, a seznam jsem tedy stáhl na:
+
+\begin{enumerate}
+    \item nastavit atribut v konfiguračním souboru,
+    \item nakódovat HTML, které atribut vypisuje.
+\end{enumerate}
+
+Důležité je zde zdůraznit, že jsem odebral i nutnost vytvořit HTML kód formuláře: pokud po formulářovém prvku nejsou vyžadovány žádné nestandardní požadavky, jsou všechny atributy formuláře zpracovávány a vykresleny zcela automaticky pomocí komponenty, kterou jsem pro tento účel vytvořil.\\
+V tuto chvíli je na místě projít ukázku kódu (\ref{code:formfields:def}), která znázorňuje, jak může vypadat \emph{definice formuláře} pro jednoduché skladové umístění:
+
+\begin{listing}[h]
+\begin{minted}[linenos,frame=lines]{js}
+const stockLocationForm = {
+    name: '',
+    code: null
+};
+
+const stockLocationFormRender = {
+    name: {
+        icon: 'label',
+        max: 50,
+        required: true
+    },
+    code: {
+        icon: 'line_weight',
+        max: 40,
+        hint: 'stocks.locations.codehint'
+    }
+};
+
+export {stockLocationForm, stockLocationFormRender};
+\end{minted}
+\caption{Příklad definice formuláře: jednoduché skladové umístění} \label{code:formfields:def}
+\end{listing}
+
+Rozdělení na \code{Form} a \code{FormRender} je zvoleno z toho důvodu, aby se oddělily logické celky: model (\code{Form}) a definice zobrazení (\code{FormRender}). Model se takto může celý při uložení poslat na API a při načtení se naopak celý přepíše daty z API. Definice zobrazení pak obsahuje informace, jak má samotný formulářový prvek vypadat a chovat se.\\
+Takovýto konfigurační soubor se poté pouze načte v komponentě, která má formulář zobrazovat, a zde předá výše zmiňované komponentě pro standardizované vykreslování formulářů.\\
+Seznam konfigurovatelných možností pro každý atribut formuláře zahrnuje například:
+
+\begin{itemize}
+    \item \emph{label:} název formulářového prvku - pokud není vyplněný, hledá se definice překladu dle názvu klíče atributu,
+    \item \emph{icon:} označení ikony z Material Icons, která se bude zobrazovat vlevo od formulářového prvku,
+    \item \emph{hint:} cesta k překladu hlášky, která se bude zobrazovat pod formulářovým prvkem,
+    \item \emph{items:} pole s hodnotami, které budou na výběr, jedná li-se o prvek typu \code{select} nebo \code{autocomplete},
+    \item \emph{loading:} booleanovská hodnota, zda má mít prvek načítací stav. Typicky se nenastavuje v konfiguračním souboru, ale může být ovládáno z komponenty, která formulář vykresluje,
+    \item \emph{multiple:} booleanovská hodnota, která určuje, zda prvek typu \code{select} nebo \code{autocomplete} může mít více vybraných hodnot současně,
+    \item \emph{readonly:} booleanovská hodnota určující, zda má být prvek pouze pro čtení,
+    \item \emph{rules:} pole pravidel pro validaci prvku (pravidla \code{max} a \code{required} je pro zjednodušení možné zadat i napřímo v konfiguraci),
+    \item \emph{createNew:} co se má zobrazit a případně stát, pokud je prvek typu \code{select} nebo \code{autocomplete} a vyhledávání přípustných prvků nenalezlo žádnou shodu na uživatelův vstup,
+    \item \emph{autocomplete:} struktura obsahující metody, které se mají zavolat na API, a které následná data zpracují a automaticky tak vytvoří seznam \emph{items}, které budou nabízeny ve formulářovém prvku typu \code{autocomplete}.
+\end{itemize}
+
+Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat různé typy vstupů, ale také je poměrně slušně upravovat a přizpůsobovat - pro mé potřeby vykreslování především formulářů na tvorbu či úpravu entit, které se v systému nacházejí: tj. skladů, dodavatelů, produktových karet, odběratelů, umístění apod., a dále formulářů zadávání a schvalování úloh, které na skladě probíhají, je tato komponenta a její konfigurace naprosto dostačující a do budoucna hlavně velmi snadně rozšiřitelná a konfigurovatelná. Ukázka formuláře vytvořeného přes tuto jednotnou komponentu je dostupná v příloze TODO
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+TODO popsat nový vue.config.js a vue ui - dashboard, deps, analyzet atp.
+
+TODO JS Flow
+
+TODO Renderer formulářů
+
+TODO text filtry
+
+https://itnext.io/yes-this-is-how-to-cache-pages-by-url-with-vue-vue-router-and-keep-alive-component-697ed76896e8
+
+TODO kontextové menu
+
+TODO exporty co CSV a JS
+
+TODO renderer tabulek
+
+TODO barvy accent a secondarz ale idempotence
+
+TODO polyfills https://cli.vuejs.org/guide/browser-compatibility.html
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Funkční specifikace}
+
+// TODO jednotlivé úlohy atp.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Perličky z vývoje}
+
+\subsection{Špatně importované ikony}
+
+Když jsem byl zhruba v polovině tvorby první použitelné verze aplikace, vyšla aktualizace knihovny \emph{Vuetify}, která z verze 1.x poskočila na verzi 2.0. To ssebou neslo poměrně hodně \emph{breaking changes} \cite{vuetify-2-upgrade}, které jsem ale postupně všechny prošel a aplikaci upravil, takže brzy opět fungovala na nové verzi Vuetify.\\
+Po nějakém čase jsem si ale všiml, že u checkboxů a dalších formulářových prvků chybí některé jejich součásti - například u checkboxu to bylo hodně výrazné - tam chyběl celý zaškrtávací čtvereček a byl vidět pouze \emph{label}. Nejprve jsem problém ignoroval s tím, že se pravděpodobně jedná o chybu knihovny, a v některé z dalších verzí bude vše opraveno.\\
+Když však ale ani po měsíci nebyly checkboxy stále vidět, začal jsem hledat příčinu problému. Samozřejmě jsem nejprve nahlížel do \emph{Nástrojů vývojáře} v prohlížeči, ale tam jsem nic zajímavého nezjistil - pouze to, že z nějakého důvodu se v mé aplikaci narozdíl od oficiální dokumentace Vuetify \cite{vuetify-doc-checkbox} (kde checkboxy samozřejmě fungovaly), nerenderuje kus HTML, který je má na starost. Založil jsem si tedy nový lokální projekt s Vue.js + Vuetify, kde checkboxy samozřejmě také fungovaly. Postupně jsem tedy začal odebírat různé závislosti z npm, abych přišel na to, která knihovna tento problém způsobuje. Při tomto procesu jsem rovnou zauditoval, zda opravdu potřebuji všechny dříve používané závislosti, a upravil i některé kusy kódu tak, aby závislosti již nebyly potřebné, a tedy jsem kód vlastně zefektivnil a zmenšil velikost výsledné aplikace. Stále jsem ale nemohl přijít na to, proč nefungují checkboxy.\\
+Teprve asi po 6 hodinách a asi 40x přeinstalovanými všemi závislostmi, jsem se dostal k importu \emph{Material Design Icons} \cite{mdi}. Vuetify ve verzi 2.0 přidalo do možností své konfigurace klíč, který určuje, který ikonový font se má použit. Při migraci na novou verzi jsem použil ukázkové nastavení této hodnoty, tedy \uv{mdi}. V žádném případě mě totiž nenapadlo, že \emph{Material Design Icons (mdi)} a \emph{Material Icons (md)} není to samé!\\
+Po chvilce dalšího ladění s importem ikonek vyšlo najevo, že nastavení \uv{mdi} není kompatibilní s načítáním ikon z CDN Googlu, ale musí se použít balíček z npm. V případě, že chcete načítat ikonky z CDN, musí být hodnota \emph{iconfont} nastavena pouze na \uv{md}. Celý problém, na kterém jsem strávil tolik hodin a nechápavých výrazů šel tedy opravit diffem z ukázky kódu \ref{code:mdi:diff}.
+
+\begin{listing}[h]
+\begin{minted}[linenos,frame=lines]{js}
+-    iconfont: 'mdi',
++    iconfont: 'md',
+\end{minted}
+\caption{Diff nastavení fontu ikonek ve Vuetify} \label{code:mdi:diff}
+\end{listing}
