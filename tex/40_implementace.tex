@@ -40,6 +40,27 @@ router.beforeEach((to, from, next) => {
 \caption{Nastavování titulků stránek pomocí Vue routeru - úprava instance routeru} \label{code:vue-router-title2}
 \end{listing}
 
+Další úpravou routeru, kterou jsem do jisté míry realizoval po svém, je generování drobečkové navigace. Vue Router ve spojení s Vuetify nemají nativní podporu pro zjišťování rodičovských stránek, a tak jsem si lehkou úpravou a vlastní komponentou pro vykreslování \emph{Breadcrumbs} toto zautomatizoval:\\
+Každá definovaná routa má nastaveného rodiče, ke kterému poskytuje \emph{getter}. Ve vykreslování drobečkové navigace se poté na aktuální routě zjišťují rekurzivně její rodiče, a včetně jejich parametrů se z nich zpětně tvoří celý strom navigace.\\
+Co se na první pohled může zdát jednoduché, se zkomplikuje ve chvíli, kdy chceme mít v cestě parametrizovanou stránku, například URL \code{/stocks/1/locations/12/update} odpovídá definici cesty v routeru \code{/:stockId(\\\\d+)/locations/:locationId(\\\\d+)/update}. Chceme-li použít navigaci zpět, je potřeba v definici routy nahradit identifikátory jejich reálnými hodnotami, které ale naštěstí Vue Router poskytuje i za runtime. Funkce pro vytvoření jednoho odkazu, ze kterých se skládá drobečková navigace, je znázorněna v ukázce kódu \ref{code:router:buildPath} - jejími argumenty jsou definice cesty v routě a objekt s aktuálními hodnotami parametrů.
+
+\begin{listing}[H]
+    \begin{minted}[linenos,frame=lines]{javascript}
+function buildPath(pathWithPlaceholders, parameters) {
+    let routePath = pathWithPlaceholders.replace(/\([^/]+\)/g, '');
+    const matches = routePath.match(/(:[a-zA-Z]+\/)|(:[a-zA-Z]+$)/g);
+    if (matches !== null) {
+        for (const match of matches) {
+            const matchParam = match.replace(/\//, '').replace(/:/, '');
+            routePath = routePath.replace(match, parameters[matchParam] + '/');
+        }
+    }
+    return routePath;
+}
+\end{minted}
+\caption{Automatické generování drobečkové navigace, včetně parametrizovaných cest} \label{code:router:buildPath}
+\end{listing}
+
 \subsection{Webpack}
 
 Webpack \cite{webpack} je software, který zpracovává součásti webových aplikací a tvoří z nich balíčky vhodné pro webové prohlížeče. Primárně je zaměřen na Javascript, ale dokáže zpracovávat i řadu dalších formátů, přes styly v css či sass, obrázky v png, jpeg, svg či konfigurace v json, yaml a dalších.\\
