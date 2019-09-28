@@ -1,15 +1,5 @@
 \chapter{Testování}\label{testing}
 
-\section{Testování prototypu}
+\input{51_testovani_hifi.tex}
 
-TODO
-
-\section{Testování aplikace}
-
-\subsection{První testování výsledné aplikace - během vývoje s odbornou osobou}
-
-První uživatelské testování výsledné aplikace proběhelo při jejím vývoji - 19. 9. 2019 - v době testu byly připravené základní možnost vkládání a úprav většiny entit v systému (skladové položky, dodavatelé atp.) a necelé čtyři ze stěženích úloh - příjem dodávky, naskladnění, inventura a část přesunu zboží.\\
-Aplikaci testovala osoba, která mimo jiné činnosti pracuje také se starým skladovým systémem Sysel v roli vedoucího skladu.\\
-Testování proběhlo při neformálním setkání v běžné kanceláři, testera jsem instruoval k tomu, aby použil svůj notebook pro zobrazení režimu správce skladu, a mobilní telefon pro roli skladníka. Zatímco na počítači bylo vše v pořádku, neboť byl použit Google Chrome, ve kterém aplikaci spouštím i při vývoji, na mobilním zařízení nejprve nastal malý problém, a to z důvodu použití prohlížeče \emph{Samsung Internet}, který nepodporuje některé moderní Javascriptové konstrukce, na které aplikace spoléhá. Ačkoliv toto nebude pro samotné použití aplikace problém, protože cílové zařízení pro skladníky je jasně dané a aplikace se tam bude otvírat ve WebView, i přesto není na škodu zachovat kompatibilitu i s jinýmy mobilními prohlížeči, třeba i pro potřeby vedoucích, aby taktéž mohli pracovat z mobilních zařízení. Již před testováním jsem věděl, že je potřeba zavést nějakou detekci prohlížečů a případně uživatele informovat o nekompatibilitě aplikace se zvoleným browserem, ale po této skutečnost jsem ještě zvýšil této úpravě prioritu.\\
-Výstupem z tohoto testování vývojové verze aplikace je seznam postřehů, chyb a návrhů na zlepšení, které jsou k naleznutí v příloze \ref{ap:testing_notes}.\\
-Zde je vhodné napsat, že zhruba pětinu všech požadavků a chyb jsem nějakým způsobem evidoval buďto formou \emph{TODO} přímo v kódu aplikace, nebo kartami v Trellu, avšak pro kompletnost zápisu jsem je ponechal i tam.
+\input{54_testovani_aplikace}

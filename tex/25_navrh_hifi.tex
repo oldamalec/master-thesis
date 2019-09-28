@@ -1,7 +1,7 @@
 \section{Návrh uživatelského rozhraní - HiFi prototyp}
 
-Dalším krokem návrhu uživatelského rozhraní byla tvorba HiFi prototypu, neboli aplikace, která je již vytvořena za použití některých technologií cílové platformy, avšak neobsahuje backend - neukládá žádná data a vždy zobrazuje pouze předpřipravený obsah.\\
-Hi-fi prototyp jsme opět realizovali jako tým v rámci předmětu MI-NUR, avšak přípravu technologie jsem provedl já samostatně a její realizace stojí za zmínku:
+Dalším krokem návrhu uživatelského rozhraní byla tvorba HiFi prototypu, neboli aplikace, která je již vytvořena za použití některých technologií cílové platformy, avšak neobsahuje backend - neukládá žádná data a vždy zobrazuje pouze předpřipravený obsah - vždy však musí správně reagovat na interakci uživatele.\\
+Hi-fi prototyp jsme opět realizovali jako tým v rámci předmětu MI-NUR, avšak přípravu technologie jsem provedl já samostatně a její realizace stojí za zmínku.
 
 \subsection{Technologie použitá v Hi-Fi prototypu}
 
@@ -79,4 +79,11 @@ function insertParameters(parent) {
 \caption{Funkce pro načtení obsahu komponent Hi-Fi prototypu, včetně podkomponent} \label{code:hifi-js}
 \end{listing}
 
-Funkce \code{loadDynamicContent} z ukázky kódu \ref{code:hifi-js} funguje tak, že projde existující kód (výchozí je vždy \code{index.html} z ukázky kódu \ref{code:hifi-html}) a veškeré výskyty tříd \code{něco-include} se snaží nahradit obsahem souboru \code{něco.html} ze složky \code{components/}. Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index.html} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Naopak například v Mozilla Firefoxu je CORS v tomto ohledu volnějši, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index.html}.
+Funkce \code{loadDynamicContent} z ukázky kódu \ref{code:hifi-js} funguje tak, že projde existující kód (výchozí je vždy \code{index.html} z ukázky kódu \ref{code:hifi-html}) a veškeré výskyty tříd \code{něco-include} se snaží nahradit obsahem souboru \code{něco.html} ze složky \code{components/}. Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index.html} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Naopak například v Mozilla Firefoxu je CORS v tomto ohledu volnějši, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index.html}.\\
+Zdrojové kódy Hi-Fi prototypu, který následně v tomto \uv{frameworku} vznikl, jsou dostupné na přiloženém médiu a také v repozitáři na Gitlab FIT \cite{gitlab-hifi}. Stejně jako u Lo-Fi prototypu, i zde vkládám obrazovku naskladnění přímo do textu jako obrázek \ref{picture:hifi}.\\
+Tento prototyp byl podroben uživatelskému testování, které je z důvodu logické struktury práce obsaženo v kapitole \ref{testing}, přestože chronologicky proběhlo ještě před dalšími návrhovými procesy, které budu popisovat v následujících sekcích.\\
+
+\begin{figure}[]
+\includegraphics[height=0.6\textheight]{../png/hifi/naskladneni.png}
+\caption{Rozhraní skladníka pro naskladňování položek: Hi-Fi prototyp} \label{picture:hifi}
+\end{figure}

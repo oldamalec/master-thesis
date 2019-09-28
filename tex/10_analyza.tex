@@ -31,7 +31,7 @@ Role vedoucího:
 	\item sledovat stav probíhajících a uzavřených úloh.
 \end{itemize}
 
-Tyto požadavky vychází ze stávající aplikace Sysel a jejich procesy měly zůstat zachovány, proto jsme konkrétní use-case a detailní procesy navrhli na základě průchodů současného systému. Diagramy, které jsou výstupem této části analýzy jsou součástí přílohy XY TODO.
+Tyto požadavky vychází ze stávající aplikace Sysel a jejich procesy měly zůstat zachovány, proto jsme konkrétní use-case a detailní procesy navrhli na základě průchodů současného systému. Diagramy, které jsou výstupem této části analýzy jsou součástí přílohy \ref{ap:diagram:storekeeper}.
 
 \section{Analýza nových požadavků}
 
@@ -52,5 +52,10 @@ Podobně jako se u Logistiky má ukládat čas, po který zboží leželo v Logi
 
 \subsection{Rozhraní pro nemobilní zařízení}
 
-Současný systém je navržen mobile-first, což by mělo být zachováno - skladníci používají mobilní zařízení se zabudovanou čtečkou. Toto rozhraní se ale prakticky vůbec nezmění i při použití větší obrazovky - na tabletech je rozhraní ještě poměrně použitelné, ale na notebooku či stolním počítači je zobrazení přinejmenším \emph{neoptimalizované} - neexistuje zde žádná práce s horizontálním místem, vše je řazeno vertikálně. TODO screen?\\
+Současný systém je navržen mobile-first, což by mělo být zachováno - skladníci používají mobilní zařízení se zabudovanou čtečkou. Toto rozhraní se ale prakticky vůbec nezmění i při použití větší obrazovky - na tabletech je rozhraní ještě poměrně použitelné, ale na notebooku či stolním počítači je zobrazení přinejmenším \emph{neoptimalizované} - neexistuje zde žádná práce s horizontálním místem, vše je řazeno vertikálně. Jako ukázku přikládám screenshot úryvku domovské obrazovky vedoucího skladu (obrázek \ref{picture:sysel:vertical}), obsahující náhled na reálný stav používaného skladu, s anonymizovanými daty.\\
 Požadavkem tedy je, aby rozhraní bylo plně responzivní - skladník sice typicky na počítači opravdu používán nebude, ale vedoucí skladu by měl mít možnost volně přecházet mezi různými zařízeními.
+
+\begin{figure}[]
+\includegraphics[width=\textwidth]{../png/sysel/vertical.png}
+\caption{Ukázka špatné práce s horizontálním místem ve starém skladovém systému} \label{picture:sysel:vertical}
+\end{figure}

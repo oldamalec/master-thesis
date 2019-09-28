@@ -90,47 +90,57 @@ TODO
 \subsection{Sentry}
 
 Sentry \cite{sentry} je webová služba pro sledování chyb, které v aplikaci nastanou. Při použití v produkčním prostředí může vývojář díky Sentry o chybě vědět ještě dříve, než ji uživatel nahlásí, a to včetně všech detailů, jako například jaké kroky chybě předcházely, prostředí, ve kterém k chybě došlo a mnoho dalších.\\
-Integrace s Vue.js je přímo podporována, a tak je integrace se Sentry záležitostí několika řádků kódu. V ukázce kódu \ref{code:sentry-vue} je vidět třída, kterou v projektu používám.
+Integrace s Vue.js je přímo podporována, a tak je integrace se Sentry záležitostí několika řádků kódu. V ukázce kódu \ref{code:sentry-vue} je vidět služba, kterou v projektu používám.
 
 \begin{listing}[H]
 \begin{minted}[linenos,frame=lines]{javascript}
-import Vue from 'vue'
-import Raven from 'raven-js';
-import RavenVue from 'raven-js/plugins/vue';
-import Env from '@/service/Environment'
+import Vue from "vue";
+import * as SentryService from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
+import {Env} from "@/service/Environment";
+import {Store} from "@/service/store/Store";
 
-class SentryClient {
+const Sentry = {
 
-    #client = undefined;
+    enableInDev: false, // Just for quick testing
 
-    constructor() {
-        if (Env.isProduction()) {
-            // When this is enabled, there is **no console output**
-            this.#client = Raven.config('<url>')
-                .addPlugin(RavenVue, Vue)
-                .install();
+    init() {
+        if (Env.isProduction() || this.enableInDev) {
+            // When this is enabled, there is **no console output** https://github.com/vuejs/vue/issues/8433
+            SentryService.init({
+                dsn: '<url>',
+                integrations: [
+                    new Integrations.Vue({
+                        Vue
+                    }),
+                ],
+            });
         }
-    }
+    },
+
+    registerUser() {
+        SentryService.configureScope(scope => {
+            scope.setUser({
+                "id": Store.getters['oauth/getUserId'],
+                "fullname": Store.getters['oauth/getUserFullName']
+            });
+        });
+    },
 
     captureMessage(msg, options) {
-        if (Env.isProduction() && this.#client !== undefined) {
-            this.#client.captureMessage(msg, options);
+        if ((Env.isProduction() || this.enableInDev)) {
+            SentryService.captureMessage(msg, options);
         }
     }
-}
+};
 
-// TODO už je uplně jinak
-
-const Sentry = new SentryClient()
-;
-export default Sentry;
+export {Sentry};
 \end{minted}
-\caption{Třída pro zasílání aplikačních chyb do Sentry} \label{code:sentry-vue}
+\caption{Služba pro zasílání aplikačních chyb do Sentry} \label{code:sentry-vue}
 \end{listing}
 
-\paragraph{Používání \code{class} a \code{\#} v JS kódu} V ukázce kódu \ref{code:sentry-vue} je použito klíčové slovo \code{class}, což je konstrukce představena až ve standardu ECMAScript 2015 \cite{js-class} a výsledný kód se chová totožně jako třídní objekty z jiných jazyků. Dále se uvnitř třídy vyskytuje proměnná začínající symbolem \code{\#} - zde se jedná o \emph{proposed feature} \cite{js-proposed-private} do budoucí verze ECMAScript a jedná se o privátní proměnné - opět tak jak je známe z jiných jazyků.
-
-Samotné zavedení třídy z ukázky kódu \ref{code:sentry-vue} zajistí, že veškeré chyby, které vzniknout v produkčním prostředí, jsou automaticky zaslání do Sentry včetně veškerých detailů. Občas je ale vhodné odeslat i uživatelskou zprávu, která nemusí nutně být chybová, může jít pouze o informativní zprávu. Sentry client toto umožňuje pomocí metody \code{captureMessage}, kterou výše zmíněné třída lehce obaluje. Použití v projektu je zaznamenáno v ukázce kódu \ref{code:sentry-vue-capture}.
+Samotné zavedení služby (spuštění metody \code{init}) z ukázky kódu \ref{code:sentry-vue} zajistí, že veškeré chyby, které vzniknout v produkčním prostředí, jsou automaticky zaslány do Sentry, včetně veškerých detailů. Občas je ale vhodné odeslat i uživatelskou zprávu, která nemusí nutně být chybová, může jít pouze o informativní zprávu. Sentry client toto umožňuje pomocí metody \code{captureMessage}, kterou výše zmíněné služba lehce obaluje. Použití v projektu je zaznamenáno v ukázce kódu \ref{code:sentry-vue-capture}.\\
+Poslední metodou, kterou tato služba nabízí, je \code{registerUser}, díky které obsahují zasílané chyby a zprávy také informace o uživateli, který byl zrovna v aplikace přihlášen. Tato metoda je zavolána vždy po přihlášení uživatele, aby se správně měnil kontext například při odhlášení a přihlášení někoho jiného.
 
 \begin{listing}[H]
 \begin{minted}[linenos,frame=lines]{javascript}
@@ -369,6 +379,24 @@ Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat r
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Realizace podpory pro undo}\label{implementation:undo}
+
+Jak jsme s Pavlem rozhodli v návrhové části (sekce \ref{draft:undo}), undo je realizováno přímou podporou u vybraných akcí.\\
+Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa výrobců zboží}, u které je možné procházet kompletní historii změn, a tedy i provádět undo. Základní implementace rozšiřuje běžné \emph{snack messages} přidáním tlačítka \uv{vrátit} (obrázek \ref{picture:undo}). Takovýto toast message má nastavenou zvýšenou či neomezenou životnost, nezmizí tedy během pár sekund, jako ty ostatní. Po využití funkce vrácení se po úspěšném dokončení zobrazí buďto obrázek \ref{picture:undo-after}, či případně chybová hláška.
+
+\begin{figure}[]
+\includegraphics[width=0.6\textwidth]{../png/app/undo_snack.png}
+\caption{Undo: Možnost vrácení provedených změn} \label{picture:undo}
+\end{figure}
+
+\begin{figure}[]
+\includegraphics[width=0.6\textwidth]{../png/app/undo_snack_after.png}
+\caption{Undo: Potvrzení vrácení provedených změn} \label{picture:undo-after}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 TODO popsat nový vue.config.js a vue ui - dashboard, deps, analyzet atp.
 
@@ -421,3 +449,4 @@ Po chvilce dalšího ladění s importem ikonek vyšlo najevo, že nastavení \u
 \end{minted}
 \caption{Diff nastavení fontu ikonek ve Vuetify} \label{code:mdi:diff}
 \end{listing}
+
