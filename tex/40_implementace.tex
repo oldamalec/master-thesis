@@ -2,7 +2,7 @@
 
 \section{Obecné součásti aplikace}
 
-Pro instalaci základu projektu jsem vycházel z dokumentace \cite{vue-doc} a využil NPM \cite{npm}. Tím jsem získal základní kostru aplikace, kterou je možné spouštět ve vývojářském režimu (ten podporuje například hot-swapping, ale pro produkční prostředí se nehodí, neboť není rychlostně optimalizován). Nástroje pro tvorbu optimalizované verze jsou také samozřejmě dostupné - zatím ale nejsou pro mé použití potřeba.
+Pro instalaci základu projektu jsem vycházel z dokumentace \cite{vue-doc} a využil NPM \cite{npm}. Tím jsem získal základní kostru aplikace, kterou je možné spouštět ve vývojářském režimu (ten podporuje například \emph{hot-swapping}, ale pro produkční prostředí se nehodí, neboť není rychlostně optimalizován). Nástroje pro tvorbu optimalizované verze jsou také samozřejmě dostupné - zatím ale nejsou pro mé použití potřeba.
 
 Jelikož se zabývám aplikací středních rozměrů, je vhodné k tomuto základu přidat některé pokročilé funkcionality, které popíšu v následujících sekcích.
 
@@ -11,9 +11,9 @@ Jelikož se zabývám aplikací středních rozměrů, je vhodné k tomuto zákl
 
 \subsection{Router}
 
-Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Jelikož Vue.js je zaměřeno na tvorbu SPA - Single Page Application, bez konfigurace routeru by se všechny obrazovky aplikace zobrazovaly pouze na URL \code{/} - pokročilý uživatel by tak nemohl zadat například adresu \code{/task/2345}, což je vhodné i při ladění chyb - tester může jednoduše poslat zprávu \emph{\uv{na této adrese se špatně zobrazuje dodavatel}}.
-
-Podobně jako chceme mít hezké URL, pro uživatele, který bude aplikaci ovládat z prohlížeče (tedy ne z aplikace), je žádoucí nastavovat správné titulky stránek. K tomu sice ve Vue Routeru neexistuje nativní podpora, ale řešení je opravdu snadné - je popsáno v jednom z \emph{Issues} v repozitáři na GitHubu \cite{vue-router-title} a spočívá v doplnění titulků do meta atributů cest:
+Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Koncept routeru je dobře znám z jakékoliv jiné aplikace, která nějak pracuje s prohlížečem uživatele - mně konkrétně byl znám z PHP.\\
+Rozdíl Vue.js routeru oproti tomu, který je používán třeba ve zmiňovaném PHP, spočívá v dynamičnosti celého Javascriptového frameworku: oproti standardním aplikacím, kde přesměrování na novou adresu skutečně vyvolá požadavek na server, který odpoví obsahem stránky na dané URL, zde se vše děje dynamicky přímo na klientském zařízení, obsah je vyměněn pomocí Javascriptu a hodnota adresního řádku se změní pouze \uv{pro efekt} - tj. aby uživatel věděl, kde se nachází, a aby mohl adresu zkopírovat a sdílet. Samozřejmě i zde většinou dochází k načítání dat nově otevřené stránky, ale vše je typicky asynchronní - stránka se změní ihned a teprve poté jsou do ní doplněna data. TODO diagram?\\
+Lehce matoucí může u tohoto \emph{frontendového routování} být nastavování titulků stránek, tedy \code{<title>} tagů v HTML. Celá aplikace má totiž stále pouze jeden \code{<title>} zapsaný v souboru \code{index.html}, který se sám o sobě při navigaci za pomocí routeru vůbec nemění. K vyřešení tohoto problému sice ve Vue Routeru neexistuje nativní podpora, ale řešení je opravdu snadné - je popsáno v jednom z \emph{issues} v repozitáři na GitHubu \cite{vue-router-title} a spočívá v doplnění titulků do \code{meta} atributů cest:
 
 \begin{listing}[H]
 \begin{minted}[linenos,frame=lines]{javascript}
@@ -42,7 +42,8 @@ router.beforeEach((to, from, next) => {
 
 Další úpravou routeru, kterou jsem do jisté míry realizoval po svém, je generování drobečkové navigace. Vue Router ve spojení s Vuetify nemají nativní podporu pro zjišťování rodičovských stránek, a tak jsem si lehkou úpravou a vlastní komponentou pro vykreslování \emph{Breadcrumbs} toto zautomatizoval:\\
 Každá definovaná routa má nastaveného rodiče, ke kterému poskytuje \emph{getter}. Ve vykreslování drobečkové navigace se poté na aktuální routě zjišťují rekurzivně její rodiče, a včetně jejich parametrů se z nich zpětně tvoří celý strom navigace.\\
-Co se na první pohled může zdát jednoduché, se zkomplikuje ve chvíli, kdy chceme mít v cestě parametrizovanou stránku, například URL \code{/stocks/1/locations/12/update} odpovídá definici cesty v routeru \code{/:stockId(\\\\d+)/locations/:locationId(\\\\d+)/update}. Chceme-li použít navigaci zpět, je potřeba v definici routy nahradit identifikátory jejich reálnými hodnotami, které ale naštěstí Vue Router poskytuje i za runtime. Funkce pro vytvoření jednoho odkazu, ze kterých se skládá drobečková navigace, je znázorněna v ukázce kódu \ref{code:router:buildPath} - jejími argumenty jsou definice cesty v routě a objekt s aktuálními hodnotami parametrů.
+Co se na první pohled může zdát jednoduché, se zkomplikuje ve chvíli, kdy chceme mít v cestě parametrizovanou stránku.\\
+Například v URL \code{/stocks/1/locations/12/update} je potřeba v definici routy nahradit všechny identifikátory jejich reálnými hodnotami, které ale naštěstí Vue Router poskytuje i během runtime. Funkce pro vytvoření jednoho odkazu, ze kterých se skládá drobečková navigace, je znázorněna v ukázce kódu \ref{code:router:buildPath} - jejími argumenty jsou definice cesty v routě a objekt s aktuálními hodnotami parametrů.
 
 \begin{listing}[H]
     \begin{minted}[linenos,frame=lines]{javascript}
@@ -52,7 +53,8 @@ function buildPath(pathWithPlaceholders, parameters) {
     if (matches !== null) {
         for (const match of matches) {
             const matchParam = match.replace(/\//, '').replace(/:/, '');
-            routePath = routePath.replace(match, parameters[matchParam] + '/');
+            routePath = routePath
+                        .replace(match, parameters[matchParam] + '/');
         }
     }
     return routePath;
@@ -68,7 +70,7 @@ Primárním důvodem, proč používat Webpack, je možnost rozdělování kódu
 
 \paragraph{Použití loaderů} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých assetů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
 
-\paragraph{Webpack ve spolupráci s Vue.js} Základní instalace Vue.js využívá automaticky Babel \cite{babel} - to je kompilátor moderních verzí JS do starších, s kterými jsou kompatibilní prohlížeče. Pokud ale chceme využít pokročilé možnosti webpacku, je potřeba vytvořit soubor \code{webpack.config.js} kam zaneseme běženou konfiguraci webpacku - tedy seznam assetů, které budou zpracovávány a jednotlivé lodery, které je mají zpracovat.
+\paragraph{Webpack ve spolupráci s Vue.js} TODO vue-cli
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,7 +108,6 @@ const Sentry = {
 
     init() {
         if (Env.isProduction() || this.enableInDev) {
-            // When this is enabled, there is **no console output** https://github.com/vuejs/vue/issues/8433
             SentryService.init({
                 dsn: '<url>',
                 integrations: [
@@ -139,15 +140,13 @@ export {Sentry};
 \caption{Služba pro zasílání aplikačních chyb do Sentry} \label{code:sentry-vue}
 \end{listing}
 
-Samotné zavedení služby (spuštění metody \code{init}) z ukázky kódu \ref{code:sentry-vue} zajistí, že veškeré chyby, které vzniknout v produkčním prostředí, jsou automaticky zaslány do Sentry, včetně veškerých detailů. Občas je ale vhodné odeslat i uživatelskou zprávu, která nemusí nutně být chybová, může jít pouze o informativní zprávu. Sentry client toto umožňuje pomocí metody \code{captureMessage}, kterou výše zmíněné služba lehce obaluje. Použití v projektu je zaznamenáno v ukázce kódu \ref{code:sentry-vue-capture}.\\
+Samotné zavedení služby (spuštění metody \code{init}) z ukázky kódu \ref{code:sentry-vue}) zajistí, že veškeré chyby, které vzniknout v produkčním prostředí, jsou automaticky zaslány do Sentry, včetně veškerých detailů. Občas je ale vhodné odeslat i uživatelskou zprávu, která nemusí nutně být chybová, může jít pouze o informativní zprávu. Sentry client toto umožňuje pomocí metody \code{captureMessage}, kterou výše zmíněné služba lehce obaluje. Použití v projektu je zaznamenáno v ukázce kódu \ref{code:sentry-vue-capture}.\\
 Poslední metodou, kterou tato služba nabízí, je \code{registerUser}, díky které obsahují zasílané chyby a zprávy také informace o uživateli, který byl zrovna v aplikace přihlášen. Tato metoda je zavolána vždy po přihlášení uživatele, aby se správně měnil kontext například při odhlášení a přihlášení někoho jiného.
 
 \begin{listing}[H]
 \begin{minted}[linenos,frame=lines]{javascript}
-import Sentry from "@/service/Sentry";
-
+import {Sentry} from "@/service/Sentry";
 ...
-
 Sentry.captureMessage('Your message');
 \end{minted}
 \caption{Zasílání vlastních zpráv do Sentry} \label{code:sentry-vue-capture}
@@ -285,12 +284,18 @@ export default {
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
-// Any Vue component
-...
 this.$store.commit('setSnack', '<message to display>');
-...
 \end{minted}
 \caption{Vuex pro snackbar-message: použití z jiné komponenty} \label{code:vuex-snack-use}
+\end{listing}
+
+Kód z ukázky \ref{code:vuex-snack-use} se mi ovšem v průběhu psaní aplikace přestal líbit, neboť zobrazování těchto zpráv je velmi častá operace, a jeho vyvolání není v ukázce příliš jednoduché. Proto jsem si nastudoval Mixiny ve Vue.js \cite{vue-mixins} a vytvořil mixin, který zjednodušuje zasílání zpráv do Snackbaru. Použití v komponentě je znázorněné na ukázce kódu \ref{code:snack-mixin}. Kromě tohoto použití je sice navíc potřeba v komponentě nastavit, aby importovala a používala nově vytvořený mixin, který poskytuje právě metodu \code{snack()}, avšak, to lze vše provést během programování automaticky za pomoci IDE.
+
+\begin{listing}[h]
+\begin{minted}[linenos,frame=lines]{js}
+this.snack('<message to display');
+\end{minted}
+\caption{Použití mixinu pro zjednodušení zasílání zpráv do Snackbaru} \label{code:snack-mixin}
 \end{listing}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
