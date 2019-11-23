@@ -311,7 +311,7 @@ TODO kontrola konektivity (proč nepoužívat browser properities, vlastní chec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Renderování formulářů}
+\subsection{Renderování formulářů} \label{implementation:formRender}
 
 Ještě před tím, než jsem začal tvořit formuláře ve své diplomové práci, jsem shodou okolností potřeboval upravit několik formulářů v jiné firemní aplikaci, která funguje na podobných technologiích: backend je zcela oddělený a poskytuje REST API, frontend je poté napsán v Angularu. Při zjišťování, jak složitě se zde generují formuláře jsem ale zjistil, že pro svou práci chci rozhodně vymyslet lepší systém. Níže přikládám seznam, které věci je potřeba ve zmiňovaném projektu upravit, chce-li programátor přidat nový formulářový prvek:
 
@@ -362,7 +362,7 @@ export {stockLocationForm, stockLocationFormRender};
 \caption{Příklad definice formuláře: jednoduché skladové umístění} \label{code:formfields:def}
 \end{listing}
 
-Rozdělení na \code{Form} a \code{FormRender} je zvoleno z toho důvodu, aby se oddělily logické celky: model (\code{Form}) a definice zobrazení (\code{FormRender}). Model se takto může celý při uložení poslat na API a při načtení se naopak celý přepíše daty z API. Definice zobrazení pak obsahuje informace, jak má samotný formulářový prvek vypadat a chovat se.\\
+Rozdělení na \code{Form} a \code{FormRender} je zvoleno z toho důvodu, aby se oddělila modelová (\code{Form}) a prezenční vrstva (\code{FormRender}). Model se takto může celý při uložení poslat na API a při načtení se naopak celý přepíše daty z API. Definice zobrazení pak obsahuje informace, jak má samotný formulářový prvek vypadat a chovat se.\\
 Takovýto konfigurační soubor se poté pouze načte v komponentě, která má formulář zobrazovat, a zde předá výše zmiňované komponentě pro standardizované vykreslování formulářů.\\
 Seznam konfigurovatelných možností pro každý atribut formuláře zahrnuje například:
 
@@ -379,7 +379,12 @@ Seznam konfigurovatelných možností pro každý atribut formuláře zahrnuje n
     \item \emph{autocomplete:} struktura obsahující metody, které se mají zavolat na API, a které následná data zpracují a automaticky tak vytvoří seznam \emph{items}, které budou nabízeny ve formulářovém prvku typu \code{autocomplete}.
 \end{itemize}
 
-Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat různé typy vstupů, ale také je poměrně slušně upravovat a přizpůsobovat - pro mé potřeby vykreslování především formulářů na tvorbu či úpravu entit, které se v systému nacházejí: tj. skladů, dodavatelů, produktových karet, odběratelů, umístění apod., a dále formulářů zadávání a schvalování úloh, které na skladě probíhají, je tato komponenta a její konfigurace naprosto dostačující a do budoucna hlavně velmi snadně rozšiřitelná a konfigurovatelná. Ukázka formuláře vytvořeného přes tuto jednotnou komponentu je dostupná v příloze TODO
+Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat různé typy vstupů, ale také je poměrně bohatě upravovat a přizpůsobovat - pro mé potřeby vykreslování především formulářů na tvorbu či úpravu entit, které se v systému nacházejí: tj. skladů, dodavatelů, produktových karet, odběratelů, umístění apod., a dále formulářů zadávání a schvalování úloh, které na skladě probíhají, je tato komponenta a její konfigurace naprosto dostačující a do budoucna hlavně velmi snadně rozšiřitelná a konfigurovatelná. Ukázka formuláře vytvořeného přes tuto jednotnou komponentu je vložena přímo v textu jako obrázek \ref{picture:form-stock-location}.
+
+\begin{figure}[]
+\includegraphics[width=\textwidth]{../png/app/form_stock_location.png}
+\caption{Formulář vykreslený pomocí vlastní jednotné formulářové komponenty} \label{picture:form-stock-location}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -402,12 +407,61 @@ Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa vý
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Generování kódu ze specifikace OpenDoc}\label{implementation:codegen}
+
+Ještě předtím, než jsem začal pracovat na realizaci samotných funkčnostech aplikace, jsem si připravil rozhraní, přes které budu komunikovat s API.\\
+Při psaní tohoto kódu jsem se snažil co nejvíce omezit opakování kódu, a tak jsem vymyslel i několik funkcí, které kód podstatně zkracují, ale jak jsem zjistil později, tak do něj zanáší neočekávané chování.\\
+Uvedu příklad na funkci pro vytvoření nového odběratele, jejíž hlavička vypadá následovně:\\
+\code{create(name, ico, dic, phone, email, website, billing\_address, ...}\\
+Uvnitř těla této funkce potřebuji odeslat na API objekt, který vypadá následovně:\\
+\code{\{name: <hodnota\_argumentu\_name>, ico: ...\}}\\
+Na jeho vytvoření samozřejmě existuje jednoduchá cesta: vytvořit objekt postupně ručně, jeden argument po druhém. To je ale zbytečná ruční práce, do které se navíc jednoduše zanese chyba.\\
+Další možností je vše vytvořit v cyklu, který bude iterovat přes všechny názvy atributů - jenže to znamená že buďto musím znovu udržovat seznam těchto atributů, a nebo využít seznam, který už vlastně \emph{mám vytvořený v deklaraci funkce}.\\
+
+\paragraph{Parsování názvů argumentů funkce} V Javascriptu není plnohodnotná Reflexe, jak ji známe například z Javy, neboť JS je jazyk \emph{prototypový}. Z toho důvodu není tak snadné vytáhnout si v runtime názvy argumentů funkce. Nejbližší nástroj, který se k tomuto přibližuje, je možné vypsat si textový zápis definice funkce, a z jeho hlavičky argumenty vyparsovat - viz ukázka kódu \ref{code:fnArgParse}, která vychází z kódu Christophera Hermanna \cite{fn-parse}.
+
+\begin{listing}[h]
+\begin{minted}[linenos,frame=lines]{js}
+function getFnArgNames(fn) {
+    return fn.toString()
+        .match(/[^(]*\(([^)]*)\)/)[1]
+        .split(',')
+        .map(element => element.split('=')[0].trim())
+        .filter(element => !(element === '' 
+            || element === null 
+            || typeof element === 'undefined')
+        );
+}
+\end{minted}
+\caption{Parsování názvů argumentů funkce} \label{code:fnArgParse}
+\end{listing}
+
+Jak se ale ukázalo později, toto parsování není použitelné v režimu, kdy je aplikace zkompilovaná pro produkční použití, neboť takový kód je minifikovaný a tudíž neobsahuje celé názvy argumentů funkce, ale pouze jeden znak - výsledný objekt odesílaný na API tedy vůbec neodpovídá specifikaci, a požadavek logicky selže.
+
+\paragraph{Modely datových typů} Metody parsování argumentů funkce by vůbec nebyly potřeba, kdybych používal standardní modely objektů - tedy před-připravené struktury - které budou mít potřebné klíče v objektech definované. Tím jsem se ale otočil do kruhu, že nechci nic opisovat a duplikovat. V tu chvíli se ale objevila myšlenka, že když mám od kolegy Pavla připravené krásně zdokumentované API, že bych mohl modely automaticky generovat přímo z něj.
+
+\paragraph{Generování modelů datových typů} Dokumetnaci API, kterou mám dostupnou, je zpracovaná ve standardu OpenAPI 3.0 \cite{openapi-spec}, je tedy možné ji zpracovávat automatizovaně různými nástroji, které stručně popíšu:
+
+\begin{itemize}
+    \item \emph{swagger-codegen} \cite{swagger-codegen} Jedná se o velmi robustní nástroj, který dokáže generovat nejen modely, ale také umí vygenerovat kompletní třídy pro komunikace s API. Jeho detaily rozeberu níže.
+    \item \emph{swagger-js-codegen} \cite{swagger-js-codegen} Tato knihovna třetí strany má podobné možnosti jako \emph{swagger-codegen}, avšak v době psaní této práce není aktualizovaná pro OpenApi specifikace třetí verze, tudíž pro mé potřeby nevhodná.
+    \item \emph{swagger-js} \cite{swagger-js} Doplňující nástroj k \emph{swagger-codegen}, který umožňuje veškeré činnosti provádět přímo za běhu programu pomocí Javascriptu. Pomocí jednoduchého zápisu je například možné i metody spouštět a testovat, avšak pro mé potřeby \emph{generování modelů} je použití taktéž nevhodné.
+    \item \emph{OpenAPI Generator} \cite{openapi-generator} Na rozdíl od předchozích - víceméně samostatných - nástrojů se v tomto případě jedná o plugin do WebStorm. Interně používá první zmiňovaný - \emph{swagger-codegen}, takže jejich možnosti popíšu společně na dalších řádcích.
+\end{itemize}
+
+Ze čtyř nástrojů zbyly dva padnoucí v úvahu, jeden z nich ale interně používá ten druhý, takže jejich výstupy jsou shodné.\\
+Vyzkoušel jsem tedy generátor spouštět s různými parametry, avšak výsledný kód byl na můj vkus vždy zbytečně dlouhý a nezapadal do zbytku codestyle mé aplikace. Zde je nutno poznamenat, že kdybych s tímto generátorem začal, tak ho pravděpodobně použiji i včetně možnosti vygenerovat prakticky celou vrstvu, která realizuje integraci Javascriptu s API - neboť generovaný kód rozhodně není nekvalitní, je velmi robustní a ušetří spoustu času. Protože ale již mám napsanou vlastní vrstvu, která se o API stará, a zakomponovat do ní pouze část generovaného kódu je poměrně složité, a nechci ani vlastní vrstvu zahodit (řeší totiž i některé další věci, které z generátoru nevypadnou - jako například překlady, automatické zpracování chybových stavů nebo zobrazování loaderu), rozhodl jsem se nakonec tento generátor nevyužít. Budu-li ale někdy pracovat na dalším projektu, ke kterému bude dostupná dokumentace ve specifikaci OpenAPI, rozhodně tento generátor zkusím použít hned na začátku implementace.
+
+\paragraph{Vyřešení modelových tříd pomocí formulářových modelů} Když jsem se rozhodl nepoužívat nakonec generátor kódu z dokumentace API, musel jsem stále ještě vyřešit problém s tím, že má funkce \code{getFnArgNames} nefunguje v produkčním režimu. Řešení nakonec bylo snadnější, než se zdálo, neboť už vlastně mám připravené vlastní modely pro všechny formuláře, jak jsem popisoval v sekci \ref{implementation:formRender} - jedná se o například o konstantu \code{stockLocationForm} z ukázky kódu \ref{code:formfields:def}. Někdo by mohl namítat, že tento model nemá řádně definované typy a další náležitosti, a má zcela pravdu. Ovšem pro základní potřebu \emph{neopisovat ve funkcích zařizujících komunikaci s API} všechny atributy je to více než dostačující - ve funkcích jsem přestal řešit, jaké všechny parametry se do nich dají poslat, a přijímám jednoduše objekt \code{data} - jehož obsahem je právě například \code{stockLocationForm}. Data, která uživatel zadá do formuláře jsou tedy \emph{na přímo, bez jakéhokoliv kopírování} ve stejné formě (samozřejmě po vyřešení serializace, kódování pro URL či převod času do formátu ISO-8601) i odesílána na API - čímž získáváme i zanedbatelné zvýšení efektivity, byť na úkor bezpečnosti (protože nehlídáme typovost obsahu dat), takže to zase taková výhoda není.\\
+Samozřejmě se najde i několik metod, do kterých nelze poslat takto přímo definici formuláře, protože se jedná například o pokyn k přesunu zboží mezi umístěním atp. - které se generuje z napípávání zboží, nikoliv z vyplněného formuláře. V těchto několika případech jsem ručně vypsal přiřazení (kterému jsem se snažil z počátku za každou cenu vyhnout), avšak nikdy se nejedná o více než 3 atributy, takže přehlednost by neměla trpět.
+Do budoucna budu ještě zvažovat zavedení větší typovosti argumentu \code{data}, který často do API metod posílám, rád bych k tomu využil například JSdoc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 TODO popsat nový vue.config.js a vue ui - dashboard, deps, analyzet atp.
 
 TODO JS Flow
-
-TODO Renderer formulářů
 
 TODO text filtry
 
@@ -415,13 +469,17 @@ https://itnext.io/yes-this-is-how-to-cache-pages-by-url-with-vue-vue-router-and-
 
 TODO kontextové menu
 
-TODO exporty co CSV a JS
+TODO exporty do CSV a JS
 
 TODO renderer tabulek
 
 TODO barvy accent a secondarz ale idempotence
 
 TODO polyfills https://cli.vuejs.org/guide/browser-compatibility.html
+
+TODO PR do Vuetify?
+
+TODO persistent store
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
