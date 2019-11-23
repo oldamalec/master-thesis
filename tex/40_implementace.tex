@@ -68,9 +68,9 @@ function buildPath(pathWithPlaceholders, parameters) {
 Webpack \cite{webpack} je software, který zpracovává součásti webových aplikací a tvoří z nich balíčky vhodné pro webové prohlížeče. Primárně je zaměřen na Javascript, ale dokáže zpracovávat i řadu dalších formátů, přes styly v css či sass, obrázky v png, jpeg, svg či konfigurace v json, yaml a dalších.\\
 Primárním důvodem, proč používat Webpack, je možnost rozdělování kódu do jednotlivých souborů. Z jiných programovacích jazyků jsme zvyklí mít oddělenou komponentu starající se o přihlašování, v dalším souboru mít podporu komunikace s externím API atp. Samotný Javascript sice samozřejmě umožňuje kód rozdělit do více souborů, avšak vše se spojuje pouze do jednoho kontextu prohlížeče, a tak může u větších projektů být matoucí, odkud se ta která závislost vlastně bere.
 
-\paragraph{Použití loaderů} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých assetů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
+\paragraph{Použití loaderů.} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých assetů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
 
-\paragraph{Webpack ve spolupráci s Vue.js} TODO vue-cli
+\paragraph{Webpack ve spolupráci s Vue.js.} TODO vue-cli
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -235,7 +235,7 @@ TODO rozvést
 
 Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, a ty mezi sebou často potřebují komunikovat. Pěkný příklad je například \emph{snackbar message}, někdy nazývaná také \emph{toast message} či jednoduše \emph{oznámení o provedení akce}. To je komponenta, která musí být dostupná z jakékoliv jiné komponenty systému a vždy se musí zobrazovat na stejném místě a stejně se chovat. Je tedy žádoucí zpřístupnit její \emph{stav} a to tak, aby se při změně stavu něco automaticky stalo, a aby změna stavu byla řízena jistými pravidly.
 
-\paragraph{Vuex} Vuex \cite{vuex} je knihovna, která implementuje \emph{State management pattern} pro Vue.js. Zařizuje jednotný přístup ke stavům komponent a umožňuje jejich řízené změny. Jeho použití v aplikaci skladového systému je vidět na ukázce kódu \ref{code:vuex-snack-def}, \ref{code:vuex-snack-snack} a \ref{code:vuex-snack-use}, kde řeší zobrazování \emph{snackbar message}.
+\paragraph{Vuex.} Vuex \cite{vuex} je knihovna, která implementuje \emph{State management pattern} pro Vue.js. Zařizuje jednotný přístup ke stavům komponent a umožňuje jejich řízené změny. Jeho použití v aplikaci skladového systému je vidět na ukázce kódu \ref{code:vuex-snack-def}, \ref{code:vuex-snack-snack} a \ref{code:vuex-snack-use}, kde řeší zobrazování \emph{snackbar message}.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
@@ -418,7 +418,7 @@ Uvnitř těla této funkce potřebuji odeslat na API objekt, který vypadá nás
 Na jeho vytvoření samozřejmě existuje jednoduchá cesta: vytvořit objekt postupně ručně, jeden argument po druhém. To je ale zbytečná ruční práce, do které se navíc jednoduše zanese chyba.\\
 Další možností je vše vytvořit v cyklu, který bude iterovat přes všechny názvy atributů - jenže to znamená že buďto musím znovu udržovat seznam těchto atributů, a nebo využít seznam, který už vlastně \emph{mám vytvořený v deklaraci funkce}.\\
 
-\paragraph{Parsování názvů argumentů funkce} V Javascriptu není plnohodnotná Reflexe, jak ji známe například z Javy, neboť JS je jazyk \emph{prototypový}. Z toho důvodu není tak snadné vytáhnout si v runtime názvy argumentů funkce. Nejbližší nástroj, který se k tomuto přibližuje, je možné vypsat si textový zápis definice funkce, a z jeho hlavičky argumenty vyparsovat - viz ukázka kódu \ref{code:fnArgParse}, která vychází z kódu Christophera Hermanna \cite{fn-parse}.
+\paragraph{Parsování názvů argumentů funkce.} V Javascriptu není plnohodnotná Reflexe, jak ji známe například z Javy, neboť JS je jazyk \emph{prototypový}. Z toho důvodu není tak snadné vytáhnout si v runtime názvy argumentů funkce. Nejbližší nástroj, který se k tomuto přibližuje, je možné vypsat si textový zápis definice funkce, a z jeho hlavičky argumenty vyparsovat - viz ukázka kódu \ref{code:fnArgParse}, která vychází z kódu Christophera Hermanna \cite{fn-parse}.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
@@ -438,9 +438,9 @@ function getFnArgNames(fn) {
 
 Jak se ale ukázalo později, toto parsování není použitelné v režimu, kdy je aplikace zkompilovaná pro produkční použití, neboť takový kód je minifikovaný a tudíž neobsahuje celé názvy argumentů funkce, ale pouze jeden znak - výsledný objekt odesílaný na API tedy vůbec neodpovídá specifikaci, a požadavek logicky selže.
 
-\paragraph{Modely datových typů} Metody parsování argumentů funkce by vůbec nebyly potřeba, kdybych používal standardní modely objektů - tedy před-připravené struktury - které budou mít potřebné klíče v objektech definované. Tím jsem se ale otočil do kruhu, že nechci nic opisovat a duplikovat. V tu chvíli se ale objevila myšlenka, že když mám od kolegy Pavla připravené krásně zdokumentované API, že bych mohl modely automaticky generovat přímo z něj.
+\paragraph{Modely datových typů.} Metody parsování argumentů funkce by vůbec nebyly potřeba, kdybych používal standardní modely objektů - tedy před-připravené struktury - které budou mít potřebné klíče v objektech definované. Tím jsem se ale otočil do kruhu, že nechci nic opisovat a duplikovat. V tu chvíli se ale objevila myšlenka, že když mám od kolegy Pavla připravené krásně zdokumentované API, že bych mohl modely automaticky generovat přímo z něj.
 
-\paragraph{Generování modelů datových typů} Dokumetnaci API, kterou mám dostupnou, je zpracovaná ve standardu OpenAPI 3.0 \cite{openapi-spec}, je tedy možné ji zpracovávat automatizovaně různými nástroji, které stručně popíšu:
+\paragraph{Generování modelů datových typů.} Dokumetnaci API, kterou mám dostupnou, je zpracovaná ve standardu OpenAPI 3.0 \cite{openapi-spec}, je tedy možné ji zpracovávat automatizovaně různými nástroji, které stručně popíšu:
 
 \begin{itemize}
     \item \emph{swagger-codegen} \cite{swagger-codegen} Jedná se o velmi robustní nástroj, který dokáže generovat nejen modely, ale také umí vygenerovat kompletní třídy pro komunikace s API. Jeho detaily rozeberu níže.
@@ -452,9 +452,76 @@ Jak se ale ukázalo později, toto parsování není použitelné v režimu, kdy
 Ze čtyř nástrojů zbyly dva padnoucí v úvahu, jeden z nich ale interně používá ten druhý, takže jejich výstupy jsou shodné.\\
 Vyzkoušel jsem tedy generátor spouštět s různými parametry, avšak výsledný kód byl na můj vkus vždy zbytečně dlouhý a nezapadal do zbytku codestyle mé aplikace. Zde je nutno poznamenat, že kdybych s tímto generátorem začal, tak ho pravděpodobně použiji i včetně možnosti vygenerovat prakticky celou vrstvu, která realizuje integraci Javascriptu s API - neboť generovaný kód rozhodně není nekvalitní, je velmi robustní a ušetří spoustu času. Protože ale již mám napsanou vlastní vrstvu, která se o API stará, a zakomponovat do ní pouze část generovaného kódu je poměrně složité, a nechci ani vlastní vrstvu zahodit (řeší totiž i některé další věci, které z generátoru nevypadnou - jako například překlady, automatické zpracování chybových stavů nebo zobrazování loaderu), rozhodl jsem se nakonec tento generátor nevyužít. Budu-li ale někdy pracovat na dalším projektu, ke kterému bude dostupná dokumentace ve specifikaci OpenAPI, rozhodně tento generátor zkusím použít hned na začátku implementace.
 
-\paragraph{Vyřešení modelových tříd pomocí formulářových modelů} Když jsem se rozhodl nepoužívat nakonec generátor kódu z dokumentace API, musel jsem stále ještě vyřešit problém s tím, že má funkce \code{getFnArgNames} nefunguje v produkčním režimu. Řešení nakonec bylo snadnější, než se zdálo, neboť už vlastně mám připravené vlastní modely pro všechny formuláře, jak jsem popisoval v sekci \ref{implementation:formRender} - jedná se o například o konstantu \code{stockLocationForm} z ukázky kódu \ref{code:formfields:def}. Někdo by mohl namítat, že tento model nemá řádně definované typy a další náležitosti, a má zcela pravdu. Ovšem pro základní potřebu \emph{neopisovat ve funkcích zařizujících komunikaci s API} všechny atributy je to více než dostačující - ve funkcích jsem přestal řešit, jaké všechny parametry se do nich dají poslat, a přijímám jednoduše objekt \code{data} - jehož obsahem je právě například \code{stockLocationForm}. Data, která uživatel zadá do formuláře jsou tedy \emph{na přímo, bez jakéhokoliv kopírování} ve stejné formě (samozřejmě po vyřešení serializace, kódování pro URL či převod času do formátu ISO-8601) i odesílána na API - čímž získáváme i zanedbatelné zvýšení efektivity, byť na úkor bezpečnosti (protože nehlídáme typovost obsahu dat), takže to zase taková výhoda není.\\
+\paragraph{Vyřešení modelových tříd pomocí formulářových modelů.} Když jsem se rozhodl nepoužívat nakonec generátor kódu z dokumentace API, musel jsem stále ještě vyřešit problém s tím, že má funkce \code{getFnArgNames} nefunguje v produkčním režimu. Řešení nakonec bylo snadnější, než se zdálo, neboť už vlastně mám připravené vlastní modely pro všechny formuláře, jak jsem popisoval v sekci \ref{implementation:formRender} - jedná se o například o konstantu \code{stockLocationForm} z ukázky kódu \ref{code:formfields:def}. Někdo by mohl namítat, že tento model nemá řádně definované typy a další náležitosti, a má zcela pravdu. Ovšem pro základní potřebu \emph{neopisovat ve funkcích zařizujících komunikaci s API} všechny atributy je to více než dostačující - ve funkcích jsem přestal řešit, jaké všechny parametry se do nich dají poslat, a přijímám jednoduše objekt \code{data} - jehož obsahem je právě například \code{stockLocationForm}. Data, která uživatel zadá do formuláře jsou tedy \emph{na přímo, bez jakéhokoliv kopírování} ve stejné formě (samozřejmě po vyřešení serializace, kódování pro URL či převod času do formátu ISO-8601) i odesílána na API - čímž získáváme i zanedbatelné zvýšení efektivity, byť na úkor bezpečnosti (protože nehlídáme typovost obsahu dat), takže to zase taková výhoda není.\\
 Samozřejmě se najde i několik metod, do kterých nelze poslat takto přímo definici formuláře, protože se jedná například o pokyn k přesunu zboží mezi umístěním atp. - které se generuje z napípávání zboží, nikoliv z vyplněného formuláře. V těchto několika případech jsem ručně vypsal přiřazení (kterému jsem se snažil z počátku za každou cenu vyhnout), avšak nikdy se nejedná o více než 3 atributy, takže přehlednost by neměla trpět.
 Do budoucna budu ještě zvažovat zavedení větší typovosti argumentu \code{data}, který často do API metod posílám, rád bych k tomu využil například JSdoc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Barevná paleta aplikace}
+
+Barvy použité v aplikaci mají velký vliv na to, jak ji budou její uživatelé vnímat. Když jsem začal s implementací, zvolil jsem pouze pár základních barev, protože v tu chvíli jsem potřeboval funkční kostru aplikace. Postupem času jsem ale začal více přemýšlet o volbě barevné palety a jak ji rozumně zvolit.
+
+\paragraph{Kontrast barvy textu a barvy pozadí.} Základem pro čitelnost textu je správný kontrast barvy textu a barvy pozadí, na kterém se text nachází. Například klasický černý (\#000000) text na bílém (\#FFFFFF) pozadí má kontrastní poměr 21:1, což je nejvyšší možný. Konsorcium W3 vydalo dokument \cite{w3-access-guide}, který popisuje, jak by měl vypadat správně dostupný web - jedna sekce popisuje právě i kontrast. Uvedu úryvek z dokumentu:
+\begin{itemize}
+    \item \emph{Kontrast (minimum)}: Vizuální prezentace musí mít minimální kontrastní poměr 4,5:1, s následujícími výjimkami:
+    \begin{itemize}
+        \item \emph{Velký text}: Musí mít kontrastní poměr minimálně 3:1.
+        \item \emph{Dekorativní, skryté a doprovodné prvky a logotypy}: Bez požadavků na minimální kontrastní poměr
+    \end{itemize}
+    \item \emph{Kontrast (pokročilý)}: Vizuální prezentace by měla mít minimální kontrastní poměr 7:1, s následujícími výjimkami:
+    \begin{itemize}
+        \item \emph{Velký text}: Měl by mít kontrastní poměr minimálně 4,5:1.
+        \item \emph{Dekorativní, skryté a doprovodné prvky a logotypy}: Bez požadavků na minimální kontrastní poměr
+    \end{itemize}
+\end{itemize}
+
+Zde samozřejmě platí, že čím více chceme text na stránce zdůraznit, tím větší kontrastní poměr mu dáme. TODO kontrola použitých kontrastů v aplikaci.
+
+\paragraph{Volba barev akčních a informačních prvků.} U informačních prvků je zde poměrně klasické rozdělení: zelená jako potvrzovací, modrá - informativní, žlutá - varovná a červená - chybová. Pro akční tlačítka pak typicky zelená - vytvoření, modrá - zobrazení, žlutá - úprava a červená - smazání. V aplikaci ale většinou nechceme mít tolik barev, moderní aplikace mají čistší, jednudušší design, který když je proveden správně, může snížit zátěž uživatele tolik barvami a zvýšit přehlednost. Velmi často se dnes objevují definice barev jako \code{primary}, \code{secondary} (občas i \code{tertiary}) a \code{accent}, které se jednou zvolí a poté se napříč aplikací používají vlastně jako proměnné.
+
+Výběrem těchto tří barev se zabývá mnoho článků a stránek, teorie, na které ale všichni staví, je pořád stejná: Když volíme tři barvy, existují tři nejčastěji používaná barevná rozložení \cite{color-scheme-pick}:
+
+\begin{enumerate}
+    \item \emph{Trojúhelníková}: Rovnoměřné rozdělení barev přes celé barevné schema. Jedná se o velmi výrazné schema, a to i v případě použití nižší barevné saturace. Ideální použití je jedna základní barva a dvě akcentní.
+    \begin{figure}[H]
+        \includegraphics[width=0.2\textwidth]{../png/colors/Triad.png}
+        \caption{Barevná paleta aplikace: Trojúhelníkové schema} \label{picture:colors:analog}
+    \end{figure}
+    \item \emph{Rozděleně-doplňková}: Toto schema vychází z doplňku dvou barev, tedy barev, které jsou v paletě naproti sobě, protější barva je ale rozdělena na dvě. Oproti trojúhelníkovému schematu je méně výrazné, díky čemuž je jednodušší barvy zvolit tak, aby nebyly pro uživatele příliš útočné. Ideální použití je opět jedna základní barva a dvě akcentní.
+    \begin{figure}[H]
+        \includegraphics[width=0.2\textwidth]{../png/colors/SplitComplementary.png}
+        \caption{Barevná paleta aplikace: Rozděleně-doplňkové schema} \label{picture:colors:splitCom}
+    \end{figure}
+    \item \emph{Analogová}: Zvolené barvy jsou v barevné paletě přímí sousedé a jedná se tak o \uv{klidné} rozložení, které vytváří jemný design jež je často vidět i v přírodě. Problémem zde může být vhodná volba kontrastu, protože barvy nejsou sami vůči sobě příloš kontrastní a je nutné je od sebe alespoň trochu rozlišit. Ideální použití je jedna dominující barva, druhá doplňková a třetí jako akcentní.
+    \begin{figure}[H]
+        \includegraphics[width=0.2\textwidth]{../png/colors/Analogous.png}
+        \caption{Barevná paleta aplikace: Analogové schema} \label{picture:colors:triad}
+    \end{figure}
+\end{enumerate}
+
+\paragraph{Volba barev pro mou aplikaci.} Jelikož cílem aplikace je pomáhat při práci ve skladu a upozorňovat na důležité zprávy, vyloučil jsem hned ze začátku \emph{analogové} barevné schema, protože jeho barevné rozložení patří spíše na stránky, které jsou pasivnější, nevyžadují tolik interakce s uživatelem a spíše obsah prezentují, než aby vyžadovali jeho zadávání. Zbyly mi tedy velmi podobná rozložení \emph{trojúhelníkové} a \emph{rozděleně-doplňkové}. Podle osobního pocitu jsem vybral základní klidnou barvu: šedozelenou \#009688, a k ní doplňkově-akcentní růžovou \#E91A63 a čistě akcentní tmavě žlutou \#FFC107, jejichž rozložení na barevné paletě je vidět na obrázku \ref{picture:colors:app}. Společně tyto barvy tvoří něco mezi dvěma zvolenými schematy - trojůhelník není ani pravidelný, ani se neblíží k doplňku.\\
+\begin{figure}[]
+    \includegraphics[width=0.4\textwidth]{../png/colors/app.png}
+    \caption{Barevná paleta aplikace: Zvolené schema pro mou aplikaci} \label{picture:colors:app}
+\end{figure}
+
+\paragraph{Barvy a idempotence akce.} Jelikož mám vybrané dvě akcentní barvy, musel jsem se rohodnout, kde budu kterou z nich používat. Co se týká zobrazování, je vše poměrně jasné: k základní barvě se volně váže doplňkově-akcentní růžová, a čistě akcentní žlutá barva je ponechána pouze pro důležité položky, které je potřeba speciálně zvýraznit. Jiné je to ale u akcí - tlačítek, odkazů apod. Zde jsem se rozhodl barvu tlačítek volit dle idempotence akce, kterou vyvolávají - tedy zda vyvolaná akce způsobuje vedlejší efekty, nebo ji lze vyvolávat stále dokola. Za vedlejší efekty v aplikaci považuji následující situace:
+\begin{itemize}
+    \item navigace na jinou stránku,
+    \item uložení či úprava dat.
+\end{itemize}
+Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládají žádná data ani nemění navigaci, mohou ale měnit aktuální zobrazení stránky, tedy například něco otevřít, skrýt, přesunout, avšak vždy tak, že se jedná o akci pouze na jednom klientu a zůstávají na jedné stránce. Na obrázcích \ref{picture:colors:time_tracker} a \ref{picture:colors:task_fab} je vidět použití jak idempotentních, tak non-idempotentních akcí: tlačítka \emph{storno} a hlavní akční tlačítko pouze skrývají dialog, respektive rozevírají menu, kdežto ostatních tlačítka a volby vždy buďto odesílají data nebo přechází na novou stránku.
+
+\begin{figure}[]
+    \includegraphics[width=0.7\textwidth]{../png/app/colors_time_tracker.png}
+    \caption{Barvy znázorňující idempotenci akcí: Dialog běžícího času} \label{picture:colors:time_tracker}
+\end{figure}
+\begin{figure}[]
+    \includegraphics[width=0.3\textwidth]{../png/app/colors_tasks.png}
+    \caption{Barvy znázorňující idempotenci akcí: Tlačítko tvorby úkolu} \label{picture:colors:task_fab}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -472,8 +539,6 @@ TODO kontextové menu
 TODO exporty do CSV a JS
 
 TODO renderer tabulek
-
-TODO barvy accent a secondarz ale idempotence
 
 TODO polyfills https://cli.vuejs.org/guide/browser-compatibility.html
 
