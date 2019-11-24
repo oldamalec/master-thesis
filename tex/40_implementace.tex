@@ -313,7 +313,7 @@ TODO kontrola konektivity (proč nepoužívat browser properities, vlastní chec
 
 \subsection{Renderování formulářů} \label{implementation:formRender}
 
-Ještě před tím, než jsem začal tvořit formuláře ve své diplomové práci, jsem shodou okolností potřeboval upravit několik formulářů v jiné firemní aplikaci, která funguje na podobných technologiích: backend je zcela oddělený a poskytuje REST API, frontend je poté napsán v Angularu. Při zjišťování, jak složitě se zde generují formuláře jsem ale zjistil, že pro svou práci chci rozhodně vymyslet lepší systém. Níže přikládám seznam, které věci je potřeba ve zmiňovaném projektu upravit, chce-li programátor přidat nový formulářový prvek:
+\paragraph{Anti-inspirace v jiném projektu.} Ještě před tím, než jsem začal tvořit formuláře ve své diplomové práci, jsem shodou okolností potřeboval upravit několik formulářů v jiné aplikaci, která funguje na podobných technologiích: backend je zcela oddělený a poskytuje REST API, frontend je poté napsán v Angularu. Při zjišťování, jak složitě se zde generují formuláře jsem ale zjistil, že pro svou práci chci rozhodně vymyslet lepší systém. Níže přikládám seznam, které věci je potřeba ve zmiňovaném projektu upravit, chce-li programátor přidat nový formulářový prvek:
 
 \begin{enumerate}
     \item přidat atribut do modelové třídy,
@@ -325,8 +325,9 @@ Ještě před tím, než jsem začal tvořit formuláře ve své diplomové prá
 \end{enumerate}
 
 Celkem se tedy jedná o šest míst, kam je potřeba nový atribut zanést. Zde je ovšem na místě upozornit, že se rozhodně nejedná o problém Angularu, a že ve Vue.js není vše automaticky jednodušší - postup, jak jsem tento počet redukoval, by měl být použitelný v jakémkoliv Javascriptovém frameworku, a s většími úpravami pravděpodobně i v jiných jazycích.\\
-Co se mi zejména nelíbilo, byl fakt, že \emph{modelová třída} a \emph{instance formuláře} měly totožné atributy, tudíž se vůbec nemusí nastavovat jedna po druhé, ale můžeme použít například \code{Object.assign()} \cite{mdn-object-assign} pro nakopírování hodnot jednoho objektu do druhého. \emph{(Tato metoda sice není podporována v Android WebView, avšak napsat její ruční alternativu je triviální záležitost)}. Tím dokážeme odbourat nutnost nastavování konkrétních klíčů mezi instancí formuláře a modelovou třídou - tedy položky 4. a 5. výše uvedeného seznamu.\\
-Nutnost položky č. 2 - vykreslování v HTML - jsem tušil už od začátku. Tomuto je spíše kontraproduktivní se vyhýbat, neboť typicky každý atribut chceme vypsat nějak jinak, celá stránka je nějak strukturována atp. - tuto položku jsem tedy ponechal a smířil se s tím, že se bude u formulářů vždy kódovat ručně.\\
+
+\paragraph{Nový návrh renderování formulářů.} Co se mi zejména ve výše zmiňovaném řešení nelíbilo, byl fakt, že \emph{modelová třída} a \emph{instance formuláře} měly totožné atributy, tudíž se vůbec nemusí nastavovat jedna po druhé, ale můžeme použít například \code{Object.assign()} \cite{mdn-object-assign} pro nakopírování hodnot jednoho objektu do druhého. \emph{(Tato metoda sice není podporována v Android WebView, avšak napsat její ruční alternativu je triviální záležitost)}. Tím dokážeme odbourat nutnost nastavování konkrétních klíčů mezi instancí formuláře a modelovou třídou - tedy položky 4. a 5. výše uvedeného seznamu.\\
+Nutnost položky č. 2 - vykreslování v HTML - jsem tušil už od začátku. Tomuto je spíše kontraproduktivní se vyhýbat, neboť typicky každý atribut chceme vypsat nějak jinak, celá stránka je nějak strukturována apod. - tuto položku jsem tedy ponechal a smířil se s tím, že se bude u výpisu formulářů vždy kódovat ručně.\\
 Stále ale ještě máme nutnost nastavit atribut v modelové třídě, v instanci formuláře a formulář nějak vykreslovat - tedy na třech různých místech: dvakrát v Typescriptu a jedenkrát v HTML. Má představa o jednoduše konfigurovatelném formuláři se ubírala směrem k vytvoření pouze jednoho konfiguračního souboru, odkud by se všechny tyto 3 věci generovaly, což se mi nakonec podařilo, a seznam jsem tedy stáhl na:
 
 \begin{enumerate}
@@ -335,7 +336,7 @@ Stále ale ještě máme nutnost nastavit atribut v modelové třídě, v instan
 \end{enumerate}
 
 Důležité je zde zdůraznit, že jsem odebral i nutnost vytvořit HTML kód formuláře: pokud po formulářovém prvku nejsou vyžadovány žádné nestandardní požadavky, jsou všechny atributy formuláře zpracovávány a vykresleny zcela automaticky pomocí komponenty, kterou jsem pro tento účel vytvořil.\\
-V tuto chvíli je na místě projít ukázku kódu (\ref{code:formfields:def}), která znázorňuje, jak může vypadat \emph{definice formuláře} pro jednoduché skladové umístění:
+V tuto chvíli je na místě projít ukázku kódu (\ref{code:formfields:def}), která znázorňuje, jak může vypadat \emph{definice formuláře} pro jednoduché skladové umístění.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
@@ -362,14 +363,14 @@ export {stockLocationForm, stockLocationFormRender};
 \caption{Příklad definice formuláře: jednoduché skladové umístění} \label{code:formfields:def}
 \end{listing}
 
-Rozdělení na \code{Form} a \code{FormRender} je zvoleno z toho důvodu, aby se oddělila modelová (\code{Form}) a prezenční vrstva (\code{FormRender}). Model se takto může celý při uložení poslat na API a při načtení se naopak celý přepíše daty z API. Definice zobrazení pak obsahuje informace, jak má samotný formulářový prvek vypadat a chovat se.\\
-Takovýto konfigurační soubor se poté pouze načte v komponentě, která má formulář zobrazovat, a zde předá výše zmiňované komponentě pro standardizované vykreslování formulářů.\\
+\paragraph{Rozdělení definice na datový a prezenční model.} Rozdělení na \code{Form} a \code{Render} je zvoleno z toho důvodu, aby se oddělila datová (modelová) (\code{Form}) a prezenční vrstva (\code{FormRender}). Datový model se takto může celý při uložení poslat na API a při načtení se naopak celý přepíše daty z API. Definice zobrazení pak obsahuje informace, jak má samotný formulářový prvek vypadat a chovat se. Někdo by mohl namítnout, že datový model by se také dal generovat automaticky z prezenčního modelu, avšak praxe ukázala, že některé formuláře jsou například rozdělené na více částí co se renderování týká, ale datově jsou společné. Díky rozdělení na data a render pak mohu mít na stránce dvě formulářové komponenty, které sdílí datový model, ale každá má svůj vlastní prezenční model. Někdy se také hodí, že v datovém modelu jsou i prvky, které renderovat nechceme, například \code{hours}, do kterého se ukládá strávený čas v úloze, který systém zaznamenává zcela automaticky (viz sekce \ref{implementation:time_tracking}). \\
 Seznam konfigurovatelných možností pro každý atribut formuláře zahrnuje například:
 
 \begin{itemize}
     \item \emph{label:} název formulářového prvku - pokud není vyplněný, hledá se definice překladu dle názvu klíče atributu,
     \item \emph{icon:} označení ikony z Material Icons, která se bude zobrazovat vlevo od formulářového prvku,
-    \item \emph{hint:} cesta k překladu hlášky, která se bude zobrazovat pod formulářovým prvkem,
+    \item \emph{hint:} cesta k překladu textu, který se bude zobrazovat pod formulářovým prvkem,
+    \item \emph{help:} klíč položky nápovědy, která se zobrazí v modálním okně po kliknutí na ikonku otazníku, který se bude zobrazovat vpravo od formulářového prvku,
     \item \emph{items:} pole s hodnotami, které budou na výběr, jedná li-se o prvek typu \code{select} nebo \code{autocomplete},
     \item \emph{loading:} booleanovská hodnota, zda má mít prvek načítací stav. Typicky se nenastavuje v konfiguračním souboru, ale může být ovládáno z komponenty, která formulář vykresluje,
     \item \emph{multiple:} booleanovská hodnota, která určuje, zda prvek typu \code{select} nebo \code{autocomplete} může mít více vybraných hodnot současně,
@@ -379,7 +380,7 @@ Seznam konfigurovatelných možností pro každý atribut formuláře zahrnuje n
     \item \emph{autocomplete:} struktura obsahující metody, které se mají zavolat na API, a které následná data zpracují a automaticky tak vytvoří seznam \emph{items}, které budou nabízeny ve formulářovém prvku typu \code{autocomplete}.
 \end{itemize}
 
-Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat různé typy vstupů, ale také je poměrně bohatě upravovat a přizpůsobovat - pro mé potřeby vykreslování především formulářů na tvorbu či úpravu entit, které se v systému nacházejí: tj. skladů, dodavatelů, produktových karet, odběratelů, umístění apod., a dále formulářů zadávání a schvalování úloh, které na skladě probíhají, je tato komponenta a její konfigurace naprosto dostačující a do budoucna hlavně velmi snadně rozšiřitelná a konfigurovatelná. Ukázka formuláře vytvořeného přes tuto jednotnou komponentu je vložena přímo v textu jako obrázek \ref{picture:form-stock-location}.
+Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat různé typy vstupů, ale také je poměrně bohatě upravovat a přizpůsobovat - pro mé potřeby vykreslování především formulářů na tvorbu či úpravu entit, které se v systému nacházejí: tj. skladů, dodavatelů, produktových karet, odběratelů, umístění apod., a dále formulářů zadávání a schvalování úkolů, které na skladě probíhají, je tato komponenta a její konfigurace naprosto dostačující a do budoucna hlavně velmi snadně rozšiřitelná a konfigurovatelná. Ukázka formuláře vytvořeného přes tuto jednotnou komponentu je vložena přímo v textu jako obrázek \ref{picture:form-stock-location}.
 
 \begin{figure}[]
 \includegraphics[width=\textwidth]{../png/app/form_stock_location.png}
@@ -459,7 +460,7 @@ Do budoucna budu ještě zvažovat zavedení větší typovosti argumentu \code{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Barevná paleta aplikace}
+\subsection{Barevná paleta aplikace}\label{implementation:colors:idempotent}
 
 Barvy použité v aplikaci mají velký vliv na to, jak ji budou její uživatelé vnímat. Když jsem začal s implementací, zvolil jsem pouze pár základních barev, protože v tu chvíli jsem potřeboval funkční kostru aplikace. Postupem času jsem ale začal více přemýšlet o volbě barevné palety a jak ji rozumně zvolit.
 
@@ -512,7 +513,7 @@ Výběrem těchto tří barev se zabývá mnoho článků a stránek, teorie, na
     \item navigace na jinou stránku,
     \item uložení či úprava dat.
 \end{itemize}
-Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládají žádná data ani nemění navigaci, mohou ale měnit aktuální zobrazení stránky, tedy například něco otevřít, skrýt, přesunout, avšak vždy tak, že se jedná o akci pouze na jednom klientu a zůstávají na jedné stránce. Na obrázcích \ref{picture:colors:time_tracker} a \ref{picture:colors:task_fab} je vidět použití jak idempotentních, tak non-idempotentních akcí: tlačítka \emph{storno} a hlavní akční tlačítko pouze skrývají dialog, respektive rozevírají menu, kdežto ostatních tlačítka a volby vždy buďto odesílají data nebo přechází na novou stránku.
+Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládají žádná data ani nemění navigaci, mohou ale měnit aktuální zobrazení stránky, tedy například něco otevřít, skrýt, přesunout, avšak vždy tak, že se jedná o akci pouze na jednom klientu a zůstávají na jedné stránce. Na obrázcích \ref{picture:colors:time_tracker} a \ref{picture:colors:task_fab} je vidět použití jak idempotentních, tak non-idempotentních akcí: tlačítka \emph{storno} a hlavní akční tlačítko pouze skrývají dialog, respektive rozevírají menu, kdežto ostatních tlačítka a volby vždy buďto odesílají data nebo přecházejí na novou stránku.
 
 \begin{figure}[]
     \includegraphics[width=0.7\textwidth]{../png/app/colors_time_tracker.png}
@@ -522,6 +523,25 @@ Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládaj
     \includegraphics[width=0.3\textwidth]{../png/app/colors_tasks.png}
     \caption{Barvy znázorňující idempotenci akcí: Tlačítko tvorby úkolu} \label{picture:colors:task_fab}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Automatický záznam stráveného času}\label{implementation:time_tracking}
+
+Jedním z požadavků na nový systém byla možnost zaznamenávání stráveného času v úkolech. Jelikož často pracuji v Redmine, což je software pro evidenci požadavků a řízení projektů, kde se čas také zaznamenává, analyzoval jsem, jak se zde se záznamem času pracuje.
+
+\paragraph{Záznam času v Redmine.} V čisté instalaci Redmine je možné čas přidávat k úkolům a nebo celkově k projektům. Zatímco záznam času k projektu se musí provést ze samostatné stránky, záznam času k úkolu je možné spojit s jeho aktualizací. Množství stráveného času ale musí vždy zadat sám uživatel - musí si tedy čas buďto pamatovat, nebo zaznamenávat v další externí aplikaci, či vlastních poznámkách. Jelikož je Redmine open-source, tak existuje hned několik pluginů, které umožňují čas strávený v úkolu stopovat a poté ho zapsat automaticky. Problém, který zde identifikuji já osobně spočívá v tom, že úkolů na Redmine mám často otevřeno i více, nebo naopak žádný, a přesto na některém pracuji například v IDE. Nelze tedy jednoznačně říct, že čas, po který byl úkol otevřen, je stejný jako čas, který byl nad úkolem reálně stráven. Hledal jsem tedy další lepší řešení, a našel vhodnou aplikaci třetí strany.
+
+\paragraph{Záznam času v Toggl.} Toggl je webová aplikace, která nabízí i instalaci nativních agentů pro Windows, Mac a mobilní platofrmy. Díky nainstalovanému agentu je možné spouštět či zastavovat běžící čas klávesovou zkratkou ať už je aktivní browser, IDE, nebo jakýkoliv jiný program. Toto je pro práci, ve které se často přepíná kontext, nebo vznikají pauzy, velmi přínosné. Problém nastává ve chvíli, kdy mám čas uložený v Toggl, ale potřebuji ho zapsat do Redmine. K tomuto účelu jsem napsal vlastní malý doplňěk do Google Chrome, který načte časy uložené v Toggl a otevře záložky s předvyplněnými polemi, ve kterých čas pouze uložím do Redmine. Vše by šlo řešit i zcela automaticky přes API obou služeb, avšak v době psaní tohoto textu ještě není tato synchronizace na dostatečné úrovni a rád mám kontrolu nad tím, které časy vlastně do Redmine zapisuji.
+
+V odstavcích výše jsem se zamyslel nad záznamem času v systému pro řízení obecných projektů. Aplikace pro správu skladu je však přecejen v něčem specifická - jelikož veškerá manipulace se zbožím musí nutně procházet přes ni - všechny položky musí vždy projít čtečkou / být zadány - mělo by být možné stopovat strávený čas přímo v aplikaci
+
+\paragraph{Záznam času v novém skladovém systému.} Pro roli skladníka je poměrně jednoduché automaticky měřit, kolik času strávil v jednotlivých úkolech, a čas odesílat společně s odesláním vyřešení úkolu. U role vedoucího skladu je čas také možné záznamenávat - zde se jedná o přípravu úkolů nebo jejich kontrolou, stále je ale možné práci provádět i mimo tyto obrazovky, například objednávky se mohou zpracovávat mimo systém a pak se pouze jednorázově zadají. Proto jsem také umožnil vedoucímu skladu přidávat strávený čas i ručně.
+
+\paragraph{Pauzování času.} U jakéhokoliv automatického stopování času je nutné mít možnost časomíru pozastavit - typicky například při pauze na oběd či jiné přestávce v práci, během které ale zůstane otevřený jeden úkol. Aplikace vždy zobrazuje, kdy je automatický záznam času spuštěn, a umožňuje ho pozastavit - přičemž u pozastaveného času není možné v úloze provádět žádné akce, až do opětovného spuštění časomíry.
+
+Navrhované řešení automatického záznamu času je samozřejmě možné zcela vypnout v konfiguraci aplikaci, a také ještě bude před ostrým používáním otestováno uživateli. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -553,7 +573,7 @@ TODO persistent store
 
 \section{Funkční specifikace}
 
-// TODO jednotlivé úlohy atp.
+// TODO jednotlivé úkoly atp.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
