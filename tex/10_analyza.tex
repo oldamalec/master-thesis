@@ -4,10 +4,15 @@ Cílem nového skladového systému je nahradit a rozšířit funkce stávajíc�
 Současná verze Sysla je již oproti svému původnímu návrhu velmi upravena, a to se podepisuje na snížené možnosti dalších úprav a celkové komplexnosti systému.\\
 Pro nový systém je na jedné straně důležité, aby bylo stále možné provádět ty procesy, které jsou ideální již za současného stavu. Na straně druhé je pak důležité zohlednit nové požadavky a pokusit se umožnit i snadné reakce na budoucí požadavky.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Analýza požadavků dle současného systému}
 
 Jádrem současného skladového systému je rozdělení na dvě role: skladník a vedoucí. Aplikace podporuje práci ve středně velkém skladu, který používá čárové kódy na zboží a umístěních, ale nemá další pokročilé automatizace jako například pohyb objednávkových bedýnek po páse, roboty, kteří autonomně vyzvedávají zboží atp. Veškeré pohyby jsou realizovány lidskými zdroji a tomu odpovídá i realizace podpůrného systému. Výhodou tohoto řešení je možnost použití systému i v menších skladech a to případně i o velikostí pouze jednoho správce.\\
-\\
+
 \subsection{Funkční požadavky}
 
 Role skladníka:
@@ -32,6 +37,11 @@ Role vedoucího:
 \end{itemize}
 
 Tyto požadavky vychází ze stávající aplikace Sysel a jejich procesy měly zůstat zachovány, proto jsme konkrétní use-case a detailní procesy navrhli na základě průchodů současného systému. Diagramy, které jsou výstupem této části analýzy jsou součástí přílohy \ref{ap:diagram:storekeeper}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Analýza nových požadavků}
 
@@ -59,3 +69,93 @@ Požadavkem tedy je, aby rozhraní bylo plně responzivní - skladník sice typi
 \includegraphics[width=\textwidth]{../png/sysel/vertical.png}
 \caption{Ukázka špatné práce s horizontálním místem ve starém skladovém systému} \label{picture:sysel:vertical}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Analýza konkurence}
+
+Před započetím tvorby samotných návrhů je potřeba analyzovat konkurenční řešení.\\
+V dnešní době existuje na trhu nespočet skladových systémů, jednak veřejně dostupných, které nabízejí například osekanou verzi zdarma, jiné placené, ale s popisem jejich vlastností, a pak také spousta uzavřených systémů, které si nechal někdo vytvořit na míru přesně pro své potřeby, a pro veřejnost není daný systém vůbec dostupný.\\
+Z tohoto důvodu jsem se rozhodl zaměřit především na funkcinality veřejně dostupných skladových systémů, které jsou primárně určené na mobilní zařízení.\\
+
+\subsection{Analýza mobilních aplikací pro evidenci skladu}
+
+\subsubsection{Storage Manager: Stock Tracker}
+
+Tuto aplikaci lze nalézt v Google Play Store a je k dispozici její free varianta, kterou jsem také vyzkoušel.\\
+Stejně jako Sysel umožňuje skenovat čárové kódy nejen na zboží, ale i na umístění. Má podobné možnosti manipulace se zbožím: naskladnění, vyskladnění, přesun, inventura. Navíc umožňuje pracovat i s objednávkami.\\
+Synchronizace probíhá přes úložiště třetí strany (Dropbox…) a to vždy pouze při startu / ukončení a nebo na vyžádání. Jedná se tedy primárně o single-user systém. Zdá se, že nejsou podporovány ani různé role.\\
+Aplikace vůbec nepočítá se systémem “úkolů”. Skladník zde musí sám vědět, co má dělat - nebo informace zjišťovat z jiného systému - nebo pracovat s objednávkami, které systém narozdíl od SYSLA podporuje.\\
+Naskladnění, vyskladnění a i přesun zboží funguje vždy pouze s jedním typem zboží - nelze hromadně přesunout např celou paletu, na které je různé zboží. U každé položky se znovu vyplňuje celý formulář.\\
+
+\paragraph{Zajímavé funkcionality}
+\begin{itemize}
+	\item Sken čárových kódů klasickým fotoaparátem zařázení.
+	\item Možnost konfigurace, které prvky se na homepage zobrazují.
+	\item Možnost konfigurace, které atributy skladových položek, objednávek atp. se zobrazují.
+\end{itemize}
+
+\paragraph{Analýza UI} Jedná se o nativní android aplikaci, v designu Androidu Jelly Bean. 
+
+\paragraph{Klady UI}
+\begin{itemize}
+	\item U pole množství jsou vždy zobrazena + a - pro usnadnění rychlých změn.
+	\item Focus na prvcích logicky přeskakuje na další, na nových obrazovkách je většinou jako výchozí zvolen EAN.
+	\item Pole výběru data nabízí nativní Androidí kalendář.
+	\item Přehled provedených transakcí.
+	\item V jakýchkoliv seznamech lze vždy hledat, řadit i filtrovat.
+	\item V detailu produktu je dole vždy informační proužek zobrazující, kolik kusů zboží je na skladě.
+\end{itemize}
+
+\paragraph{Zápory UI}
+\begin{itemize}
+	\item Důležité prvky (uložení nového zboží) jsou vždy umístěny v horní liště, která někdy může být špatně dostupná.
+	\item Autofocus na některých prvcích neotevírá automaticky klávesnici, je tedy stejně nutné znovu do pole tapnout.
+	\item Aplikace nemá menu. Tudíž když se zanořím někam hluboko, musím hodněkrát použít \uv{back}, abych se dostal na domovskou obrazovku.
+	\item Při hromadném vyskladňování nelze pracovat \uv{z jednoho místa} - u každého produktu se vždy volí znovu umístění - nezůstává ani nepředvyplněné.
+	\item Celkově se jedná spíše o jednoduchý seznam potřebných informací, UI není nějak extra nápomocné.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Simple Stock Manager}
+
+Tato aplikace je také dostupná na Google Play zdarma, avšak narozdíl od předchozí testované, tato nemá plnou verzi za peníze, ale obsahuje reklamy.\\
+Nabízí pouze základní funkcionalitu naskladnění a vyskladnění (neumí tedy ani řešit umístění, zdaleka neumí role, synchronizaci, úkoly, dodací listy, faktury...)\\
+Provedené transakce lze zpětně upravovat - pro použití této aplikace je to vhodné (je určena pro single-user použití), pro Sysla je to funkce nevhodná z důvodu kontroly nad stock flow.
+
+\paragraph{Zajímavé funkcionality}
+\begin{itemize}
+	\item Kalkulačka u polí množství (lze tak efektivně zadat například \uv{5*50 + 7}.
+	\item Možnost zobrazení přehledu produktů, kterých je na skladě málo.
+\end{itemize}
+
+\paragraph{Analýza UI}
+Jedná se o jednoduchou aplikaci, která má ale některé zajímavé funkcionality.\\
+Nabízí například zajímavé grafy pohybu konkrétního zboží.
+
+\paragraph{Klady UI}
+\begin{itemize}
+	\item Při zadávání množství v naskladnění zobrazuje výsledek, kolik bude na skladě po naskladnění.
+	\item Má menu, které lze vytáhnout z levého okraje. Jednoduše se tak vždy rychle dostanu tak, kam potřebuji.
+	\item Nejvíce potřebné akce jsou na domovské obrazovce dostupné v řádku ve spodní části obrazovky.
+	\item V horní části obrazovky je nástřel drobečkové navigace - bohužel ale aplikace nemá více než 1 zanoření a tudíž je nevyužita.
+\end{itemize}
+
+\paragraph{Zápory UI}
+\begin{itemize}
+	\item Datum se vybírá z vlastního formuláře, který se používá hůře než vestavěný androidí.
+	\item Dokončení akce zobrazí vždy potvrzovací dialog, což sice na první pohled může vypadat jako dobrý nápad, ale při přehnaném použivání těchto dialogů ztrácí uživatel zájem se nad dialogem rozmýšlet, a všechny automaticky potvrzuje, čímž dialog ztrácí smysl \cite{nn-dialogs}.
+	\item Chybí auto focus při otevření nových stránek na důležité prvky (vyplnění EAN, hledání…).
+	\item Ovládací prvky UI (potrvzení atp.) jsou často malé a špatně se na ně na dotykové obrazovce strefuje.
+	\item Z přehledu zboží s nízkou skladovostí lze kliknout na \uv{add} u konkrétního výrobku. Otevře se stránka naskladnění, zvolený výrobek ale není předvyplněn.
+	\item Na domovské obrazovce je plovoucí tlačítko pro přidání nového pohybu zboží. Toto tlačátko ale někdy překrývá jiné ovládací prvky, na které není možné kliknout ani při pokusu odscrollovat níže, protože tam už stránka často končí.
+	\item Když je menu v levé části vytahováno gestem (posun prstu od kraje obrazovky), je nutné táhnout prst asi až do polovny obrazovky, jinak se menu neotevře.
+	\item V seznamu zboží je pro otevření detailu nutné kliknout na malou akci \uv{Show}, klik na celý řádek produktu nedělá nic.
+\end{itemize}
+
+// TODO další konkurence

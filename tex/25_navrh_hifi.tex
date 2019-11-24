@@ -1,7 +1,10 @@
-\section{Návrh uživatelského rozhraní - HiFi prototyp}
+\section{Návrh uživatelského rozhraní - Hi-Fi prototyp}
 
-Dalším krokem návrhu uživatelského rozhraní byla tvorba HiFi prototypu, neboli aplikace, která je již vytvořena za použití některých technologií cílové platformy, avšak neobsahuje backend - neukládá žádná data a vždy zobrazuje pouze předpřipravený obsah - vždy však musí správně reagovat na interakci uživatele.\\
+Dalším krokem návrhu uživatelského rozhraní byla tvorba Hi-Fi prototypu, neboli aplikace, která je již vytvořena za použití některých technologií cílové platformy, avšak neobsahuje backend - neukládá žádná data a vždy zobrazuje pouze předpřipravený obsah - vždy však musí správně reagovat na interakci uživatele.\\
 Hi-fi prototyp jsme opět realizovali jako tým v rámci předmětu MI-NUR, avšak přípravu technologie jsem provedl já samostatně a její realizace stojí za zmínku.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Technologie použitá v Hi-Fi prototypu}
 
@@ -81,9 +84,39 @@ function insertParameters(parent) {
 
 Funkce \code{loadDynamicContent} z ukázky kódu \ref{code:hifi-js} funguje tak, že projde existující kód (výchozí je vždy \code{index} z ukázky kódu \ref{code:hifi-html}) a veškeré výskyty tříd ve tvaru \code{něco-include} nahrazuje obsahem souboru \code{něco.html} ze složky \code{components/}. Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Naopak například v Mozilla Firefoxu je CORS v tomto ohledu volnějši, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index}.\\
 Zdrojové kódy Hi-Fi prototypu, který následně v tomto \uv{frameworku} vznikl, jsou dostupné na přiloženém médiu a také v repozitáři na Gitlab FIT \cite{gitlab-hifi}. Stejně jako u Lo-Fi prototypu, i zde vkládám obrazovku naskladnění přímo do textu jako obrázek \ref{picture:hifi}.\\
-Tento prototyp byl podroben uživatelskému testování, které je z důvodu logické struktury práce obsaženo v kapitole \ref{testing}, přestože chronologicky proběhlo ještě před dalšími návrhovými procesy, které budu popisovat v následujících sekcích.\\
 
 \begin{figure}[]
 \includegraphics[height=0.6\textheight]{../png/hifi/naskladneni.png}
 \caption{Rozhraní skladníka pro naskladňování položek: Hi-Fi prototyp} \label{picture:hifi}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Testování prototypu}
+
+Hi-Fi prototyp popisovaný v předchozí sekci, který je také dostupný na přiloženém médiu, byl testován v rámci předmětu MI-NUR společně mnou, Pavlem Kovářem, Martinem Kubišem a Jakubem Šterclem. Abych nekradl cizí práci, uvedu v tomto textu pouze části, které jsou realizoval já osobně, i výstup ostatních kolegů jsem ale zhodnotil v samotné implementaci následné funkční aplikace.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Heuristická analýza}
+
+Zvolili jsme několik akcí skladníka, které jsme podrobili heuristické analýze. Já konkrétně jsem řešil obrazovku naskladnění (screenshot přiložen v předchozí kapitole jako obrázek \ref{picture:hifi}), která dopadla následovně:
+
+\begin{enumerate}
+  \item \emph{Viditelnost stavu systému}:\\Vše v pořádku
+  \item \emph{Shoda mezi systémem a realitou}:\\OK
+  \item \emph{Minimální zodpovědnost (a stres)}:\\Při otevřené tohoto tasku se mu ten hned přiřadí. Pro navrácení je nutné jej stornovat a vyplnit, že se jednalo o chybu. V systému o tom však bude záznam. Dále není jasné, zda tlačítka ve spodní části úkol již odeslou, nebo se teprve zobrazí nějaký formulář a potvrzení.\footnote{V reálné aplikace je toto vyřešeno: úkol při otevření - pokud ještě není přiřazen - zobrazí pouze informace a tlačítko pro přiřazení úkolu \uv{sám sobě}. Teprve poté je možné v něm provádět práci. Tlačítka ve spodní části byla předělána na běžná tlačítka a byla přidána další obrazovka, kde se úkol dokončuje. Zda tlačítko něco odesílá, řeší rozlišení jejich barev, což jsem popisoval v sekci \ref{implementation:colors:idempotent}.}
+  \item \emph{Shoda s použitou platformou a obecnými standardy}:\\V pořádku (material design)
+  \item \emph{Prevence chyb}:\\Úkol nelze dokončit, pokud nějaké zboží nemá vyplněno umístění.\footnote{V reálné aplikaci toto řešeno výrazným označením zboží, které ještě není umístěno.} Jiné chyby na této stránce (z aplikačního hlediska) prakticky nelze udělat => OK
+  \item \emph{Kouknu a vidím}:\\Při větším množství položek může být seznam dlouhý a nepřehledný
+  \item \emph{Flexibilita a efektivita}:\\OK - zkušený může stále pípat, nový může zkoumat dostupné vstupy.
+  \item \emph{Minimalita (Klapky na očích)}:\\OK - obsah karet bude ve finální aplikaci konfigurovatelný\footnote{V době psaní textu se jedná o jeden z návrhů na budoucí vylepšení aplikace}.
+  \item \emph{Smysluplné chybové hlášky}:\\Jediná chybová hláška o vyplnění umístění je jasná.
+  \item \emph{Help a dokumentace}:\\Dokumentace není\footnote{Reálná aplikace základní nápovědu / dokumentaci nabízí}
+\end{enumerate}
+
+// TODO more

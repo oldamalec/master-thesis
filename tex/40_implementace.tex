@@ -1,21 +1,89 @@
 \chapter{Implementace}\label{implementation}
 
-\section{Obecné součásti aplikace}
+Pro instalaci základu projektu jsem vycházel z dokumentace \cite{vue-doc} a využil npm \cite{npm}. Tím jsem získal základní kostru aplikace, kterou je možné spouštět ve vývojářském režimu (ten podporuje například \emph{hot-swapping} a také tvořit výsledný build vhodný pro produkční prostředí, který je již optimalizován pro rychlost.
 
-Pro instalaci základu projektu jsem vycházel z dokumentace \cite{vue-doc} a využil NPM \cite{npm}. Tím jsem získal základní kostru aplikace, kterou je možné spouštět ve vývojářském režimu (ten podporuje například \emph{hot-swapping}, ale pro produkční prostředí se nehodí, neboť není rychlostně optimalizován). Nástroje pro tvorbu optimalizované verze jsou také samozřejmě dostupné - zatím ale nejsou pro mé použití potřeba.
+V následujících sekcích budu popisovat převážně obecné součástí aplikace, u kterých jsem se do jisté míry zastavil a upravoval jejich použití pro účely skladového systému.
 
-Jelikož se zabývám aplikací středních rozměrů, je vhodné k tomuto základu přidat některé pokročilé funkcionality, které popíšu v následujících sekcích.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Router}
+\section{Router}
 
 Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Koncept routeru je dobře znám z jakékoliv jiné aplikace, která nějak pracuje s prohlížečem uživatele - mně konkrétně byl znám z PHP.\\
-Rozdíl Vue.js routeru oproti tomu, který je používán třeba ve zmiňovaném PHP, spočívá v dynamičnosti celého Javascriptového frameworku: oproti standardním aplikacím, kde přesměrování na novou adresu skutečně vyvolá požadavek na server, který odpoví obsahem stránky na dané URL, zde se vše děje dynamicky přímo na klientském zařízení, obsah je vyměněn pomocí Javascriptu a hodnota adresního řádku se změní pouze \uv{pro efekt} - tj. aby uživatel věděl, kde se nachází, a aby mohl adresu zkopírovat a sdílet. Samozřejmě i zde většinou dochází k načítání dat nově otevřené stránky, ale vše je typicky asynchronní - stránka se změní ihned a teprve poté jsou do ní doplněna data. TODO diagram?\\
-Lehce matoucí může u tohoto \emph{frontendového routování} být nastavování titulků stránek, tedy \code{<title>} tagů v HTML. Celá aplikace má totiž stále pouze jeden \code{<title>} zapsaný v souboru \code{index.html}, který se sám o sobě při navigaci za pomocí routeru vůbec nemění. K vyřešení tohoto problému sice ve Vue Routeru neexistuje nativní podpora, ale řešení je opravdu snadné - je popsáno v jednom z \emph{issues} v repozitáři na GitHubu \cite{vue-router-title} a spočívá v doplnění titulků do \code{meta} atributů cest:
+Rozdíl Vue.js routeru oproti tomu, který je používán třeba ve zmiňovaném PHP, spočívá v dynamičnosti celého Javascriptového frameworku: oproti standardním aplikacím, kde přesměrování na novou adresu skutečně vyvolá požadavek na server, který odpoví obsahem stránky na dané URL (diagram \ref{picture:route:http}), zde se vše děje dynamicky přímo na klientském zařízení, obsah je vyměněn pomocí Javascriptu a hodnota adresního řádku se změní pouze \uv{pro efekt} - tj. aby uživatel věděl, kde se nachází, a aby mohl adresu zkopírovat a sdílet. Samozřejmě i zde většinou dochází k načítání dat nově otevřené stránky, ale vše je typicky asynchronní - stránka se změní ihned a teprve poté jsou do ní doplněna data - viz doagram \ref{picture:route:vue}
 
-\begin{listing}[H]
+\begin{figure}[]
+\includegraphics[width=0.7\textwidth]{../png/diagrams/sequence-http-navigate.png}
+\caption{Navigace na standardní webové stránce} \label{picture:route:http}
+\end{figure}
+
+\begin{figure}[]
+\includegraphics[width=0.9\textwidth]{../png/diagrams/sequence-vue-router.png}
+\caption{Navigace v aplikaci pomocí Vue Router} \label{picture:route:vue}
+\end{figure}
+
+% title Navigace na standardní webové stránce
+
+% View->Browser:První otevření stránky
+% activate Browser
+% Browser->Server:GET /index
+% activate Server
+% Server-->>Browser:HTML + CSS + JS
+% deactivate Server
+% Browser->>View:Zobraz vyrenderované zdroje
+% deactivate Browser
+% activate View
+
+
+% View->Browser:Klik na link "uživatelé"
+% deactivate View
+% activate Browser
+% Browser->Server:GET /users
+% activate Server
+% Server-->>Browser:HTML + CSS + JS
+% deactivate Server
+% Browser->>View:Změň celou stránku na nové zdroje
+% deactivate Browser
+% activate View
+
+
+% title Navigace pomocí Vue Routeru
+% 
+% participant View
+% participant App
+% participant Browser
+% participant Server
+% 
+% View->Browser:První otevření stránky
+% activate Browser
+% Browser->Server:GET /index
+% activate Server
+% Server-->>Browser:JS + CSS
+% deactivate Server
+% Browser->>App:Instance Vue
+% deactivate Browser
+% activate App
+% App->>View:Zobrazení aplikace
+% activate View
+% 
+% 
+% View->App:Klik na link "uživatelé"
+% deactivate View
+% App->>View:Výměna obsahu v <router-view>
+% activate View
+% App->>Browser:Úprava URL
+% App->>Server:GET /users
+% activate Server
+% Server-->>App:JSON
+% deactivate Server
+% App->>View:Vložení dat do již vyrenderované stránky
+% 
+
+\paragraph{Titulky stránek.} Lehce matoucí může u tohoto \emph{frontendového routování} být nastavování titulků stránek, tedy \code{<title>} tagů v HTML. Celá aplikace má totiž stále pouze jeden \code{<title>} zapsaný v souboru \code{index.html}, který se sám o sobě při navigaci za pomocí routeru vůbec nemění. K vyřešení tohoto problému sice ve Vue Routeru neexistuje nativní podpora, ale řešení je opravdu snadné - je popsáno v jednom z \emph{issues} v repozitáři na GitHubu \cite{vue-router-title} a spočívá v doplnění titulků do \code{meta} atributů cest, viz ukázka kódu \ref{code:vue-router-title1}, a dále úpravě samotné instance routeru, viz ukázka kódu \ref{code:vue-router-title2}. // TODO nakonec ještě jinak, složitější titulky
+
+\begin{listing}[]
 \begin{minted}[linenos,frame=lines]{javascript}
 {
     path: '/',
@@ -28,9 +96,7 @@ Lehce matoucí může u tohoto \emph{frontendového routování} být nastavová
 \caption{Nastavování titulků stránek pomocí Vue routeru - úprava definic} \label{code:vue-router-title1}
 \end{listing}
 
-a dále úpravě samotné instance routeru:
-
-\begin{listing}[H]
+\begin{listing}[]
     \begin{minted}[linenos,frame=lines]{javascript}
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
@@ -40,7 +106,7 @@ router.beforeEach((to, from, next) => {
 \caption{Nastavování titulků stránek pomocí Vue routeru - úprava instance routeru} \label{code:vue-router-title2}
 \end{listing}
 
-Další úpravou routeru, kterou jsem do jisté míry realizoval po svém, je generování drobečkové navigace. Vue Router ve spojení s Vuetify nemají nativní podporu pro zjišťování rodičovských stránek, a tak jsem si lehkou úpravou a vlastní komponentou pro vykreslování \emph{Breadcrumbs} toto zautomatizoval:\\
+\paragraph{Drobečková navigace.} Další úpravou routeru, kterou jsem do jisté míry realizoval po svém, je generování drobečkové navigace. Vue Router ve spojení s Vuetify nemají nativní podporu pro zjišťování rodičovských stránek, a tak jsem si lehkou úpravou a vlastní komponentou pro vykreslování \emph{Breadcrumbs} toto zautomatizoval:\\
 Každá definovaná routa má nastaveného rodiče, ke kterému poskytuje \emph{getter}. Ve vykreslování drobečkové navigace se poté na aktuální routě zjišťují rekurzivně její rodiče, a včetně jejich parametrů se z nich zpětně tvoří celý strom navigace.\\
 Co se na první pohled může zdát jednoduché, se zkomplikuje ve chvíli, kdy chceme mít v cestě parametrizovanou stránku.\\
 Například v URL \code{/stocks/1/locations/12/update} je potřeba v definici routy nahradit všechny identifikátory jejich reálnými hodnotami, které ale naštěstí Vue Router poskytuje i během runtime. Funkce pro vytvoření jednoho odkazu, ze kterých se skládá drobečková navigace, je znázorněna v ukázce kódu \ref{code:router:buildPath} - jejími argumenty jsou definice cesty v routě a objekt s aktuálními hodnotami parametrů.
@@ -63,7 +129,14 @@ function buildPath(pathWithPlaceholders, parameters) {
 \caption{Automatické generování drobečkové navigace, včetně parametrizovaných cest} \label{code:router:buildPath}
 \end{listing}
 
-\subsection{Webpack}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Webpack}
+
+TODO přepracovat
 
 Webpack \cite{webpack} je software, který zpracovává součásti webových aplikací a tvoří z nich balíčky vhodné pro webové prohlížeče. Primárně je zaměřen na Javascript, ale dokáže zpracovávat i řadu dalších formátů, přes styly v css či sass, obrázky v png, jpeg, svg či konfigurace v json, yaml a dalších.\\
 Primárním důvodem, proč používat Webpack, je možnost rozdělování kódu do jednotlivých souborů. Z jiných programovacích jazyků jsme zvyklí mít oddělenou komponentu starající se o přihlašování, v dalším souboru mít podporu komunikace s externím API atp. Samotný Javascript sice samozřejmě umožňuje kód rozdělit do více souborů, avšak vše se spojuje pouze do jednoho kontextu prohlížeče, a tak může u větších projektů být matoucí, odkud se ta která závislost vlastně bere.
@@ -86,10 +159,12 @@ TODO
 
 TODO
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Sentry}
+\section{Sentry}
 
 Sentry \cite{sentry} je webová služba pro sledování chyb, které v aplikaci nastanou. Při použití v produkčním prostředí může vývojář díky Sentry o chybě vědět ještě dříve, než ji uživatel nahlásí, a to včetně všech detailů, jako například jaké kroky chybě předcházely, prostředí, ve kterém k chybě došlo a mnoho dalších.\\
 Integrace s Vue.js je přímo podporována, a tak je integrace se Sentry záležitostí několika řádků kódu. V ukázce kódu \ref{code:sentry-vue} je vidět služba, kterou v projektu používám.
@@ -152,10 +227,12 @@ Sentry.captureMessage('Your message');
 \caption{Zasílání vlastních zpráv do Sentry} \label{code:sentry-vue-capture}
 \end{listing}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Podpora WebApp}
+\section{WebApp}
 
 V kapitole \ref{technology} jsem zmiňoval, že skladník bude aplikaci používat z nativní Android aplikace, která bude obalovat WebView, a vedoucí skladu si aplikaci otevře v běžném browseru - pro obě použití by konfigurace WebApp nebyla potřeba, avšak pokud by někdo nepotřeboval čtečku čárových kódu - což je jediný důvod, proč skladníci používají jako základ nativní Android aplikaci, je možné si otevřít na mobilu běžnou stránku a použít volbu "Přidat na plochu". Tím vznikne zástupce, který zobrazuje \emph{favicon} webové stránky a po jehož otevření se opět otevře běžný webový prohlížeč.\\
 Pokud je však na stránce definovaný \code{manifest.json} pro webové aplikace, může se po otevření tohoto zástupce otevřít stránka v režimu celé obrazovky, a to případně i se skrytými ovládacími prvky - vše tak vypadá, jako kdyby se jednalo o nativní aplikaci. Základní konfigurace tohoto manifestu je vidět v ukázce kódu \ref{code:webapp-manifest}.
@@ -182,10 +259,12 @@ Pokud je však na stránce definovaný \code{manifest.json} pro webové aplikace
 
 TODO screenshot rozdílu?
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Překlady}
+\section{Překlady}
 
 Novou aplikaci je dnes vhodné hned od počátku psát jako \emph{multijazyčnou} - jako základ tedy například v češtině a angličtině.\\
 Pro překlady Vue.js aplikací je vhodné použít knihovnu \code{vue-i18n}\footnote{název je zkratka pro \emph{internationalization} - číslovka 18 značí počet přeskočených znaků}. \cite{vue-i18n}\\
@@ -217,21 +296,26 @@ Použití knihovny je pak obdobné jako známe z jiných jazyků. Máme definova
 
 Bude-li v budoucnu někdy potřeba přidat další jazyky, stačí vzít pouze definice překladů dle klíčů a přeložit vše do nového jazyku. Zde je vhodné ještě zmínit, že pouhé překládání podle klíčů je sice rychlé, ale i tak by po nasazení nového jazyka měly být překlady zkontrolovány překladatelem přímo v aplikaci, a to navíc takovým, který rozumí cílové doméně. Pokud se tak neučiní, nastává často situace, kterou vídáme u zahraničních služeb, které expandují do Česka: překlady jsou dělané buďto strojově a nebo pouze dle klíčů, a v aplikaci se pak zobrazují slova, která bychom my jako Češi nikdy v daném kontextu nepoužili.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Material design}
+\section{Material design}
+
+TODO rozvést
 
 Nejrozšířenější grafickou knihovnou pro tvorbu webových a mobilních aplikací pro Android je bezesporu \emph{Material Design} od Googlu.\\
 První knihovna, na kterou jsem narazil, byla Vue Material \cite{vue-material}. Bohužel jsem záhy zjistil, že jelikož v době psaní práce (březen 2019) je teprve v beta verzi, a nemá implementované všechny komponenty, nakonec jsem se rozhodl pro její alternativu - Vuetify.\\
 Jedná se o aktivně vyvíjenou knihovnu, která již podporuje veškeré základní prvky Material Designu a stále jsou přidávány i prvky nové \cite{vuetify}.\\
 Vuetify lze navíc jednoduše integrovat s již použitou knihovnou i18n.js popisovanou v předchozí sekci.
-TODO rozvést
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{State management pattern}
+\section{State management pattern}
 
 Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, a ty mezi sebou často potřebují komunikovat. Pěkný příklad je například \emph{snackbar message}, někdy nazývaná také \emph{toast message} či jednoduše \emph{oznámení o provedení akce}. To je komponenta, která musí být dostupná z jakékoliv jiné komponenty systému a vždy se musí zobrazovat na stejném místě a stejně se chovat. Je tedy žádoucí zpřístupnit její \emph{stav} a to tak, aby se při změně stavu něco automaticky stalo, a aby změna stavu byla řízena jistými pravidly.
 
@@ -298,20 +382,24 @@ this.snack('<message to display');
 \caption{Použití mixinu pro zjednodušení zasílání zpráv do Snackbaru} \label{code:snack-mixin}
 \end{listing}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Hlídání konektivity}
+\section{Hlídání konektivity}
 
 V moderních aplikacích, které veškerá data ukládají na API, je vhodné hlídat dostupnost tohoto API.\\
 Prvním krokem k realizaci této funkce bylo zjistit stav připojení - tedy zda je aplikace online, nebo offline. Jako první jsem našel vlastnost prohlížeče \code{window.navigator.onLine} \cite{online}, která by přesně o tomto měla informovat a navíc poskytuje i možnosti poslouchat její změny pomocí běžných JS eventů.\\
 Po hlubším prozkoumání TODO
 TODO kontrola konektivity (proč nepoužívat browser properities, vlastní check, jeho náročnost na síť)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Renderování formulářů} \label{implementation:formRender}
+\section{Renderování formulářů} \label{implementation:formRender}
 
 \paragraph{Anti-inspirace v jiném projektu.} Ještě před tím, než jsem začal tvořit formuláře ve své diplomové práci, jsem shodou okolností potřeboval upravit několik formulářů v jiné aplikaci, která funguje na podobných technologiích: backend je zcela oddělený a poskytuje REST API, frontend je poté napsán v Angularu. Při zjišťování, jak složitě se zde generují formuláře jsem ale zjistil, že pro svou práci chci rozhodně vymyslet lepší systém. Níže přikládám seznam, které věci je potřeba ve zmiňovaném projektu upravit, chce-li programátor přidat nový formulářový prvek:
 
@@ -384,13 +472,15 @@ Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat r
 
 \begin{figure}[]
 \includegraphics[width=\textwidth]{../png/app/form_stock_location.png}
-\caption{Formulář vykreslený pomocí vlastní jednotné formulářové komponenty} \label{picture:form-stock-location}
+\caption{Formulář vykreslený pomocí jednotné formulářové komponenty} \label{picture:form-stock-location}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Realizace podpory pro undo}\label{implementation:undo}
+\section{Realizace podpory pro undo}\label{implementation:undo}
 
 Jak jsme s Pavlem rozhodli v návrhové části (sekce \ref{draft:undo}), undo je realizováno přímou podporou u vybraných akcí.\\
 Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa výrobců zboží}, u které je možné procházet kompletní historii změn, a tedy i provádět undo. Základní implementace rozšiřuje běžné \emph{snack messages} přidáním tlačítka \uv{vrátit} (obrázek \ref{picture:undo}). Takovýto toast message má nastavenou zvýšenou či neomezenou životnost, nezmizí tedy během pár sekund, jako ty ostatní. Po využití funkce vrácení se po úspěšném dokončení zobrazí buďto obrázek \ref{picture:undo-after}, či případně chybová hláška.
@@ -405,10 +495,12 @@ Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa vý
 \caption{Undo: Potvrzení vrácení provedených změn} \label{picture:undo-after}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Generování kódu ze specifikace OpenDoc}\label{implementation:codegen}
+\section{Generování kódu ze specifikace OpenDoc}\label{implementation:codegen}
 
 Ještě předtím, než jsem začal pracovat na realizaci samotných funkčnostech aplikace, jsem si připravil rozhraní, přes které budu komunikovat s API.\\
 Při psaní tohoto kódu jsem se snažil co nejvíce omezit opakování kódu, a tak jsem vymyslel i několik funkcí, které kód podstatně zkracují, ale jak jsem zjistil později, tak do něj zanáší neočekávané chování.\\
@@ -457,10 +549,12 @@ Vyzkoušel jsem tedy generátor spouštět s různými parametry, avšak výsled
 Samozřejmě se najde i několik metod, do kterých nelze poslat takto přímo definici formuláře, protože se jedná například o pokyn k přesunu zboží mezi umístěním atp. - které se generuje z napípávání zboží, nikoliv z vyplněného formuláře. V těchto několika případech jsem ručně vypsal přiřazení (kterému jsem se snažil z počátku za každou cenu vyhnout), avšak nikdy se nejedná o více než 3 atributy, takže přehlednost by neměla trpět.
 Do budoucna budu ještě zvažovat zavedení větší typovosti argumentu \code{data}, který často do API metod posílám, rád bych k tomu využil například JSdoc.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Barevná paleta aplikace}\label{implementation:colors:idempotent}
+\section{Barevná paleta aplikace}\label{implementation:colors:idempotent}
 
 Barvy použité v aplikaci mají velký vliv na to, jak ji budou její uživatelé vnímat. Když jsem začal s implementací, zvolil jsem pouze pár základních barev, protože v tu chvíli jsem potřeboval funkční kostru aplikace. Postupem času jsem ale začal více přemýšlet o volbě barevné palety a jak ji rozumně zvolit.
 
@@ -524,10 +618,12 @@ Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládaj
     \caption{Barvy znázorňující idempotenci akcí: Tlačítko tvorby úkolu} \label{picture:colors:task_fab}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Automatický záznam stráveného času}\label{implementation:time_tracking}
+\section{Záznam stráveného času v úkolech}\label{implementation:time_tracking}
 
 Jedním z požadavků na nový systém byla možnost zaznamenávání stráveného času v úkolech. Jelikož často pracuji v Redmine, což je software pro evidenci požadavků a řízení projektů, kde se čas také zaznamenává, analyzoval jsem, jak se zde se záznamem času pracuje.
 
@@ -566,14 +662,7 @@ TODO PR do Vuetify?
 
 TODO persistent store
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Funkční specifikace}
-
-// TODO jednotlivé úkoly atp.
+TODO funkční specifikace jednotlivých úkolů?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -597,4 +686,3 @@ Po chvilce dalšího ladění s importem ikonek vyšlo najevo, že nastavení \u
 \end{minted}
 \caption{Diff nastavení fontu ikonek ve Vuetify} \label{code:mdi:diff}
 \end{listing}
-
