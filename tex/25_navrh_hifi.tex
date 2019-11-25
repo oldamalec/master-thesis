@@ -79,7 +79,7 @@ function insertParameters(parent) {
     }
 }
 \end{minted}
-\caption{Funkce pro načtení obsahu komponent Hi-Fi prototypu, včetně podkomponent} \label{code:hifi-js}
+\caption[Funkce pro načtení obsahu komponent Hi-Fi prototypu]{Funkce pro načtení obsahu komponent Hi-Fi prototypu, včetně podkomponent} \label{code:hifi-js}
 \end{listing}
 
 Funkce \code{loadDynamicContent} z ukázky kódu \ref{code:hifi-js} funguje tak, že projde existující kód (výchozí je vždy \code{index} z ukázky kódu \ref{code:hifi-html}) a veškeré výskyty tříd ve tvaru \code{něco-include} nahrazuje obsahem souboru \code{něco.html} ze složky \code{components/}. Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Naopak například v Mozilla Firefoxu je CORS v tomto ohledu volnějši, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index}.\\
