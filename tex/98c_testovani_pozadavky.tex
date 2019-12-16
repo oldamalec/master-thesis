@@ -1,0 +1,72 @@
+\chapter{Zpracovaný výstup z uživatelského testování alfa verze aplikace} \label{ap:testing_requirements}
+
+\paragraph{Seznam požadavků}
+
+\begin{itemize}
+	\item Expedice:
+	\begin{itemize}
+		\item přidat možnost zadat váhu balíku,
+		\item upozorňovat, že dělám balení skladové položky, která je i v jiné expedici, která byla ale zadána dřív a je ještě nezpracovaná (FIFO),
+	\end{itemize}
+	\item možnost dokončit vyskladnění částečně, tj. nedokončené položky by se vložily do nového úkolu,
+	\item do webview aplikace přidat možnost rozsvítit světlo blesku přímo z aplikace,
+	\item mít možnost u skladové položky vyplnit jednak oficiální název ale také skladový název, podle kterého se např. bude lépe položka hledat na skladě,
+	\item přehled produktů může být moc dlouhý, když jich je na skladě hodně - rozumně omezit,
+	\item k \uv{může mít šarži} přidat vysvětlení (nápovědu),
+	\item mít možnost přidávat nové položky i pod tabulkou, které je vypisují,
+	\item přidávání čárových kódů skladových položek by mělo být i v šipce vpravo dole, výchozí kódy rovnou v tabulce, ne až na prokliku. Stejná tabulka by mohla být i v úpravě produktu,
+	\item při naskladňování položky bez fotky nabídnout, zda chce skladník fotografii přidat,
+	\item při kolizi čárového kódu umožnit zobrazení kolizní položky,
+	\item umožnit vlastní řazení sloupců na přehledu na domovské obrazovce,
+	\item ikonku čárového kódu otočit o 90°,
+	\item vedle šipky vpravo dole přidat nadpis \uv{nový úkol},
+	\item ze seznamu umístění ve skladu mít akci, která zobrazí položky na konkrétním umístění,
+	\item možnost nastavit si pořadí tvorby úkolů v šipce vpravo dole,
+	\item umožnit zobrazit nahranou přílohu,
+	\item umožnit nahrát více souborů postupně,
+	\item umožnit měnit prioritu úkolu i po jeho vytvoření,
+	\item v naskladnění zpřístupnit i přehled podle produktů a kam jsou naskladněny, ne pouze přehled umístění, a co na ně bylo umístěno,
+	\item při dokončování úkolů mít možnost přiřadit i fotku,
+	\item při volbě položek k vyskladnění či přesunu vypisovat jejich stručné informace ve volném místě vpravo,
+	\item u umístění mít možnost evidovat, zda se na něm dá provádět expedice,
+	\item snack zpráva o nově vytvořeném úkolu by měla obsahovat jeho ID a odkaz na něj,
+	\item seznam umístění, kde lze požadovanou položku nalézt, řadit pod sebe, pouze jedno na řádek,
+	\item přidat na bottom sheet křížek pro jeho zavření,
+	\item automatické obnovování seznamů na domovské obrazovce,
+	\item možnost zvolit komu úkol přiřadím, skupiny skladníků,
+	\item po navrácení na domovskou stránku ponechat aktivní tu záložku, ze které byl úkol otevřený,
+	\item při manipulaci se skladovými položkami v úkolech umožnit změnu jejich počtu i rozklikem položky, ne nutně napípnutím,
+	\item při naskladňování přidat volitelně možnost použití skladníkova inventáře, aby viděl, co ještě musí umístit,
+	\item při výběru umístění ve formulářích vypisovat i jeho kód
+	\item při výběru položek k vyskladnění či přesunu umožnit je přidávat kliknutím na jejich název (ve výpisu \uv{položek na skladu},
+	\item potom, co skladník zvolí, že bude pracovat na úloze, přepnout rovnou na druhou záložku úkolu,
+	\item více zvýraznit když se seznam úkolů načítá,
+	\item informace o tom, co by se mělo skenovat, by měla být nejen pod vstupním polem, ale i přímo v něm,
+	\item možnost aktivovat umístění, na které naskladňuji, pouhým kliknutím na něj, bez nutnosti skenovat kód,
+	\item při přesunu položek na cílové umístění povolit rychlou akci, která přesune vše.
+\end{itemize}
+
+\paragraph{Seznam chyb}
+
+\begin{itemize}
+	\item Název umístění v přehledu hotových úloh je moc nevýrazný,
+	\item překlopení Zebry na bok ukončí aktivitu - aplikace se poté musí znovu přihlásit,
+	\item ve webview nefunguje otevření jiné přílohy než png, jpg,
+	\item hláška o načítání na umístění je nejasná: mělo by být spíš \uv{Načtěte produkty k umístění do ...},
+	\item když mám přesouvat produkt, který už je i cílovém umístění, tak stále vypisuje chybu a nelze přesunout.
+\end{itemize}
+
+\paragraph{Návrhy na pokročilé funkce}
+
+\begin{itemize}
+	\item Umožnit zadat termíny, kdy pravidelně přijíždí konkrétní dopravce přebírající zásilky. Díky tomu by mohl systém upřednostňovat expedici podle termínu, kdy musí být balíky připravené.
+	\item Umožnit současně pracovat na více úkolech.
+	\item Preferování různých umístění při naskladnění: do zcela volných umístění apod.
+	\item Podpora pro výměnu vratných obalů (sklenice, sodastream, apod.).
+	\item Vedoucímu umožnit nastavit k výrobku speciální upozornění pro skladníka, které se mu zobrazí (např. zkontroluj, že je na krabici nějaký nápis apod.).
+	\item Notifikace na nové úkoly.
+	\item Vratky zboží, řešit především návaznosti šarží - tj. trvanlivost apod.,
+	\item hromadná avíza: umožnit zadání, které zboží přijede a bude naskladněno. To ale bude najíždět postupně, a mělo by být vidět, co vlastně ještě chybí a má přijet.
+	\item Umožnit skladníkovi zadávat si mikro-úkoly například na expedici, když se mu něco na umístění nezdá a chce to zkontrolovat.
+	\item Kapacity umístění.
+\end{itemize}

@@ -7,14 +7,14 @@ V této kapitole se budu věnovat převážně některým obecným součástem a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Nízkoúrovňové vývojové nástroje}
+\section{Podpůrné nástroje vývoje}
 
 \subsection{Webpack}
 
 Webpack \cite{webpack} je software, který zpracovává součásti webových aplikací a tvoří z nich balíčky vhodné pro webové prohlížeče. Primárně je zaměřen na Javascript, ale dokáže zpracovávat i řadu dalších formátů, přes styly v css, sass či stylus, obrázky v png, jpg, svg, ale také konfigurace v json, yaml a dalších.\\
 Hlavním důvodem, proč používat Webpack, je možnost rozdělování kódu do jednotlivých souborů. Při programování je pohodlné mít oddělené ucelené komponenty, různé konfigurační soubory apod. Výstupem webpacku jsou poté typicky pouze čtyři soubory: dva obsahující logiku aplikace (.js) a dva pro stylování (.css), přičemž logika i styly jsou rozděleny na samotnou aplikaci - kód programátora, a kód třetích stran - tzv. \code{vendor}.
 
-\paragraph{Použití loaderů.} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých assetů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
+\paragraph{Použití loaderů.} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých souborů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
 
 \paragraph{Webpack ve spolupráci s Vue.js.} Konfigurace webpacku může být pro neznalého uživatele až příliš obsáhlá a může být jednoduché v ní udělat chybu, kvůli které bude například výsledný build aplikace neoptimalizovaný a tudíž pomalý. Vývojáři Vue tento problém mitigovali tak, že celá optimalizovaná konfigurace webpacku je součástí \code{vue-cli}, což znamená, že stačí mít v projektu jako závislosti právě tento npm modul, a pokud nejsou vyžadovány žádné pokročilé funkce, funguje vše \emph{automagicky}\footnote{Nejedná se o překlep, jde o spojení slov automaticky a magicky}. Pro účely porovnání jsem se podíval, jak dlouhá je konfigurace webpacku, kterou má Vue automaticky v sobě - jedná se o \emph{1490 řádků kódu}.
 
@@ -180,7 +180,7 @@ function buildPath(pathWithPlaceholders, parameters) {
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Plnohodnotná webová aplikace}
+\section{Moderní webová aplikace}
 
 V kapitole \ref{technology} jsem zmiňoval, že skladník bude aplikaci používat z nativní Android aplikace, která bude obalovat WebView, a vedoucí skladu si aplikaci otevře v běžném browseru - pro obě použití by níže popisovaná konfigurace nebyla potřeba, avšak pokud by někdo nepotřeboval čtečku čárových kódu - což je jediný důvod, proč skladníci používají jako základ nativní Android aplikaci, je možné si otevřít na mobilu běžnou stránku a použít volbu \uv{Přidat na plochu}. Tím vznikne zástupce, který zobrazuje \emph{favicon} webové stránky a po jehož otevření se opět otevře běžný webový prohlížeč.\\
 Pokud je však na stránce definovaný \code{manifest.json} pro webové aplikace, může se po otevření tohoto zástupce otevřít stránka v režimu celé obrazovky, a to případně i se skrytými ovládacími prvky - vše tak vypadá, jako kdyby se jednalo o nativní nainstalovanou aplikaci. Základní konfigurace tohoto manifestu je vidět v ukázce kódu \ref{code:webapp-manifest}.
@@ -254,70 +254,51 @@ const user = "uživatele";
 
 TODO + moje persistentní řešení
 
-Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, a ty mezi sebou často potřebují komunikovat. Pěkný příklad je například \emph{snackbar message}, někdy nazývaná také \emph{toast message} či jednoduše \emph{oznámení o provedení akce}. To je komponenta, která musí být dostupná z jakékoliv jiné komponenty systému a vždy se musí zobrazovat na stejném místě a stejně se chovat. Je tedy žádoucí zpřístupnit její \emph{stav} a to tak, aby se při změně stavu něco automaticky stalo, a aby změna stavu byla řízena jistými pravidly.
+Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, které mezi sebou často potřebují sdílet nějaký \emph{stav}. Nabízí se tedy vytvoření centrálního bodu, který bude stav udržovat, a umožní jej měnit. Na změny by v ideálním případě měly dotčené komponenty reagovat automaticky, a tyto změny by také měly být nějak řízeny, aby nebylo možné nastavit nevalidní hodnoty. Přesně toto nabízí knihovna \emph{Vuex} \cite{vuex}, jejíž interní cyklus popisuje diagram \ref{picture:vuex}.
 
-\paragraph{Vuex.} Vuex \cite{vuex} je knihovna, která implementuje \emph{State management pattern} pro Vue.js. Zařizuje jednotný přístup ke stavům komponent a umožňuje jejich řízené změny. Jeho použití v aplikaci skladového systému je vidět na ukázce kódu \ref{code:vuex-snack-def}, \ref{code:vuex-snack-snack} a \ref{code:vuex-snack-use}, kde řeší zobrazování \emph{snackbar message}.
+\begin{figure}[]
+\includegraphics[width=\textwidth]{../png/diagrams/vuex.png}
+\caption{Diagram použití Vuex}\label{picture:vuex}
+\end{figure}
 
-\begin{listing}[h]
-\begin{minted}[linenos,frame=lines]{js}
-Vue.use(Vuex);
-
-new Vue({
-    store: new Vuex.Store({
-        modules: {
-            snackbar: {
-                state: {
-                    snack: ''
-                },
-                mutations: {
-                    setSnack (state, snack) {
-                        state.snack = snack
-                    }
-                },
-            }
-        }
-    });
-});
-\end{minted}
-\caption{Vuex pro snackbar-message: definice} \label{code:vuex-snack-def}
-\end{listing}
+Nebudu zde rozepisovat detaily jejího použití, ty jsou dostupné kdykoliv online v její kvalitní dokumentaci. Popíšu ale mé vlastní zkušenosti s touto knihovnou, a jak jsem implementoval některá vylepšení. Začněme však od kraje - jako první jsem Vuex použil pro zobrazování snack message - tedy krátkých informačních zpráv, které se zobrazují uživateli ve spodní části obrazovky, především jako potvrzení jeho akce. K tomu jsem použil Vuex do jehož stavu jsem ukládat obsah zprávy a případně její trvání. Ukázku zaslání takové zprávy znázorňuje ukázka kódu \ref{code:vuex-snack-use}.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
-...
-export default {
-    name: "Snackbar",
-    data: ...
-    created: function () {
-        this.$store.watch(state => state.snackbar.snack, () => {
-            const msg = this.$store.state.snackbar.snack;
-            if (msg !== '') {
-                this.show = true;
-                this.text = msg;
-                this.$store.commit('setSnack', '');
-            }
-        })
-    }
-}
-\end{minted}
-\caption{Vuex pro snackbar-message: Snackbar komponenta} \label{code:vuex-snack-snack}
-\end{listing}
-
-\begin{listing}[h]
-\begin{minted}[linenos,frame=lines]{js}
-this.$store.commit('setSnack', '<message to display>');
+this.$store.dispatch('snackbar/setSnack', '<message to display>');
 \end{minted}
 \caption{Vuex pro snackbar-message: použití z jiné komponenty} \label{code:vuex-snack-use}
 \end{listing}
 
-Kód z ukázky \ref{code:vuex-snack-use} se mi ovšem v průběhu psaní aplikace přestal líbit, neboť zobrazování těchto zpráv je velmi častá operace, a jeho vyvolání není v ukázce příliš jednoduché. Proto jsem si nastudoval Mixiny ve Vue.js \cite{vue-mixins} a vytvořil mixin, který zjednodušuje zasílání zpráv do Snackbaru. Použití v komponentě je znázorněné na ukázce kódu \ref{code:snack-mixin}. Kromě tohoto použití je sice navíc potřeba v komponentě nastavit, aby importovala a používala nově vytvořený mixin, který poskytuje právě metodu \code{snack()}, avšak, to lze vše provést během programování automaticky za pomoci IDE.
+Výše uvedený kód se mi ovšem v průběhu psaní aplikace přestal líbit, neboť zobrazování těchto zpráv je velmi častá operace, a její vyvolání není v ukázce příliš jednoduché. Proto jsem si nastudoval Mixiny ve Vue.js \cite{vue-mixin} a vytvořil mixin\footnote{Mixin je možné použít pro definici dat a metod, kterými má komponenta disponovat, a které se do ní vloží při jejím vytvoření. Výhodou je, že mixin je znovupoužitelný a může být vložen do libovolného počtu komponent.}, který zjednodušuje zasílání zpráv do Snackbaru. Použití v komponentě vybavené takovým mixinem je znázorněné na ukázce kódu \ref{code:snack-mixin}.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
-this.snack('<message to display');
+this.snack('<message to display>');
 \end{minted}
 \caption{Použití mixinu pro zjednodušení zasílání zpráv do Snackbaru} \label{code:snack-mixin}
 \end{listing}
+
+\paragraph{Persistentní úložiště.} Když už máme efektivně vyřešené jak data ukládáme, a aby se neměnila \emph{jen tak}, ale vždy řízeně, může být v některých případech škoda, že v Javascriptovém frameworku stačí jedno obnovení stránky pomocí \code{F5}, \code{ctrl-r} či chcete li tlačítkem v prohlížeči, a všechna tato data se ztratí, neboť bylo vše uloženo pouze v paměti stránky, která se touto akcí celá přepíše. I v aplikaci pro správu skladu jsem se dostal k tomu, že některé věci bych potřeboval uložit tak, aby se nepřemazaly. Projdu nyní jednotlivé moduly, které ve Vuex v době psaní tohoto textu používám, a okomentuji jejich možnosti persistence:
+
+\begin{itemize}
+    \item \emph{Stav připojení k API:} modul udržující informaci, zda je dostupné API backendové části aplikace.
+        \begin{itemize}
+            \item Ukládání tohoto modulu persistentně nemá příliš smysl, protože drží vždy pouze aktuální informaci.
+        \end{itemize}
+    \item \emph{Loader:} tedy ukazatel, že se něco stahuje. V aplikaci rozlišuji dva typy loaderů: jeden nenápadný ve spodní části obrazovky, a druhý znemožňující provádět jakékoliv akce, dokud se obsah nenačte. U prvního zmiňovaného je navyšován počet požadavků, které běží, a teprve při doběhnutí všech se loader skryje.
+        \begin{itemize}
+            \item Vzhledem k možnému vyššímu počtu běžících požadavků se nabízí, že by tato data mohla být persistentní, ale ve výsledku je to také nevhodné, protože při obnovení stránky se všechny běžící požadavky zahodí, a jejich potenciální výsledek je ignorován.
+        \end{itemize}
+    \item \emph{Cache:} TODO dle níže sekce
+    \item \emph{Autorizace:} Jelikož se uživatelé do aplikace přihlašují, a backendové API je samozřejmě zabezpečené proti neoprávněnému přístupu, je potřeba na klientském zařízení udržovat informace o přihlášení. Aplikace implementuje protokol OAuth2 \cite{oauth2rfc}, který na klientském zařízení pracuje s dočasnými identifikátory \code{access\_token} a \code{refresh\_token} plus některými dalšími položkami, tyto dvě jsou ale nejkritičtější. Ukládání těchto tokenů by se teoreticky mohlo hodit, aby se uživatel nemusel při obnovení stránky znovu přihlašovat.
+        \begin{itemize}
+            \item Jelikož znalost tokenu prakticky opravňuje kohokoliv vystupovat pod jménem uživatele, který token při přihlášení získal, nesmí být ani jeden z nich ukládán kamkoliv jinam než do aplikace samotné. Z toho důvodu není doporučováno ukládat tokeny persistentně, avšak existuje zde jedna výjimka. Během vývojového procesu, pokud se pracuje s API, které je zabezpečené, tak používáme tyto tokeny také. V takovém případě je možné tokeny ukládat persistentně, protože s nimi pracuje pouze vývojář, který používá testovací uživatele a testovací data - nehrozí tedy žádný únik či poškození dat reálných uživatelů.
+        \end{itemize}
+    \item \emph{Snackbar:} TODO
+    \item \emph{Záznam stráveného času:} TODO
+    \item \emph{Uživatelská konfigurace aplikace:} TODO
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -330,6 +311,15 @@ V moderních aplikacích, které veškerá data ukládají na API, je vhodné hl
 Prvním krokem k realizaci této funkce bylo zjistit stav připojení - tedy zda je aplikace online, nebo offline. Jako první jsem našel vlastnost prohlížeče \code{window.navigator.onLine} \cite{online}, která by přesně o tomto měla informovat a navíc poskytuje i možnosti poslouchat její změny pomocí běžných JS eventů.\\
 Po hlubším prozkoumání TODO
 TODO kontrola konektivity (proč nepoužívat browser properities, vlastní check, jeho náročnost na síť)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Cache}
+
+TODO
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
