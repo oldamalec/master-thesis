@@ -125,13 +125,9 @@ Jelikož nejpalčivější problémy uživatelského rozhraní se často opakova
 \end{figure}
 
 
-\paragraph{Přesun mezi umístěními a dvojité pípání položek.} Dalším velmi palčivým problémem, na který si uživatelé stěžovali, byla nutnost znovu zvolit všechny položky, které se chystají přesunout na cílové umístění při přesunu položek, či při vyskladňování typu \uv{expedice}. Při těchto úkolech je potřeba nejprve napípat zboží, které skladník \emph{sbírá}, a poté jej napípat znovu, při \emph{pokládání} na cílové umístění. Při přesunech, které mají pevně dané cílové umístění může být ale druhé pípání velmi otravné, a tak jsem do aplikace přidal \emph{volitelnou} možnost po označení cílového umístění, na něj přesunout vše, co má skladník aktuálně \uv{u sebe}. 
-TODO
-
+\paragraph{Přesun mezi umístěními a dvojité pípání položek.} Dalším velmi palčivým problémem, na který si uživatelé stěžovali, byla nutnost znovu zvolit všechny položky, které se chystají přesunout na cílové umístění při přesunu položek, či při vyskladňování typu \uv{expedice}. Při těchto úkolech je potřeba nejprve napípat zboží, které skladník \emph{sbírá}, a poté jej napípat znovu, při \emph{pokládání} na cílové umístění. Při přesunech, které mají pevně dané cílové umístění může být ale druhé pípání velmi otravné, a tak jsem se rozhodl do aplikace přidat \emph{volitelnou} možnost, která po označení cílového umístění umožní rychle na něj přesunout vše, co má skladník aktuálně \uv{u sebe}. 
 
 \paragraph{Ruční nastavení počtu kusů zboží.} Funkce, kterou všichni testeři shodně žádali, je umožnění ruční manipulace s počtem načteného zboží, což umožní jednodušeji zadat větší množství položek, avšak může to také zvýšit chybovost. Přesto jsem se rozhodl nastavení přímé kusovosti uživatelům umožnit, a v případě, že by to nějakému provozovateli skladu vadilo, může být tato komponenta zobrazována na základě nastavení konkrétní instance skladového systému.
-
-// TODO screen?
 
 \paragraph{Zavření detailu skladové položky.} Detaily o skladové položce se během práce na úkolu zobrazují v komponentě nazývané \uv{bottom sheet}, což je vlastně modální okno, které vyjíždí ze spodní části obrazovky a zabírá celou její šířku. Uživatelské testování ukázalo, že uživatelé mají často problém tento pohled zavřít, což se provádí dotykem (či kliknutím) kamkoliv mimo. Po zvážení těchto nejasností jsem se ale rozhodl přidat do jeho pravého horního okraje i tlačítko na jeho zavření, viz obrázek \ref{picture:test:close_bottom_sheet}.
 

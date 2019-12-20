@@ -41,13 +41,6 @@ Zaměřit bych se chtěl především na možnost spuštění grafického prost�
 
 Našel jsem si tedy řešení spočívající v přidání jednoho řádku konfigurace \cite{momentjs-ignore-locale}, jehož cílem je nezahrnovat do výsledného buildu ty jazyky, které nepoužívám (což jsou všechny, kromě češtiny a angličtiny). Výsledek je takový, že nyní překlady nezabírají \emph{ani jedno celé procento}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Proměnné prostředí}
-
-TODO
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -250,9 +243,7 @@ const user = "uživatele";
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{State management pattern}
-
-TODO + moje persistentní řešení
+\section{State management pattern} \label{impl:vuex}
 
 Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, které mezi sebou často potřebují sdílet nějaký \emph{stav}. Nabízí se tedy vytvoření centrálního bodu, který bude stav udržovat, a umožní jej měnit. Na změny by v ideálním případě měly dotčené komponenty reagovat automaticky, a tyto změny by také měly být nějak řízeny, aby nebylo možné nastavit nevalidní hodnoty. Přesně toto nabízí knihovna \emph{Vuex} \cite{vuex}, jejíž interní cyklus popisuje diagram \ref{picture:vuex}.
 
@@ -279,7 +270,7 @@ this.snack('<message to display>');
 \caption{Použití mixinu pro zjednodušení zasílání zpráv do Snackbaru} \label{code:snack-mixin}
 \end{listing}
 
-\paragraph{Persistentní úložiště.} Když už máme efektivně vyřešené jak data ukládáme, a aby se neměnila \emph{jen tak}, ale vždy řízeně, může být v některých případech škoda, že v Javascriptovém frameworku stačí jedno obnovení stránky pomocí \code{F5}, \code{ctrl-r} či chcete li tlačítkem v prohlížeči, a všechna tato data se ztratí, neboť bylo vše uloženo pouze v paměti stránky, která se touto akcí celá přepíše. I v aplikaci pro správu skladu jsem se dostal k tomu, že některé věci bych potřeboval uložit tak, aby se nepřemazaly. Projdu nyní jednotlivé moduly, které ve Vuex v době psaní tohoto textu používám, a okomentuji jejich možnosti persistence:
+\paragraph{Persistentní úložiště.} Když už máme efektivně vyřešené, jak data ukládáme, a aby se neměnila \emph{jen tak}, ale vždy řízeně, může být v některých případech škoda, že v Javascriptovém frameworku stačí jedno obnovení stránky pomocí \code{F5}, \code{ctrl-r} či chcete li tlačítkem v prohlížeči, a všechna tato data se ztratí, neboť bylo vše uloženo pouze v paměti stránky, která se touto akcí celá přepíše. I v aplikaci pro správu skladu jsem se dostal k tomu, že některé věci bych potřeboval uložit tak, aby se nepřemazaly. Projdu nyní jednotlivé moduly, které ve Vuex v době psaní tohoto textu používám, a okomentuji jejich možnosti persistence:
 
 \begin{itemize}
     \item \emph{Stav připojení k API:} modul udržující informaci, zda je dostupné API backendové části aplikace.
@@ -290,14 +281,26 @@ this.snack('<message to display>');
         \begin{itemize}
             \item Vzhledem k možnému vyššímu počtu běžících požadavků se nabízí, že by tato data mohla být persistentní, ale ve výsledku je to také nevhodné, protože při obnovení stránky se všechny běžící požadavky zahodí, a jejich potenciální výsledek je ignorován.
         \end{itemize}
-    \item \emph{Cache:} TODO dle níže sekce
+    \item \emph{Cache:} místní úložiště dat z API
+        \begin{itemize}
+            \item Tato část úložiště je detailněji popsána v sekci \ref{impl:cache} níže.
+        \end{itemize}
     \item \emph{Autorizace:} Jelikož se uživatelé do aplikace přihlašují, a backendové API je samozřejmě zabezpečené proti neoprávněnému přístupu, je potřeba na klientském zařízení udržovat informace o přihlášení. Aplikace implementuje protokol OAuth2 \cite{oauth2rfc}, který na klientském zařízení pracuje s dočasnými identifikátory \code{access\_token} a \code{refresh\_token} plus některými dalšími položkami, tyto dvě jsou ale nejkritičtější. Ukládání těchto tokenů by se teoreticky mohlo hodit, aby se uživatel nemusel při obnovení stránky znovu přihlašovat.
         \begin{itemize}
-            \item Jelikož znalost tokenu prakticky opravňuje kohokoliv vystupovat pod jménem uživatele, který token při přihlášení získal, nesmí být ani jeden z nich ukládán kamkoliv jinam než do aplikace samotné. Z toho důvodu není doporučováno ukládat tokeny persistentně, avšak existuje zde jedna výjimka. Během vývojového procesu, pokud se pracuje s API, které je zabezpečené, tak používáme tyto tokeny také. V takovém případě je možné tokeny ukládat persistentně, protože s nimi pracuje pouze vývojář, který používá testovací uživatele a testovací data - nehrozí tedy žádný únik či poškození dat reálných uživatelů.
+            \item Jelikož znalost tokenu prakticky opravňuje kohokoliv vystupovat pod jménem uživatele, který token při přihlášení získal, nesmí být ani jeden z nich ukládán kamkoliv jinam než do aplikace samotné. Z toho důvodu není doporučováno ukládat tokeny persistentně, avšak existuje zde jedna výjimka. Během vývojového procesu, pokud se pracuje s API, které je zabezpečené, používáme tyto tokeny také. V takovém případě je možné tokeny ukládat persistentně, protože s nimi pracuje pouze vývojář, který používá testovací uživatele a testovací data - nehrozí tedy žádný únik či poškození dat reálných uživatelů.
         \end{itemize}
-    \item \emph{Snackbar:} TODO
-    \item \emph{Záznam stráveného času:} TODO
-    \item \emph{Uživatelská konfigurace aplikace:} TODO
+    \item \emph{Snackbar:} modul pro zobrazování krátných zpráv uživateli.
+        \begin{itemize}
+            \item Z logiky věci zde vyplývá, že nemá smysl po přenačtení stránky zobrazovat stále stejnou jednorázovou zprávu, modul tedy není nastaven jako persistentní.
+        \end{itemize}
+    \item \emph{Záznam stráveného času:} tento modul úkládá, kdy bylo spuštěno měření času stráveného v úkolu a další spjaté informace.
+        \begin{itemize}
+            \item Tuto informaci je naopak velmi důležité ukládat persistentně, neboť při přenačtení stránky je důležité, aby čas nebyl resetován.
+        \end{itemize}
+    \item \emph{Uživatelská konfigurace aplikace:} zde jsou uloženy informace jako například jazyk, tmavý režim, povolení záznamu času apod.
+        \begin{itemize}
+            \item Tyto informace bych rád ukládal na API, avšak to zatím takové položky nepodporuje. Proto je také ukládám lokálně a modul je tedy persistentní.
+        \end{itemize}
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -308,18 +311,24 @@ this.snack('<message to display>');
 \section{Hlídání konektivity}
 
 V moderních aplikacích, které veškerá data ukládají na API, je vhodné hlídat dostupnost tohoto API.\\
-Prvním krokem k realizaci této funkce bylo zjistit stav připojení - tedy zda je aplikace online, nebo offline. Jako první jsem našel vlastnost prohlížeče \code{window.navigator.onLine} \cite{online}, která by přesně o tomto měla informovat a navíc poskytuje i možnosti poslouchat její změny pomocí běžných JS eventů.\\
-Po hlubším prozkoumání TODO
-TODO kontrola konektivity (proč nepoužívat browser properities, vlastní check, jeho náročnost na síť)
+Prvním krokem k realizaci této funkčnosti bylo zjišťovat aktuální stav připojení - tedy zda je aplikace online, nebo offline. Jako první jsem našel vlastnost prohlížeče \code{window.navigator.onLine} \cite{online}, která by přesně o tomto měla informovat a navíc poskytuje i možnosti poslouchat její změny pomocí běžných JS eventů.\\
+Po hlubším prozkoumání jsem ale zjistil, že tento stav odpovídá pouze dostupnosti \emph{místní sítě}, tj. například dostupnost nejbližšího routeru. Pokud bude fungovat spojení mezi prohlížečem a routerem, ale router samotný nebude mít přístup k internetu, bude tento stav mít hodnotu \code{true}, což ale už pro mé potřeby není vhodné - potřebuji znát dostupnost backendového API.\\
+Po tomto zjištění jsem tedy připravil vlastní řešení, které periodicky zasílá dotazy na výchozí endpoint API, ve kterém kontroluje pouze návratový kód. Kontrola probíhá v minutových intervalech, a při odpojení od sítě častěji. Při zaimplementování tohoto řešení mě napadlo, zda nebude problém s tím, že by funkce využívala zbytečně moc dat, provedl jsem proto zběžné výpočty: Velikost jednoho požadavku pro zjištění konektivity je 280 B. Při jednom požadavku za minutu to dělá 16.8 kB za hodinu, což je za osmihodinovou směnu 134,4 kB - tedy zcela zanedbatelná velikost.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Cache}
+\section{Cache} \label{impl:cache}
 
-TODO
+Při psaní aplikace jsem častokrát narazil na problém, že mnohokrát za sebou potřebuji načíst stejná data. Nejprve bylo možné tento problém řešit efektivně, data jsem načetl při vytvoření komponenty, a její součásti je poté načítaly jednotně. Problém ale přišel ve chvíli, kdy jsem chtěl vytvořit obecnou komponentu, která bude s takovými daty pracovat, a nechtěl jsem, aby byla závislá na externích datech - tj. aby si je načetla sama. Příkladem je například komponenta zobrazující informace o umístění, která jako parametr přijímá jeho ID. Cílem komponenty je načíst si o umístění informace jako jméno nebo kód, a ty vypsat uživateli. Někdy se ale stává, že je na stránce potřeba vypsat i více stejných umístění, a tak je na ní několik komponent se stejným ID umístění. Každý si pak samostatně načítá zcela stejná data z API, což je neefektivní z hlediska využití sítě, ale také pomalé.\\
+
+\paragraph{Vue keep-alive.} Jednou z prvních objevených možností je použití wrapperu \code{<keep-alive>}\cite{vue-keep-alive} která není tak zcela o cachování dat z API, ale o cachování celých Vue komponent, což při správném použití může vést na stejný výsledný efekt. Bohužel při hromadném aplikování na celý projekt začalo docházet k nežádaným vedlejším efektům - například odeslaný formulář byl při znovuotevření vyplněn starými daty, nebo na jiných stránkách byl špatně načten nový stav z API a zobrazoval se ten starý. Nakonec jsem \code{keep-alive} přestal používat, ale nechávám ho ještě jako otevřený v tipem k dalšímu vývoji aplikace.
+
+\paragraph{Vlastní cache.} Současné použité řešení spočívá ve vlastím aktivní cachování vybraných položek, které se ukládají do persistentního Vuex store popsaného v sekci \ref{impl:vuex}. Toto řešení jsem testoval ke konci vývoje aplikace a projevilo se jako poměrně flexibilní, bez vedlejších efektů, avšak za cenu vlastní správy cachovaných položek, včetně jejich ručního zápisu apod. Náročnost na psaní kódu je tedy poměrně vysoká, což by mohlo do budoucna přinášet spíše problémy, a budu se této problematice ještě věnovat.
+
+\paragraph{Axios cache.} Další alternativou by bylo využít cache, která by byla napojená přímo na HTTP klienta - Axios. Tuto možnost ještě musíme řádně prozkoumat a vyhodnotit, zda by byla pro projekt přínosná.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -499,7 +508,7 @@ Barvy použité v aplikaci mají velký vliv na to, jak ji budou její uživatel
     \end{itemize}
 \end{itemize}
 
-Zde samozřejmě platí, že čím více chceme text na stránce zdůraznit, tím větší kontrastní poměr mu dáme. TODO kontrola použitých kontrastů v aplikaci.
+Zde samozřejmě platí, že čím více chceme text na stránce zdůraznit, tím větší kontrastní poměr mu dáme.
 
 \paragraph{Volba barev akčních a informačních prvků.} U informačních prvků je zde poměrně klasické rozdělení: zelená jako potvrzovací, modrá - informativní, žlutá - varovná a červená - chybová. Pro akční tlačítka pak typicky zelená - vytvoření, modrá - zobrazení, žlutá - úprava a červená - smazání. V aplikaci ale většinou nechceme mít tolik barev, moderní aplikace mají čistší, jednudušší design, který když je proveden správně, může snížit zátěž uživatele tolik barvami a zvýšit přehlednost. Velmi často se dnes objevují definice barev jako \code{primary}, \code{secondary} (občas i \code{tertiary}) a \code{accent}, které se jednou zvolí a poté se napříč aplikací používají vlastně jako proměnné.
 
@@ -569,27 +578,25 @@ Navrhované řešení automatického záznamu času je samozřejmě možné zcel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-TODO popsat nový vue.config.js a vue ui - dashboard, deps, analyzet atp.
-
-TODO JS Flow
-
-TODO text filtry
-
-https://itnext.io/yes-this-is-how-to-cache-pages-by-url-with-vue-vue-router-and-keep-alive-component-697ed76896e8
-
-TODO kontextové menu
-
-TODO exporty do CSV a JS
-
-TODO renderer tabulek
-
-TODO polyfills https://cli.vuejs.org/guide/browser-compatibility.html
-
-TODO PR do Vuetify?
-
-TODO persistent store
-
-TODO funkční specifikace jednotlivých úkolů?
+% TODO popsat nový vue.config.js a vue ui - dashboard, deps, analyzet atp.
+% 
+% TODO JS Flow
+% 
+% TODO text filtry
+% 
+% https://itnext.io/yes-this-is-how-to-cache-pages-by-url-with-vue-vue-router-and-keep-alive-component-697ed76896e8
+% 
+% TODO kontextové menu
+% 
+% TODO exporty do CSV a JS
+% 
+% TODO renderer tabulek
+% 
+% TODO polyfills https://cli.vuejs.org/guide/browser-compatibility.html
+% 
+% TODO PR do Vuetify?
+% 
+% TODO funkční specifikace jednotlivých úkolů?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
