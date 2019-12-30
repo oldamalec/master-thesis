@@ -435,6 +435,10 @@
 		}\fi
 	}\@declarationOptionSelectedtrue\fi
 	\ifx4#1 \DeclareRobustCommand{\thedeclarationofauthenticity}{\if@langczech{%
+		% malecold addition
+		\hyphenation{te-ri-to-riál-ně}
+		\hyphenation{zdro-jo-vý}
+		% end malecold addition
 		Prohlašuji, že jsem předloženou práci vypracoval samostatně a že jsem uvedl veškeré použité informační zdroje v~souladu s~Metodickým pokynem o~etické přípravě vysokoškolských závěrečných prací.
 
 		Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů. V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových programů, jež jsou její součástí či přílohou a veškeré jejich dokumentace (dále souhrnně jen „Dílo“), a to všem osobám, které si přejí Dílo užít. Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje hodnotu Díla a za jakýmkoli účelem (včetně užití k~výdělečným účelům). Toto oprávnění je časově, teritoriálně i~množstevně neomezené. Každá osoba, která využije výše uvedenou licenci, se však zavazuje udělit ke každému dílu, které vznikne (byť jen zčásti) na základě Díla, úpravou Díla, spojením Díla s~jiným dílem, zařazením Díla do díla souborného či zpracováním Díla (včetně překladu), licenci alespoň ve výše uvedeném rozsahu a zároveň zpřístupnit zdrojový kód takového díla alespoň srovnatelným způsobem a ve srovnatelném rozsahu, jako je zpřístupněn zdrojový kód Díla.
@@ -592,11 +596,12 @@ of works or by adapting the Work (including translation), and at the same time m
 	\noindent \textcopyright{} \the\year{} \theauthorGN{} \theauthorFN{}. \if@langczech{Všechna práva vyhrazena.}\else{All rights reserved.}\fi
 	
 	\if@langczech{
+		\hyphenation{mezi-ná-rod-ní-mi} %% malecold additions
 		\noindent \textit{Tato práce vznikla jako školní dílo na Českém vysokém učení technickém v~Praze, Fakultě informačních technologií. Práce je chráněna právními předpisy a mezinárodními úmluvami o~právu autorském a právech souvisejících s~právem autorským. K~jejímu užití, s~výjimkou bezúplatných zákonných licencí, je nezbytný souhlas autora.}}\else{
 		\noindent \textit{This thesis is a school work as defined by Copyright Act of the Czech Republic. It has been submitted at Czech Technical University in Prague, Faculty of Information Technology. The thesis is protected by the Copyright Act and its usage without author's permission is prohibited (with exceptions defined by the Copyright Act).}
 	}\fi
 	
-	\if@langczech{\subsection*{Odkaz na tuto práci} \MakeUppercase{\theauthorFN{}}, \theauthorGN{}. \textit{\thetitle{}}. \thesistype{}. Praha: České vysoké učení technické v~Praze, Fakulta informačních technologií, \the\year.\if@websitedefined{ Dostupný také z~WWW: $\langle$\url{\thewebsite}$\rangle$.}\fi}\else{\subsection*{Citation of this thesis} \MakeUppercase{\theauthorFN{}}, \theauthorGN{}. \textit{\thetitle{}}. \thesistype{}. Czech Technical University in Prague, Faculty of Information Technology, \the\year.\if@websitedefined{ Available also from WWW: $\langle$\url{\thewebsite}$\rangle$.}\fi}\fi
+	\if@langczech{\subsection*{Odkaz na tuto práci} \MakeUppercase{\theauthorFN{}}, \theauthorGN{}. \textit{\thetitle{}}. \thesistype{}. Praha: České vysoké učení technické v~Praze, Fakulta informačních technologií, \the\year.\if@websitedefined{\\Dostupný také z~WWW:\\$\langle$\url{\thewebsite}$\rangle$.}\fi}\else{\subsection*{Citation of this thesis} \MakeUppercase{\theauthorFN{}}, \theauthorGN{}. \textit{\thetitle{}}. \thesistype{}. Czech Technical University in Prague, Faculty of Information Technology, \the\year.\if@websitedefined{ Available also from WWW: $\langle$\url{\thewebsite}$\rangle$.}\fi}\fi
 }
 
 \DeclareRobustCommand{\abstractpage}{%

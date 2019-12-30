@@ -14,9 +14,9 @@ V této kapitole se budu věnovat převážně některým obecným součástem a
 Webpack \cite{webpack} je software, který zpracovává součásti webových aplikací a tvoří z nich balíčky vhodné pro webové prohlížeče. Primárně je zaměřen na Javascript, ale dokáže zpracovávat i řadu dalších formátů, přes styly v css, sass či stylus, obrázky v png, jpg, svg, ale také konfigurace v json, yaml a dalších.\\
 Hlavním důvodem, proč používat Webpack, je možnost rozdělování kódu do jednotlivých souborů. Při programování je pohodlné mít oddělené ucelené komponenty, různé konfigurační soubory apod. Výstupem webpacku jsou poté typicky pouze čtyři soubory: dva obsahující logiku aplikace (.js) a dva pro stylování (.css), přičemž logika i styly jsou rozděleny na samotnou aplikaci - kód programátora, a kód třetích stran - tzv. \code{vendor}.
 
-\paragraph{Použití loaderů.} Další příležitost k použití webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých souborů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
+\paragraph{Použití loaderů.} Další příležitost k použití Webpacku přichází ve chvíli, kdy chceme v projektu mít kód, který není v cílovém prohlížeči podporován. Tím může být například SASS, nebo třeba i moderní syntaxe Javascriptu řídící se standardem ES6 či novějším. S pomocí Webpacku lze nastavit, aby se při zpracování některých souborů použil \emph{loader}, který například převede SASS na CSS, konstrukce ES6 na ES5 apod. \cite{webpack-ackee}.
 
-\paragraph{Webpack ve spolupráci s Vue.js.} Konfigurace webpacku může být pro neznalého uživatele až příliš obsáhlá a může být jednoduché v ní udělat chybu, kvůli které bude například výsledný build aplikace neoptimalizovaný a tudíž pomalý. Vývojáři Vue tento problém mitigovali tak, že celá optimalizovaná konfigurace webpacku je součástí \code{vue-cli}, což znamená, že stačí mít v projektu jako závislosti právě tento npm modul, a pokud nejsou vyžadovány žádné pokročilé funkce, funguje vše \emph{automagicky}\footnote{Nejedná se o překlep, jde o spojení slov automaticky a magicky}. Pro účely porovnání jsem se podíval, jak dlouhá je konfigurace webpacku, kterou má Vue automaticky v sobě - jedná se o \emph{1490 řádků kódu}.
+\paragraph{Webpack ve spolupráci s Vue.js.} Konfigurace Webpacku může být pro neznalého uživatele až příliš obsáhlá a může být jednoduché v ní udělat chybu, kvůli které bude například výsledný build aplikace neoptimalizovaný a tudíž pomalý. Vývojáři Vue tento problém mitigovali tak, že celá optimalizovaná konfigurace Webpacku je součástí \code{vue-cli}, což znamená, že stačí mít v projektu jako závislosti právě tento npm modul, a pokud nejsou vyžadovány žádné pokročilé funkce, funguje vše \emph{automagicky}\footnote{Nejedná se o překlep, jde o spojení slov automaticky a magicky}. Pro účely porovnání jsem se podíval, jak dlouhá je konfigurace webpacku, kterou má Vue automaticky v sobě - jedná se o \emph{1490 řádků kódu}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,7 +24,7 @@ Hlavním důvodem, proč používat Webpack, je možnost rozdělování kódu do
 \subsection{Vue-UI}
 
 V předchozím paragrafu jsem popisoval výhodu použití Vue-CLI, ke kterému je ale vhodné říci i několik dalších slov, jelikož se jedná o velmi prakticky nástroj, usnadňující mnoho běžných požadavků na správu projektu.\\
-Zaměřit bych se chtěl především na možnost spuštění grafického prostředí, pomocí \code{vue ui} z terminálu, což si vytvoří vlastní webový server a na adrese \code{localhost:8000} spustí grafickou správu projektu. Ta obsahuje následující možnosti:
+Zaměřit bych se chtěl především na možnost spuštění grafického prostředí, pomocí příkazu \code{vue ui} z terminálu, což si vytvoří vlastní webový server a na adrese \code{localhost:8000} spustí grafickou správu projektu. Ta obsahuje následující možnosti:
 \begin{itemize}
     \item \emph{přehled projektů}, který nabízí rychlou kontrolu dostupných aktualizací použitých balíčků, kontrolu bezpečnostních mezer nebo RSS čtečku novinek od Vue komunity,
     \item \emph{instalované pluginy}, což jsou běžné npm balíčky, ke kterým je ale možné přidat další konfiguraci. Jedný se například o pluginy pro samotné \code{vue-cli}, \code{eslint} nebo třeba knihovnu \code{vuetify}, která poskytuje grafické komponenty, a pomocí tohoto pluginu vkládá do výsledného buildu pouze ty, které jsou skutečně v aplikaci používány.
@@ -32,12 +32,12 @@ Zaměřit bych se chtěl především na možnost spuštění grafického prost�
     \item \emph{úlohy spouštěné nad kódem aplikace}, asi nejpraktičtější součást Vue-UI, ze které je možné spouštět lokální dev-server ale také build pro produkci. Největší výhodou spouštění těchto úloh z UI je ta, že po skončení úlohy jsou zde dostupné bohaté informace o velikosti výsledných souborů a přehled, jak velká je která závislost. Jako příklad uvedu dále optimalizaci velikosti překladů.
 \end{itemize}
 
-\paragraph{Optimalizace velikosti aplikace odebráním zbytečných překladů.} Jednou ze závislostí, kterou v projektu používám, je knihovna \emph{moment} \cite{momentjs}, která se stará o parsování a zobrazování datumů a časů, a jejíž součástí jsou i překlady do 127 jazyků. Jeden soubor s jazykem má sice \uv{pouze} 172 řádků kódu, ale při vzájemném pronásobení to už je \emph{21844 řádků}. Není tak divu, že při analýze velikostu výsledných souborů pomocí Vue-UI jsem odhalil, že tyto překlady zabírají téměř \emph{15\% celé velikosti} souboru s kódem třetích stran (\code{vendor}), jak je znázorněno na obrázku \ref{picture:cli:analyze}.
-
-\begin{figure}[]
-\includegraphics[width=0.7\textwidth]{../png/cli/analyze-moment.png}
+\begin{figure}[h]
+\includegraphics[width=0.6\textwidth]{../png/cli/analyze-moment.png}
 \caption[Analýza velikosti výsledné aplikace: překlady moment.js]{Analýza velikosti výsledné aplikace: překlady moment.js (na obrázku popsáno jako locale a označeno oranžově) zabírají velké procento z celkové velikosti souboru.} \label{picture:cli:analyze}
 \end{figure}
+
+\paragraph{Optimalizace velikosti aplikace odebráním zbytečných překladů.} Jednou ze závislostí, kterou v projektu používám, je knihovna \emph{moment} \cite{momentjs}, která se stará o parsování a zobrazování datumů a časů, a jejíž součástí jsou i překlady do 127 jazyků. Jeden soubor s jazykem má sice \uv{pouze} 172 řádků kódu, ale při vzájemném pronásobení to už je \emph{21844 řádků}. Není tak divu, že při analýze velikostu výsledných souborů pomocí Vue-UI jsem odhalil, že tyto překlady zabírají téměř \emph{15\% celé velikosti} souboru s kódem třetích stran (\code{vendor}), jak je znázorněno na obrázku \ref{picture:cli:analyze}.
 
 Našel jsem si tedy řešení spočívající v přidání jednoho řádku konfigurace \cite{momentjs-ignore-locale}, jehož cílem je nezahrnovat do výsledného buildu ty jazyky, které nepoužívám (což jsou všechny, kromě češtiny a angličtiny). Výsledek je takový, že nyní překlady nezabírají \emph{ani jedno celé procento}.
 
@@ -48,17 +48,17 @@ Našel jsem si tedy řešení spočívající v přidání jednoho řádku konfi
 
 \section{Router}
 
+\begin{figure}[h]
+\includegraphics[width=0.7\textwidth]{../png/diagrams/sequence-http-navigate.png}
+\caption[Sekvenční diagram navigace na standardní webové stránce]{Sekvenční diagram navigace na standardní webové stránce: Pro každý link existuje cesta na serveru, který odpovídá kompletním obsahem této stránky.} \label{picture:route:http}
+\end{figure}
+
 Jednou z prvních komponent, kterou jsem k čistému Vue.js přidal, byl oficiální Vue Router \cite{vue-router}. Koncept routeru je dobře znám z jakékoliv jiné aplikace, která nějak pracuje s prohlížečem uživatele.\\
 Rozdíl Vue.js routeru oproti tomu, který je používán třeba v PHP, spočívá v dynamičnosti celého Javascriptového frameworku: oproti standardním webovým stránkám, kde přesměrování na novou adresu skutečně vyvolá požadavek na server, který odpoví obsahem stránky na dané URL (diagram \ref{picture:route:http}), zde se vše děje dynamicky přímo na klientském zařízení, obsah je vyměněn pomocí Javascriptu a hodnota adresního řádku se změní pouze \uv{pro efekt} - tj. aby uživatel věděl, kde se nachází, a aby mohl adresu zkopírovat a sdílet. Samozřejmě i zde většinou dochází k načítání dat nově otevřené stránky, ale vše je typicky asynchronní - stránka se změní ihned a teprve poté jsou do ní doplněna data - viz diagram \ref{picture:route:vue}.
 
-\begin{figure}[]
-\includegraphics[width=0.7\textwidth]{../png/diagrams/sequence-http-navigate.png}
-\caption[Navigace na standardní webové stránce]{Navigace na standardní webové stránce: Pro každý link existuje cesta na serveru, který odpovídá kompletním obsahem této stránky.} \label{picture:route:http}
-\end{figure}
-
-\begin{figure}[]
+\begin{figure}[h]
 \includegraphics[width=0.9\textwidth]{../png/diagrams/sequence-vue-router.png}
-\caption[Navigace v aplikaci pomocí Vue Router]{Navigace v aplikaci pomocí Vue Router: Kompletní obsah aplikace se ze serveru stáhne pouze při prvním přístupu, navigaci v aplikaci řeší Vue Router přímo na klientu a od serveru či jiného API vyžaduje pouze konkrétní data, která v aplikaci zobrazuje.} \label{picture:route:vue}
+\caption[Sekvenční diagram navigace v aplikaci pomocí Vue Router]{Sekvenční diagram navigace v aplikaci pomocí Vue Router: Kompletní obsah aplikace se ze serveru stáhne pouze při prvním přístupu, navigaci v aplikaci řeší Vue Router přímo na klientu a od serveru či jiného API vyžaduje pouze konkrétní data, která v aplikaci zobrazuje.} \label{picture:route:vue}
 \end{figure}
 
 % title Navigace na standardní webové stránce
@@ -215,7 +215,7 @@ I přes nedokončenou speficikaci se již PWA běžně používají a i ve sklad
 \section{Překlady}
 
 Novou aplikaci je dnes vhodné hned od počátku psát jako \emph{multijazyčnou} - jako základ tedy například v češtině a angličtině.\\
-Pro překlady Vue.js aplikací je vhodné použít knihovnu \code{vue-i18n}\footnote{název je zkratka slova \emph{internationalization} - číslovka 18 značí počet přeskočených znaků} \cite{vue-i18n}, jejíž použití je obdobné, jako známe z jiných jazyků. Zatímco například v PHP se často překlady zapisují do \code{.yaml} nebo \code{.neon}, což jsou formáty, které sice umožňují například zanořování, ale s dalšími funkcemi už si často neporadí, zde se texty zapisují do běžného \code{.js} souboru (ukázka kódu \ref{code:i18n-def}), jehož výstupem je JSON. To znamená, že můžeme používat libovolné konstrukce Javascriptu, od standarního zápisu (klíč \code{close} ve zmiňované ukázce), přes spojování řetězců a používání konstant (podklíče \code{user}), po proměnné klíče (podklíče \code{orderState}), jejichž definice se doplní z číselníku načteného klidně i z jiného souboru. Kreativní autor překladů by jistě našel i prostor pro použití cyklů nebo funkcí, mně ale pro potřeby skladové aplikace stačily znázorněné možností.
+Pro překlady Vue.js aplikací je vhodné použít knihovnu \code{vue-i18n}\footnote{název je zkratka slova \emph{internationalization} - číslovka 18 značí počet přeskočených znaků} \cite{vue-i18n}, jejíž použití je obdobné, jako známe z jiných jazyků. Zatímco například v PHP se často překlady zapisují do \code{.yaml} nebo \code{.neon}, což jsou formáty, které sice umožňují například zanořování, ale s dalšími funkcemi už si často neporadí, zde se texty zapisují do běžného \code{.js} souboru (ukázka kódu \ref{code:i18n-def}), jehož výstupem je JSON. To znamená, že můžeme používat libovolné konstrukce Javascriptu, od standarního zápisu (klíč \code{close} ve zmiňované ukázce), přes spojování řetězců a používání konstant (podklíče \code{user}), po proměnné klíče (podklíče \code{orderState}), jejichž definice se doplní z číselníku načteného klidně i z jiného souboru. Kreativní autor překladů by jistě našel i prostor pro použití cyklů nebo funkcí, mně ale pro potřeby skladové aplikace stačily znázorněné možnosti.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
@@ -247,12 +247,12 @@ const user = "uživatele";
 
 Jako první se zde sluší říci, co to vlastně \emph{State management pattern} je. Ve Vue.js aplikaci máme typicky velké množství komponent, které mezi sebou často potřebují sdílet nějaký \emph{stav}. Nabízí se tedy vytvoření centrálního bodu, který bude stav udržovat, a umožní jej měnit. Na změny by v ideálním případě měly dotčené komponenty reagovat automaticky, a tyto změny by také měly být nějak řízeny, aby nebylo možné nastavit nevalidní hodnoty. Přesně toto nabízí knihovna \emph{Vuex} \cite{vuex}, jejíž interní cyklus popisuje diagram \ref{picture:vuex}.
 
-\begin{figure}[]
+\begin{figure}[h]
 \includegraphics[width=\textwidth]{../png/diagrams/vuex.png}
 \caption{Diagram použití Vuex}\label{picture:vuex}
 \end{figure}
 
-Nebudu zde rozepisovat detaily jejího použití, ty jsou dostupné kdykoliv online v její kvalitní dokumentaci. Popíšu ale mé vlastní zkušenosti s touto knihovnou, a jak jsem implementoval některá vylepšení. Začněme však od kraje - jako první jsem Vuex použil pro zobrazování snack message - tedy krátkých informačních zpráv, které se zobrazují uživateli ve spodní části obrazovky, především jako potvrzení jeho akce. K tomu jsem použil Vuex do jehož stavu jsem ukládat obsah zprávy a případně její trvání. Ukázku zaslání takové zprávy znázorňuje ukázka kódu \ref{code:vuex-snack-use}.
+Nebudu zde rozepisovat detaily jejího použití, ty jsou dostupné kdykoliv online v její kvalitní dokumentaci. Popíšu ale mé vlastní zkušenosti s touto knihovnou, a jak jsem implementoval některá vylepšení. Začněme však od kraje - jako první jsem Vuex použil pro zobrazování snack message - tedy krátkých informačních zpráv, které se zobrazují uživateli ve spodní části obrazovky, především jako potvrzení jeho akce. K tomu jsem použil Vuex do jehož stavu jsem ukládal obsah zprávy a případně její trvání. Ukázku zaslání takové zprávy znázorňuje ukázka kódu \ref{code:vuex-snack-use}.
 
 \begin{listing}[h]
 \begin{minted}[linenos,frame=lines]{js}
@@ -303,6 +303,8 @@ this.snack('<message to display>');
         \end{itemize}
 \end{itemize}
 
+Obsah těch modulů, které jsem vyhodnotil jako vhodné k persistenci, ukládám pomocí vlastního řešení do \emph{LocalStorage} webového prohlížeče. V definici modulu pro to stačí nastavit příznak \code{persistent}, případně \code{devPersistent} pro ukládání pouze ve vývojovém režimu, a o zbytek se postará můj globální handler nastavený pro všechny akce Vuex - který při zapnutí aplikace existující stav načte, a při jakékoliv změně ji zapíše právě i do \emph{LocalStorage}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -322,9 +324,9 @@ Po tomto zjištění jsem tedy připravil vlastní řešení, které periodicky 
 
 \section{Cache} \label{impl:cache}
 
-Při psaní aplikace jsem častokrát narazil na problém, že mnohokrát za sebou potřebuji načíst stejná data. Nejprve bylo možné tento problém řešit efektivně, data jsem načetl při vytvoření komponenty, a její součásti je poté načítaly jednotně. Problém ale přišel ve chvíli, kdy jsem chtěl vytvořit obecnou komponentu, která bude s takovými daty pracovat, a nechtěl jsem, aby byla závislá na externích datech - tj. aby si je načetla sama. Příkladem je například komponenta zobrazující informace o umístění, která jako parametr přijímá jeho ID. Cílem komponenty je načíst si o umístění informace jako jméno nebo kód, a ty vypsat uživateli. Někdy se ale stává, že je na stránce potřeba vypsat i více stejných umístění, a tak je na ní několik komponent se stejným ID umístění. Každý si pak samostatně načítá zcela stejná data z API, což je neefektivní z hlediska využití sítě, ale také pomalé.\\
+Při psaní aplikace jsem častokrát narazil na problém, že mnohokrát za sebou potřebuji načíst stejná data. Nejprve bylo možné tento problém řešit efektivně, data jsem načetl při vytvoření komponenty, a její součásti je poté načítaly jednotně. Problém ale přišel ve chvíli, kdy jsem chtěl vytvořit obecnou komponentu, která bude s takovými daty pracovat, a nechtěl jsem, aby byla závislá na externích datech - žádoucí bylo, aby si je načetla sama. Příkladem je například komponenta zobrazující informace o umístění, která jako parametr přijímá jeho ID. Cílem komponenty je načíst si o umístění informace jako jméno nebo kód, a ty vypsat uživateli. Někdy se ale stává, že je na stránce potřeba vypsat i více stejných umístění, a tak je na ní několik komponent se stejným ID umístění. Každý si pak samostatně načítá zcela stejná data z API, což je neefektivní z hlediska využití sítě, ale také pomalé.\\
 
-\paragraph{Vue keep-alive.} Jednou z prvních objevených možností je použití wrapperu \code{<keep-alive>}\cite{vue-keep-alive} která není tak zcela o cachování dat z API, ale o cachování celých Vue komponent, což při správném použití může vést na stejný výsledný efekt. Bohužel při hromadném aplikování na celý projekt začalo docházet k nežádaným vedlejším efektům - například odeslaný formulář byl při znovuotevření vyplněn starými daty, nebo na jiných stránkách byl špatně načten nový stav z API a zobrazoval se ten starý. Nakonec jsem \code{keep-alive} přestal používat, ale nechávám ho ještě jako otevřený v tipem k dalšímu vývoji aplikace.
+\paragraph{Vue keep-alive.} Jednou z prvních objevených možností je použití wrapperu \code{<keep-alive>}\cite{vue-keep-alive} která není tak zcela o cachování dat z API, ale o cachování celých Vue komponent, což při správném použití může vést na stejný výsledný efekt. Bohužel při hromadném aplikování na celý projekt začalo docházet k nežádaným vedlejším efektům - například odeslaný formulář byl při znovuotevření vyplněn starými daty, nebo na jiných stránkách byl špatně načten nový stav z API a zobrazoval se ten starý. Nakonec jsem \code{keep-alive} přestal používat, ale nechávám ho ještě jako otevřený v tipech k dalšímu vývoji aplikace.
 
 \paragraph{Vlastní cache.} Současné použité řešení spočívá ve vlastím aktivní cachování vybraných položek, které se ukládají do persistentního Vuex store popsaného v sekci \ref{impl:vuex}. Toto řešení jsem testoval ke konci vývoje aplikace a projevilo se jako poměrně flexibilní, bez vedlejších efektů, avšak za cenu vlastní správy cachovaných položek, včetně jejich ručního zápisu apod. Náročnost na psaní kódu je tedy poměrně vysoká, což by mohlo do budoucna přinášet spíše problémy, a budu se této problematice ještě věnovat.
 
@@ -419,17 +421,26 @@ Jedná se tedy o poměrně flexibilní systém, který umí nejen zpracovávat r
 \section{Realizace podpory pro undo}\label{implementation:undo}
 
 Jak jsme s Pavlem rozhodli v návrhové části (sekce \ref{draft:undo}), undo je realizováno přímou podporou u vybraných akcí.\\
-Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa výrobců zboží}, u které je možné procházet kompletní historii změn, a tedy i provádět undo. Základní implementace rozšiřuje běžné \emph{snack messages} přidáním tlačítka \uv{vrátit} (obrázek \ref{picture:undo}). Takovýto toast message má nastavenou zvýšenou či neomezenou životnost, nezmizí tedy během pár sekund, jako ty ostatní. Po využití funkce vrácení se po úspěšném dokončení zobrazí buďto obrázek \ref{picture:undo-after}, či případně chybová hláška.
+Pro demonstraci celé funkčnosti byla v první fázi vybrána \emph{správa výrobců zboží}, u které je možné procházet kompletní historii změn, a tedy i provádět undo. Základní implementace rozšiřuje běžné \emph{snack messages} přidáním tlačítka \uv{vrátit} (obrázek \ref{picture:undo}). Takovýto snack message má nastavenou zvýšenou či neomezenou životnost, nezmizí tedy během pár sekund, jako ty ostatní. Po využití funkce vrácení se po úspěšném dokončení zobrazí buďto obrázek \ref{picture:undo-after}, či případně chybová hláška.
 
-\begin{figure}[]
+\begin{figure}[h]
 \includegraphics[width=0.6\textwidth]{../png/app/undo_snack.png}
 \caption{Undo: Možnost vrácení provedených změn} \label{picture:undo}
 \end{figure}
 
-\begin{figure}[]
+\begin{figure}[h]
 \includegraphics[width=0.6\textwidth]{../png/app/undo_snack_after.png}
 \caption{Undo: Potvrzení vrácení provedených změn} \label{picture:undo-after}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Realizace zkratek v systému pomocí čtečky čárových kódů}\label{implementation:shortcuts}
+
+Tato funkce, navrhovaná v sekci \ref{draft:shortcuts}, má ve výsledné aplikaci připravenou obecnou podporu, což znamená, že je možné načítat čárové kódy na jakékoliv obrazovce, bez nutnosti klikat do formulářového prvku. Vstup z čtečky se zpracovává ve funkci, kterou si může libovolná komponenta aplikace přetížit. Na druhé straně ale nebyla z časových důvodů realizována samotná možnost nastavit si, jakou akci má který kód spouštět, aplikace tedy prozatím reaguje pouze na standardní napípnutí umístění či EANu skladové položky, do budoucna ale není problém realizovat i kompletní funkčnost, jak byla navržena.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -484,75 +495,6 @@ Vyzkoušel jsem tedy generátor spouštět s různými parametry, avšak výsled
 \paragraph{Vyřešení modelových tříd pomocí formulářových modelů.} Když jsem se rozhodl nepoužívat nakonec generátor kódu z dokumentace API, musel jsem stále ještě vyřešit problém s tím, že má funkce \code{getFnArgNames} nefunguje v produkčním režimu. Řešení nakonec bylo snadnější, než se zdálo, neboť už vlastně mám připravené vlastní modely pro všechny formuláře, jak jsem popisoval v sekci \ref{implementation:formRender} - jedná se o například o konstantu \code{stockLocationForm} z ukázky kódu \ref{code:formfields:def}. Někdo by mohl namítat, že tento model nemá řádně definované typy a další náležitosti, a má zcela pravdu. Ovšem pro základní potřebu \emph{neopisovat ve funkcích zařizujících komunikaci s API} všechny atributy je to více než dostačující - ve funkcích jsem přestal řešit, jaké všechny parametry se do nich dají poslat, a přijímám jednoduše objekt \code{data} - jehož obsahem je právě například \code{stockLocationForm}. Data, která uživatel zadá do formuláře jsou tedy \emph{na přímo, bez jakéhokoliv kopírování} ve stejné formě (samozřejmě po vyřešení serializace, kódování pro URL či převod času do formátu ISO-8601) i odesílána na API - čímž získáváme i zanedbatelné zvýšení efektivity, byť na úkor bezpečnosti (protože nehlídáme typovost obsahu dat), takže to zase taková výhoda není.\\
 Samozřejmě se najde i několik metod, do kterých nelze poslat takto přímo definici formuláře, protože se jedná například o pokyn k přesunu zboží mezi umístěním atp. - které se generuje z napípávání zboží, nikoliv z vyplněného formuláře. V těchto několika případech jsem ručně vypsal přiřazení (kterému jsem se snažil z počátku za každou cenu vyhnout), avšak nikdy se nejedná o více než 3 atributy, takže přehlednost by neměla trpět.
 Do budoucna budu ještě zvažovat zavedení větší typovosti argumentu \code{data}, který často do API metod posílám, rád bych k tomu využil například JSdoc.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Barevná paleta aplikace}\label{implementation:colors:idempotent}
-
-Barvy použité v aplikaci mají velký vliv na to, jak ji budou její uživatelé vnímat. Když jsem začal s implementací, zvolil jsem pouze pár základních barev, protože v tu chvíli jsem potřeboval funkční kostru aplikace. Postupem času jsem ale začal více přemýšlet o volbě barevné palety a jak ji rozumně zvolit.
-
-\paragraph{Kontrast barvy textu a barvy pozadí.} Základem pro čitelnost textu je správný kontrast barvy textu a barvy pozadí, na kterém se text nachází. Například klasický černý (\#000000) text na bílém (\#FFFFFF) pozadí má kontrastní poměr 21:1, což je nejvyšší možný. Konsorcium W3 vydalo dokument \cite{w3-access-guide}, který popisuje, jak by měl vypadat správně dostupný web - jedna sekce popisuje právě i kontrast. Uvedu úryvek z dokumentu:
-\begin{itemize}
-    \item \emph{Kontrast (minimum)}: Vizuální prezentace musí mít minimální kontrastní poměr 4,5:1, s následujícími výjimkami:
-    \begin{itemize}
-        \item \emph{Velký text}: Musí mít kontrastní poměr minimálně 3:1.
-        \item \emph{Dekorativní, skryté a doprovodné prvky a logotypy}: Bez požadavků na minimální kontrastní poměr
-    \end{itemize}
-    \item \emph{Kontrast (pokročilý)}: Vizuální prezentace by měla mít minimální kontrastní poměr 7:1, s následujícími výjimkami:
-    \begin{itemize}
-        \item \emph{Velký text}: Měl by mít kontrastní poměr minimálně 4,5:1.
-        \item \emph{Dekorativní, skryté a doprovodné prvky a logotypy}: Bez požadavků na minimální kontrastní poměr
-    \end{itemize}
-\end{itemize}
-
-Zde samozřejmě platí, že čím více chceme text na stránce zdůraznit, tím větší kontrastní poměr mu dáme.
-
-\paragraph{Volba barev akčních a informačních prvků.} U informačních prvků je zde poměrně klasické rozdělení: zelená jako potvrzovací, modrá - informativní, žlutá - varovná a červená - chybová. Pro akční tlačítka pak typicky zelená - vytvoření, modrá - zobrazení, žlutá - úprava a červená - smazání. V aplikaci ale většinou nechceme mít tolik barev, moderní aplikace mají čistší, jednudušší design, který když je proveden správně, může snížit zátěž uživatele tolik barvami a zvýšit přehlednost. Velmi často se dnes objevují definice barev jako \code{primary}, \code{secondary} (občas i \code{tertiary}) a \code{accent}, které se jednou zvolí a poté se napříč aplikací používají vlastně jako proměnné.
-
-Výběrem těchto tří barev se zabývá mnoho článků a stránek, teorie, na které ale všichni staví, je pořád stejná: Když volíme tři barvy, existují tři nejčastěji používaná barevná rozložení \cite{color-scheme-pick}:
-
-\begin{enumerate}
-    \item \emph{Trojúhelníková}: Rovnoměřné rozdělení barev přes celé barevné schema. Jedná se o velmi výrazné schema, a to i v případě použití nižší barevné saturace. Ideální použití je jedna základní barva a dvě akcentní.
-    \begin{figure}[H]
-        \includegraphics[width=0.2\textwidth]{../png/colors/Triad.png}
-        \caption{Barevná paleta aplikace: Trojúhelníkové schema} \label{picture:colors:analog}
-    \end{figure}
-    \item \emph{Rozděleně-doplňková}: Toto schema vychází z doplňku dvou barev, tedy barev, které jsou v paletě naproti sobě, protější barva je ale rozdělena na dvě. Oproti trojúhelníkovému schematu je méně výrazné, díky čemuž je jednodušší barvy zvolit tak, aby nebyly pro uživatele příliš útočné. Ideální použití je opět jedna základní barva a dvě akcentní.
-    \begin{figure}[H]
-        \includegraphics[width=0.2\textwidth]{../png/colors/SplitComplementary.png}
-        \caption{Barevná paleta aplikace: Rozděleně-doplňkové schema} \label{picture:colors:splitCom}
-    \end{figure}
-    \item \emph{Analogová}: Zvolené barvy jsou v barevné paletě přímí sousedé a jedná se tak o \uv{klidné} rozložení, které vytváří jemný design jež je často vidět i v přírodě. Problémem zde může být vhodná volba kontrastu, protože barvy nejsou sami vůči sobě příloš kontrastní a je nutné je od sebe alespoň trochu rozlišit. Ideální použití je jedna dominující barva, druhá doplňková a třetí jako akcentní.
-    \begin{figure}[H]
-        \includegraphics[width=0.2\textwidth]{../png/colors/Analogous.png}
-        \caption{Barevná paleta aplikace: Analogové schema} \label{picture:colors:triad}
-    \end{figure}
-\end{enumerate}
-
-\paragraph{Volba barev pro mou aplikaci.} Jelikož cílem aplikace je pomáhat při práci ve skladu a upozorňovat na důležité zprávy, vyloučil jsem hned ze začátku \emph{analogové} barevné schema, protože jeho barevné rozložení patří spíše na stránky, které jsou pasivnější, nevyžadují tolik interakce s uživatelem a spíše obsah prezentují, než aby vyžadovali jeho zadávání. Zbyly mi tedy velmi podobná rozložení \emph{trojúhelníkové} a \emph{rozděleně-doplňkové}. Podle osobního pocitu jsem vybral základní klidnou barvu: šedozelenou \#009688, a k ní doplňkově-akcentní růžovou \#E91A63 a čistě akcentní tmavě žlutou \#FFC107, jejichž rozložení na barevné paletě je vidět na obrázku \ref{picture:colors:app}. Společně tyto barvy tvoří něco mezi dvěma zvolenými schematy - trojůhelník není ani pravidelný, ani se neblíží k doplňku.\\
-\begin{figure}[]
-    \includegraphics[width=0.4\textwidth]{../png/colors/app.png}
-    \caption{Barevná paleta aplikace: Zvolené schema pro mou aplikaci} \label{picture:colors:app}
-\end{figure}
-
-\paragraph{Barvy a idempotence akce.} Jelikož mám vybrané dvě akcentní barvy, musel jsem se rohodnout, kde budu kterou z nich používat. Co se týká zobrazování, je vše poměrně jasné: k základní barvě se volně váže doplňkově-akcentní růžová, a čistě akcentní žlutá barva je ponechána pouze pro důležité položky, které je potřeba speciálně zvýraznit. Jiné je to ale u akcí - tlačítek, odkazů apod. Zde jsem se rozhodl barvu tlačítek volit dle idempotence akce, kterou vyvolávají - tedy zda vyvolaná akce způsobuje vedlejší efekty, nebo ji lze vyvolávat stále dokola. Za vedlejší efekty v aplikaci považuji následující situace:
-\begin{itemize}
-    \item navigace na jinou stránku,
-    \item uložení či úprava dat.
-\end{itemize}
-Naopak akce, které nemají vedlejší efekt jsou všechny ty, které neukládají žádná data ani nemění navigaci, mohou ale měnit aktuální zobrazení stránky, tedy například něco otevřít, skrýt, přesunout, avšak vždy tak, že se jedná o akci pouze na jednom klientu a zůstávají na jedné stránce. Na obrázcích \ref{picture:colors:time_tracker} a \ref{picture:colors:task_fab} je vidět použití jak idempotentních, tak non-idempotentních akcí: tlačítka \emph{storno} a hlavní akční tlačítko pouze skrývají dialog, respektive rozevírají menu, kdežto ostatních tlačítka a volby vždy buďto odesílají data nebo přecházejí na novou stránku.
-
-\begin{figure}[]
-    \includegraphics[width=0.7\textwidth]{../png/app/colors_time_tracker.png}
-    \caption{Barvy znázorňující idempotenci akcí: Dialog běžícího času} \label{picture:colors:time_tracker}
-\end{figure}
-\begin{figure}[]
-    \includegraphics[width=0.3\textwidth]{../png/app/colors_tasks.png}
-    \caption{Barvy znázorňující idempotenci akcí: Tlačítko tvorby úkolu} \label{picture:colors:task_fab}
-\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

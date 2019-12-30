@@ -1,13 +1,13 @@
 \section{Volba technologie}\label{technology}
 
-Jelikož bude aplikace rozdělena na backend, kterým se zabývá můj kolega Bc.~Pavel Kovář, a frontend, který je předmětem této práce, je žádoucí věnovat jistou část textu volbě vhodné technologie.
+Jelikož je aplikace rozdělena na backend - řešený v práci Bc. Pavla Kováře \cite{master-kovar} a frontend, který je předmětem této práce, je žádoucí věnovat jistou část textu volbě vhodné technologie.
 
-\paragraph{Cílová platforma} Aplikace je navrhována s ohledem na hardwarové vybavení skladu, ve kterém bude poprvé nasazována: zdejší skladníci jsou vybaveni mobilními telefony \emph{Zebra TC25BJ}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucích pracovníků. Z důvodu jednoduchosti vývoje,  testování, možností aktualizací a obecně dobré zkušenosti z jiných projektů bylo hned při úvodním návrhu určeno, že aplikace bude tvořena formou webové služby, která bude na klientských zařízeních zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. Řídící pracovníci budou naopak moci využít přístupu odkudkoliv, kde budou připojeni k internetu pouze pomocí běžného webového prohlížeče.\\
+\paragraph{Cílová platforma.} Aplikace je navrhována s ohledem na očekávané hardwarové vybavení skladů, na které nová aplikace cílí. Tamní skladníci jsou často vybaveni mobilními telefony \emph{Zebra TC25BJ}, které disponují OS Android 7.1 a vestavěnou čtečkou čárových kódů. Kromě skladníků by měla být aplikace použitelná také z tabletu či stolního počítače pro účely vedoucích pracovníků. Z důvodu jednoduchosti vývoje, testování, možností aktualizací a obecně dobré zkušenosti z jiných projektů bylo hned při úvodním návrhu určeno, že aplikace bude tvořena formou webové služby, která bude na klientských zařízeních zobrazována ve WebView v jednoduchém kontejneru chovajícím se jako nativní aplikace. Řídící pracovníci budou naopak moci využít přístupu odkudkoliv, kde budou připojeni k internetu pouze pomocí běžného webového prohlížeče.\\
 Z tohoto důvodu jsou v následující rešerši zhodnocovány frameworky či knihovny, které usnadňují vývoj \emph{webových aplikací}.
 
-\paragraph{Frameworky a knihovny} V době psaní této práce patří mezi nejpopulárnější \cite{frameworks-github} \cite{frameworks-hackr} front-endové frameworky či knihovny Angular \cite{angular}, React \cite{react}, Vue.js \cite{vue}, Ember.js \cite{ember} a Backbone.js \cite{backbone}.
+\paragraph{Frameworky a knihovny.} V době psaní této práce patří mezi nejpopulárnější \cite{frameworks-github} \cite{frameworks-hackr} front-endové frameworky či knihovny Angular \cite{angular}, React \cite{react}, Vue.js \cite{vue}, Ember.js \cite{ember} a Backbone.js \cite{backbone}.
 
-\paragraph{Názvosloví} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework}, kterým budu označovat jak frameworky, tak knihovny, z důvodu snížení opakování textu.\\
+\paragraph{Názvosloví.} Pro účely tohoto textu budu na následujících řádcích používat slovo \emph{framework}, kterým budu označovat jak frameworky, tak knihovny, z důvodu snížení opakování textu.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,11 +52,11 @@ Zázemí velké\\společnosti                & ano                         & ano
 
 \subsection{Licence}
 
-Licence k použití frameworku je důležitá položka při rozhodování. Naštěstí všech 5 porovnávaných frameworků je v době psaní této licencováno pod MIT licencí, která povoluje jakékoliv použití i v komerční sféře, úpravy, distribuce i použití v ne-opensource projektech. Nevýhodou této licence je nulová záruka funkčnosti či zodpovědnost autorů za potenciální spáchané škody tímto softwarem.
+Licence k použití frameworku je důležitá položka při rozhodování. Naštěstí všech 5 porovnávaných frameworků je v době psaní tohoto textu licencováno pod MIT licencí \cite{mit-license}, která povoluje jakékoliv použití i v komerční sféře, úpravy, distribuce i použití v ne-opensource projektech. Nevýhodou této licence je nulová záruka funkčnosti či zodpovědnost autorů za potenciální spáchané škody tímto softwarem.
 \\
-\paragraph{Licencování Reactu} Facebook původně vydal svůj React pod BSD licencí spolu s dalšími patenty, avšak 24. září 2017 byl React převeden pod MIT licenci \cite{react-license-commit, react-license}.
+\paragraph{Licencování Reactu.} Facebook původně vydal svůj React pod BSD licencí \cite{bsd-license} spolu s dalšími patenty, avšak 24. září 2017 byl React převeden pod MIT licenci \cite{react-license-commit, react-license}.
 \\
-Jelikož jsou všechny frameworky licencovány stejně, neprobíhá v tabulce \ref{table:compare:license} žádné bodování.
+Jelikož jsou všechny frameworky licencovány stejně, neprobíhá v tabulce \ref{table:compare:license} opět žádné bodování.
 
 \begin{table}[h]
 \caption{Volba frameworku: Licence}
@@ -75,11 +75,11 @@ Licence                                  & MIT                         & MIT    
 
 Složitost frameworku je důležitá metrika, neboť má dopady zejména na ekonomickou stránku projektu. Jednoduché prvotní vniknutí do problematiky frameworku ovšem také nemusí být nutně výhodou, pokud v něm je později problémové provést některé pokročilé věci, nebo i v pokročilém stádiu zdržuje svým nízkoúrovňovým přístupem k problémům, které jiné frameworky řeší automaticky.
 
-\paragraph{Angular, React a Vue.js} Přehled obtížnosti tří v současnosti nejčastěji skloňovaných frameworků přehledně shrnul Rajdeep Chandra ve své prezentaci \emph{My experience with Angular 2 , React and Vue} \cite{frameworks-3compare}, ze které vychází hodnocení v tabulce \ref{table:compare:difficulty}.
+\paragraph{Angular, React a Vue.js:} Přehled obtížnosti tří v současnosti nejčastěji skloňovaných frameworků přehledně shrnul Rajdeep Chandra ve své prezentaci \emph{My experience with Angular 2 , React and Vue} \cite{frameworks-3compare}, ze které vychází hodnocení v tabulce \ref{table:compare:difficulty}.
 
-\paragraph{Ember.js} Tento framework je dle V. Lascika \cite{ember-diffuculty} vhodný spíše pro projekty, na kterých pracuje velké množství vývojářů, a to z důvodu své komplexnosti. Proto jej pro použití v mé vznikající aplikaci hodnotím nula body.
+\paragraph{Ember.js:} Tento framework je dle V. Lascika \cite{ember-diffuculty} vhodný spíše pro projekty, na kterých pracuje velké množství vývojářů, a to z důvodu své komplexnosti. Proto jej pro použití v mé vznikající aplikaci hodnotím pouze jedním bodem.
 
-\paragraph{Backbone.js} U této knihovny je důležité zmínit, že umožňuje vývojáři vytvořit si strukturu aplikace kompletně dle svého uvážení \cite{frameworks-rubygarage}. To ssebou může nést jak výhody pro zkušeného, tak nevýhody pro nezkušeného vývojáře, který v pokročilém stádiu vývoje může zjistit, že některou ze základních struktur navrhl špatně. Samotná obtížnost práce s touto knihovnou je ale poměrně nízká.
+\paragraph{Backbone.js:} U této knihovny je důležité zmínit, že umožňuje vývojáři vytvořit si strukturu aplikace kompletně dle svého uvážení \cite{frameworks-rubygarage}. To ssebou může nést jak výhody pro zkušeného, tak nevýhody pro nezkušeného vývojáře, který v pokročilém stádiu vývoje může zjistit, že některou ze základních struktur navrhl špatně nebo nevhodně. Samotná obtížnost práce s touto knihovnou je ale poměrně nízká.
 
 \begin{table}[h]
 \caption{Volba frameworku: Obtížnost}
@@ -99,15 +99,15 @@ Obtížnost                                & vysoká                      & vyš
 
 Hlavním zdrojem ke studiu frameworku by měla být jeho oficiální dokumentace, v této sekci tedy budu hodnotit kvalitu a obsáhlost oficiálního manuálu k jednotlivým frameworkům.
 
-\paragraph{Angular} Jedná se o velmi obsáhlou a dobře rozdělenou dokumentaci \cite{angular-doc}, která obsahuje i řadu příkladů a ve srozumitelné stromové struktuře vývojář jednoduše najde, co potřebuje.
+\paragraph{Angular:} Jedná se o velmi obsáhlou a dobře rozdělenou dokumentaci \cite{angular-doc}, která obsahuje i řadu příkladů a ve srozumitelné stromové struktuře vývojář jednoduše najde, co potřebuje.
 
-\paragraph{React} Dokumentace Reactu \cite{react-doc} je o poznání jednodušší než ta Angularu, avšak to je způsobeno tím, že React je pouze knihovna, kdežto Angular je plnohodnotný framework. Dokumentace je rozdělena na jednodušší úvod a pokročilejší techniky, je tedy snadné s ní pracovat.
+\paragraph{React:} Dokumentace Reactu \cite{react-doc} je o poznání jednodušší než ta Angularu, avšak to je způsobeno tím, že React je pouze knihovna, kdežto Angular je plnohodnotný framework. Dokumentace je rozdělena na jednodušší úvod a pokročilejší techniky, je tedy snadné s ní pracovat.
 
-\paragraph{Vue.js} Nejmladší z frameworků má také velmi přátelskou dokumentaci \cite{vue-doc}, která je podobně jako u Angularu velmi bohatá a stromově strukturovaná.
+\paragraph{Vue.js:} Nejmladší z frameworků má také velmi přátelskou dokumentaci \cite{vue-doc}, která je podobně jako u Angularu velmi bohatá a stromově strukturovaná.
 
-\paragraph{Ember.js} Oficiální manuál Ember.js \cite{ember-doc} je taktéž poměrně obsáhlý a strukturou připomíná dokumentaci Angularu a Vue.js. Obsahuje velké množství ukázek kódu a je logicky strukturován.
+\paragraph{Ember.js:} Oficiální manuál Ember.js \cite{ember-doc} je taktéž poměrně obsáhlý a strukturou připomíná dokumentaci Angularu a Vue.js. Obsahuje velké množství ukázek kódu a je logicky strukturován.
 
-\paragraph{Backbone.js} Poslední ze zkoumaných frameworků má oficiální dokumentaci \cite{backbone-doc} na první pohled méně atraktivní a pro nováčka může být matoucí. Oproti ostatním dokumentacím chybí například barevné zvýraznění důležitých bodů a další grafické strukturování textu.
+\paragraph{Backbone.js:} Poslední ze zkoumaných frameworků má oficiální dokumentaci \cite{backbone-doc} na první pohled méně atraktivní a pro nováčka může být matoucí. Oproti ostatním dokumentacím chybí například barevné zvýraznění důležitých bodů a další grafické strukturování textu.
 
 \begin{table}[h]
 \caption{Volba frameworku: Dokumentace}
@@ -125,17 +125,17 @@ Hlavním zdrojem ke studiu frameworku by měla být jeho oficiální dokumentace
 
 \subsection{Testování}
 
-Testování je při vývoji softwaru velkým tématem. Mnoho vývojářů nerado testuje, jiní se naopak specializují pouze na testování. V moderních aplikacích je testování z větší části řešeno automatizovanými testy, které se spouští v rámci CI. Přestože se tato práce zabývá pouze frontendem, i ten je možné testovat již od úrovně Unit testů, vyvíjej jej pomocí TDD a nakonec samozřejmě vše zkontrolovat pomocí E2E testů.
+Testování je při vývoji softwaru velkým tématem. Mnoho vývojářů nerado testuje, jiní se naopak specializují pouze na testování. V moderních aplikacích je testování z větší části řešeno automatizovanými testy, které se spouští v rámci CI. Přestože se tato práce zabývá pouze frontendem, i ten je možné testovat již od úrovně Unit testů, vyvíjet jej pomocí TDD a nakonec samozřejmě vše zkontrolovat pomocí E2E testů.
 
-\paragraph{Angular} Nejkomplexější z frameworků nabízí přehlednou dokumentaci \cite{angular-test}, jak by měl být testován. Popisuje jak používat Unit testy i E2E testy a pro druhý zmíněný typ nabízí i samotný testovací framework: Protractor \cite{protractor}. Jeho testovatelnost tedy hodnotím jako velmi dobrou.
+\paragraph{Angular:} Nejkomplexější z frameworků nabízí přehlednou dokumentaci \cite{angular-test}, jak by měl být testován. Popisuje jak používat Unit testy i E2E testy a pro druhý zmíněný typ nabízí i samotný testovací framework: \emph{Protractor} \cite{protractor}. Jeho testovatelnost tedy hodnotím jako velmi dobrou.
 
-\paragraph{React} Tato knihovna ve své dokumentaci na první pohled testování příliš neprosazuje, avšak stránku dedikovanou této kratochvíli \cite{react-test} lze nakonec také nalézt. Narozdíl od Angularu zde není poskytován dedikovaný framework určený přímo pro testování této knihovny. Stránka popisuje testovací frameworky, které používají různé společnosti: autoři Reactu - Facebook - zmiňují svůj Jest \cite{jest}, také je ale zmiňován Enzyme \cite{enzyme} od Airbnb. Konkrétní příklady použití bychom tedy dále hledali v dokumentacích těchto frameworků. Celkově je pro React k dispozici více různých testovacích frameworků, které opět pokrývají jak Unit, tak E2E testování.
+\paragraph{React:} Tato knihovna ve své dokumentaci na první pohled testování příliš neprosazuje, avšak stránku dedikovanou této kratochvíli \cite{react-test} lze nakonec také nalézt. Narozdíl od Angularu zde není poskytován dedikovaný framework určený přímo pro testování této knihovny. Stránka popisuje testovací frameworky, které používají různé společnosti: autoři Reactu - Facebook - zmiňují svůj Jest \cite{jest}, také je ale zmiňován Enzyme \cite{enzyme} od Airbnb. Konkrétní příklady použití bychom tedy dále hledali v dokumentacích těchto frameworků. Celkově je pro React k dispozici více různých testovacích frameworků, které opět pokrývají jak Unit, tak E2E testování.
 
-\paragraph{Vue.js} Ani Vue.js se neztratí co se Unit a E2E testů týká. Přímo ve své dokumentaci \cite{vue-test} popisuje spouštění Unit testů pomoci vestavěných příkazů, které interně používají buďto již zmiňovaný Jest nebo Mocha \cite{mocha}, a dále odkazuje na vlastní kompletní testovací knihovnu \cite{vue-test-utils}. Také je možné použít velké množství různých testových frameworků a aplikace ve Vue.js lze vyvíjet i pomocí TDD \cite{vue-tdd}.
+\paragraph{Vue.js:} Ani Vue.js se neztratí co se Unit a E2E testů týká. Přímo ve své dokumentaci \cite{vue-test} popisuje spouštění Unit testů pomoci vestavěných příkazů, které interně používají buďto již zmiňovaný Jest nebo Mocha \cite{mocha}, a dále odkazuje na vlastní kompletní testovací knihovnu \cite{vue-test-utils}. Také je možné použít velké množství různých testových frameworků a aplikace ve Vue.js lze vyvíjet i pomocí TDD \cite{vue-tdd}.
 
-\paragraph{Ember.js} Tento framework se ve své dokumentaci věnuje testování poměrně intenzivně a zasvětil mu rovnou několik stránek \cite{ember-test}. Jako výchozí testovací framework představuje vlastní QUnit, avšak informuje, že je možné použít i frameworky třetích stran. Testování přehledně rozděluje na \emph{Unit}, \emph{Container}, \emph{Render}, a \emph{Application} testy a také popisuje jak testovat jednotlivé komponenty. Testování Ember.js tedy také hodnotím jako velmi dobré.
+\paragraph{Ember.js:} Tento framework se ve své dokumentaci věnuje testování poměrně intenzivně a zasvětil mu rovnou několik stránek \cite{ember-test}. Jako výchozí testovací framework představuje vlastní QUnit, avšak informuje, že je možné použít i frameworky třetích stran. Testování přehledně rozděluje na \emph{Unit}, \emph{Container}, \emph{Render}, a \emph{Application} testy a také popisuje jak testovat jednotlivé komponenty. Testování Ember.js tedy také hodnotím jako velmi dobré.
 
-\paragraph{Backbone.js} U posledního zkoumaného frameworku na první pohled není testování moc jasné. Oficiální stránka odkazuje na \emph{test suite} \cite{backbone-test}, což je ovšem stránka, která testy \emph{spouští} a ne popisuje. Zdá se, že na této stránce je možné otestovat svůj prohlížeč, zda podporuje veškeré funkcionality Backbone.js. Co se psaní testů týká, rozumněji již vypadá externí stránka \emph{Backbone.js Testing} \cite{backbone-testing}, která již zmiňuje i zde dříve probírané frameworky jako \emph{Mocha}. Ve výsledku tak bude pravděpodobně testování Backbone vypadat obdobně jako u ostatních frameworků, avšak přístup oficiální dokumentace snižuje jeho pochopení.
+\paragraph{Backbone.js:} U posledního zkoumaného frameworku na první pohled není testování moc jasné. Oficiální stránka odkazuje na \emph{test suite} \cite{backbone-test}, což je ovšem stránka, která testy \emph{spouští} a ne popisuje. Zdá se, že na této stránce je možné otestovat svůj prohlížeč, zda podporuje veškeré funkcionality Backbone.js. Co se psaní testů týká, rozumněji již vypadá externí stránka \emph{Backbone.js Testing} \cite{backbone-testing}, která již zmiňuje i zde dříve probírané frameworky jako \emph{Mocha}. Ve výsledku tak bude pravděpodobně testování Backbone vypadat obdobně jako u ostatních frameworků, avšak přístup oficiální dokumentace snižuje jeho pochopení.
 
 \begin{table}[h]
 \caption{Volba frameworku: Testování}
@@ -153,7 +153,7 @@ Testování je při vývoji softwaru velkým tématem. Mnoho vývojářů nerado
 
 \subsection{Vývojářské nástroje}
 
-Dalším důležitým nástrojem při práci s frameworkem je možnost jeho debuggování. Framework by měl nabízet vlastní řešení, které vývojáři usnadní nalézt chybu, zjistit, jak se jeho kód chová či odladil rychlostní problémy.
+Dalším důležitým nástrojem při práci s frameworkem je možnost jeho debuggování. Framework by měl nabízet vlastní řešení, které vývojáři usnadní nalézt chybu, zjistit, jak se jeho kód chová či odladit rychlostní problémy.
 \\
 Všechny ze zde porovnávaných frameworků nabízejí tyto nástroje formou doplňku do prohlížeče, konkrétně se dále budeme bavit o doplňcích pro Google Chrome.
 
@@ -235,7 +235,7 @@ Z pohledu volby frameworku může být na jednu stranu vhodné, aby bylo na tét
 
 \subsection{Firemní stack}
 
-Další zvolenou metrikou je, jak daná technologie zapadá do firemní stacku firmy Jagu s.r.o., ve které bude tento nový projekt realizován. Firma se specializuje především na webové aplikace a middlewary na zakázku \cite{jaguweb}, a mezi nejpoužívanější technologie patří PHP (Nette, Laravel, Symfony), dále provozuje jeden informační systém postavený na Angularu a nově také menší aplikaci ve Vue.js. Tabulka \ref{table:compare:stack} shrnuje, jak jsou jednotlivé frameworky blízko k tomuto stacku.
+Další zvolenou metrikou je, jak daná technologie zapadá do firemní stacku firmy Jagu s.r.o., ve které je tento projekt realizován. Firma se specializuje především na webové aplikace a middlewary na zakázku \cite{jaguweb}, a mezi nejpoužívanější technologie patří PHP (Nette, Laravel, Symfony), dále provozuje jeden informační systém postavený na Angularu a nově také menší aplikaci ve Vue.js. Tabulka \ref{table:compare:stack} shrnuje, jak jsou jednotlivé frameworky blízko k tomuto stacku.
 
 \begin{table}[h]
 \caption{Volba frameworku: Shoda s firemním stackem}
@@ -287,23 +287,6 @@ Při pohledu na přehled toho, jaké technologie Sentry podporuje v JavaScriptu 
 \makecell[l]{Oficiální integrace\\se Sentry} & ano                     & ano                       & ano                        & ano                          & ano                       \\
 \end{tabular}
 \end{table}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \subsection{Vybavenost frameworku TODO}
-
-% V poslední části se zaměříme na to, jaké funkce jednotlivé frameworky nabízí, a zda je vhodné jejich použití pro frontend skladového systému, který je předmětem této práce. Jelikož systém bude vždy napojen na backend, který bude poskytovat data i bussiness logiku, je vhodné se zamyslet i nad tím, aby framework zbytečně neobsahoval nepotřebné součásti, které by v tomto případě byly spíše na obtíž a zanášely jednoduchou aplikaci zbytečnými složitostmi.
-
-% \paragraph{Angular} Ze všech zde porovnávaných frameworků se jedná o ten nejkomplexnější. Nabízí Dependency Injection, Services, Router, TODO
-
-% \paragraph{React} Tím, že je React pouze knihovna a nikoliv framework, nenabízí tolik součástí jako Angular: neexistuje zde Dependency Injection\footnote{DI je do Reactu možné doplnit pomocí knihoven třetích stran}, Services, Router\footnote{Router je možné doplnit knihovnou}, vše je komponenta.TODO
-
-% \paragraph{Vue.js} Co se nabízených komponent týká, Vue.js stojí mezi Angularem a Reactem. Vue.js je považováno za framework, a samo o sobě říká, že obsahuje \emph{to nejlepší z Angularu}. Například Router je možné použít jak oficiální vestavěný, tak jiný router třetí strany \cite{vue-routers}. Dependency injection je také dostupné jako knihovna třetí strany.TODO
-
-% \paragraph{Ember.js} 
-
-% \paragraph{Backbone.js} Backbone.js je z pěti porovnávaných 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
