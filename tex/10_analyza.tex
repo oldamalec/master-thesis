@@ -47,12 +47,12 @@ Tyto požadavky vychází ze stávající aplikace Sysel a jejich procesy měly 
 
 \subsection{Logistika}
 
-Hlavním novým požadavkem, který současný Sysel nepodporuje, je správa \emph{Logistiky} - tedy místa ve skladu, kde dochází ke kompletaci odchozího zboží, jeho balení atp.\\
-Toto místo se od běžného skladového umístění odlišuje v tom, co se zde navíc eviduje:
+Hlavním novým požadavkem, který současný Sysel nepodporuje, je správa \emph{logistiky} - tedy místa ve skladu, kde dochází ke kompletaci odchozího zboží, jeho balení atp.\\
+Toto místo se od běžného skladového umístění odlišuje v tom, co se zde eviduje navíc:
 \begin{itemize}
-	\item \emph{Použitý spotřební materiál} Zaznamenávají se spotřebované balíky či fólie, ale například i palety.
-	\item \emph{Doba uložení} Ukládá se, jak dlouho zde dané zboží \uv{zabíralo} místo.
-	\item \emph{Činnosti skladníka} Zde se eviduje, kolik a jaké úkony musel skladník se zbožím provést - jako například \emph{balení do folie}, \emph{přeskládání} atp.
+	\item \emph{Použitý spotřební materiál:} Zaznamenávají se spotřebované balíky či fólie, ale například i palety.
+	\item \emph{Doba uložení:} Ukládá se, jak dlouho zde dané zboží \uv{zabíralo} místo.
+	\item \emph{Činnosti skladníka:} Zde se eviduje, kolik a jaké úkony musel skladník se zbožím provést - jako například \emph{balení do folie}, \emph{přeskládání} atp.
 \end{itemize}
 
 \subsection{Evidence stráveného času}
@@ -78,7 +78,7 @@ Požadavkem tedy je, aby rozhraní bylo plně responzivní - role skladníka sic
 \section{Analýza konkurence}
 
 Před započetím tvorby nových návrhů UI je vhodné analyzovat existující konkurenční řešení.\\
-V dnešní době existuje na trhu nespočet skladových systémů, jednak veřejně dostupných, které nabízejí buď osekanou verzi zdarma, nebo jsou placené, ale zato mají dostupný popis jejich vlastností, a pak také spousta uzavřených systémů, které si nechal někdo vytvořit na míru přesně pro své potřeby, a pro veřejnost není daný systém vůbec dostupný.\\
+V dnešní době existuje na trhu nespočet skladových systémů, jednak veřejně dostupných, které nabízejí buď zkušební verzi zdarma, nebo jsou placené, ale zato mají dostupný popis jejich vlastností, a pak také spousta uzavřených systémů, které si nechal někdo vytvořit na míru přesně pro své potřeby, a pro veřejnost není daný systém vůbec dostupný.\\
 Z tohoto důvodu jsem se rozhodl zaměřit především na funkcinality veřejně dostupných skladových systémů, které jsou primárně určené na mobilní zařízení.\\
 
 \subsection{Analýza mobilních aplikací pro evidenci skladu}
@@ -107,7 +107,7 @@ Naskladnění, vyskladnění a i přesun zboží funguje vždy pouze s jedním t
 	\item Pole výběru data nabízí nativní androidí kalendář.
 	\item Přehled provedených transakcí.
 	\item V jakýchkoliv seznamech lze vždy hledat, řadit i filtrovat.
-	\item V detailu produktu je dole vždy informační proužek zobrazující, kolik kusů zboží je na skladě.
+	\item V detailu produktu je dole vždy informační proužek zobrazující počet kusů zboží na skladě.
 \end{itemize}
 
 \paragraph{Zápory UI:}
@@ -134,7 +134,7 @@ Provedené transakce lze zpětně upravovat - pro použití této aplikace je to
 	\item Možnost zobrazení přehledu produktů, kterých je na skladě málo.
 \end{itemize}
 
-\paragraph{Analýza UI:} Jedná se o jednoduchou aplikaci, která má ale některé zajímavé funkcionality - nabízí například zajímavé grafy pohybu konkrétního zboží.
+\paragraph{Analýza UI:} Jedná se o jednoduchou aplikaci, která však má zajímavé funkcionality - nabízí například zajímavé grafy pohybu konkrétního zboží.
 
 \paragraph{Klady UI:}
 \begin{itemize}

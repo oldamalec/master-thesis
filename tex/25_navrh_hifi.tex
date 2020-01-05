@@ -8,7 +8,7 @@ Hi-Fi prototyp jsme stále realizovali jako tým v rámci předmětu MI-NUR, av�
 
 \subsection{Technologie použitá v Hi-Fi prototypu}
 
-Cílem bylo vytvořit jakýsi mikro-framework, ve kterém bude snadné tvořit Hi-Fi prototyp a současně bude možné používat standardní prvky Material designu. Kód měl být psán v jazyku cílové platformy, tedy HTML + CSS + JS.\\
+Cílem bylo vytvořit jakýsi mikro-framework, ve kterém bude snadné tvořit \mbox{Hi-Fi} prototyp a současně bude možné používat standardní prvky Material designu. Kód měl být psán v jazyce cílové platformy, tedy HTML + CSS + JS.\\
 Jelikož nikdo z nás neměl zkušenosti s žádným z javascriptových frameworků typu Angular či React a já jsem chtěl pro naše řešení mít co nejméně závislostí, rozhodl jsem se vše napsat v čistém Javascriptu (pouze za použití dnes de facto standardní knihovny jQuery, která se dá jednoduše načíst z CDN). Základem je jeden výchozí HTML soubor, viz ukázka kódu \ref{code:hifi-html}.
 
 \begin{listing}[H]
@@ -83,7 +83,7 @@ function insertParameters(parent) {
 \end{listing}
 
 Funkce \code{loadDynamicContent} z ukázky kódu \ref{code:hifi-js} funguje tak, že projde existující kód (výchozí je vždy \code{index} z ukázky kódu \ref{code:hifi-html}) a veškeré výskyty tříd ve tvaru \code{foo-include} nahrazuje obsahem souboru \code{foo.html} ze složky \code{components/}.\\
-Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Naopak například v Mozilla Firefoxu je CORS v tomto ohledu volnější, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index.html}.\\
+Díky tomu, že Javascriptu může být umožněn přístup na filesystém, lze takto dynamicky načítat obsah souborů z disku a renderovat ho přímo v již načteném obsahu. Tato technika je v některých browserech zablokována kvůli CORS\footnote{Cross-origin resource sharing - ochrana před načítáním nezabezpečeného obsahu}, a tak pro použití například v Google Chrome je nutné zmiňovaný \code{index} spouštět přes libovolný webserver, nelze jej přímo otevřít z filesystému. Na druhou stranu například v Mozilla Firefoxu je CORS v tomto ohledu volnější, a celý tento mikro-framework tak lze používat bez jakéhokoliv lokálního serveru, stahování závislostí atp. - stačí pouze otevřit \code{index.html}.\\
 
 \subsection{Realizace Hi-Fi prototypu}
 
@@ -116,14 +116,14 @@ Kompletní zdrojové kódy prototypu jsou dostupné na přiloženém médiu a ta
 
 \section{Testování Hi-Fi prototypu}
 
-Vzniklý Hi-Fi prototyp byl testován v rámci předmětu MI-NUR společně mnou, Pavlem Kovářem, Martinem Kubišem a Jakubem Šterclem. Abych nevyužíval cizí práci, uvedu v tomto textu pouze části, které jsou realizoval já osobně, i výstup ostatních kolegů jsem ale zhodnotil v samotné implementaci následné funkční aplikace.
+Vzniklý Hi-Fi prototyp byl testován v rámci předmětu MI-NUR společně mnou, Pavlem Kovářem, Martinem Kubišem a Jakubem Šterclem. Abych nevyužíval cizí práci, uvedu v tomto textu pouze části, které jsou realizoval já osobně, práci ostatních kolegů jsem ale zhodnotil v samotné implementaci následné funkční aplikace.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Heuristická analýza}
 
-Zvolili jsme několik akcí skladníka, které jsme podrobili heuristické analýze. Já konkrétně jsem řešil obrazovku naskladnění (screenshoty \ref{picture:hifi:naskladneni} a \ref{picture:hifi:dokonceni}), která dopadla následovně:
+Zvolili jsme několik akcí skladníka, které jsme podrobili heuristické analýze. Konkrétně já jsem řešil obrazovku naskladnění (screenshoty \ref{picture:hifi:naskladneni} a \ref{picture:hifi:dokonceni}), která dopadla následovně:
 
 \begin{enumerate}
   \item \emph{Viditelnost stavu systému}:\\Vše v pořádku.
