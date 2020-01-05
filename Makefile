@@ -1,4 +1,4 @@
-NAME = DIP_Malec_Oldrich_2019.pdf
+NAME = DIP_Malec_Oldrich_2020.pdf
 
 .PHONY:	all pdf open debug clean $(NAME)
 
